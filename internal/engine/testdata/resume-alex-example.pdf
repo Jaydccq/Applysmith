@@ -1,21 +1,21 @@
 %PDF-1.4
 1 0 obj
-<< /Pages 2 0 R /Type /Catalog >>
+<< /Type /Catalog /Pages 2 0 R >>
 endobj
 2 0 obj
-<< /Count 1 /Kids [4 0 R] /Type /Pages >>
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
 endobj
 3 0 obj
-<< /BaseFont /Times-Roman /Subtype /Type1 /Type /Font >>
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
 endobj
 4 0 obj
-<< /Contents 5 0 R /MediaBox [0 0 595 842] /Parent 2 0 R /Resources << /Font << /F1 3 0 R >> >> /Type /Page >>
+<< /Length 62 >>
+stream
+BT /F1 18 Tf 72 720 Td (Alex Example - synthetic resume) Tj ET
+endstream
 endobj
 5 0 obj
-<< /Length 78 >>
-stream
-BT /F1 16 Tf 56 780 Td (Alex Example: synthetic resume for upload tests) Tj ET
-endstream
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
 xref
 0 6
@@ -23,10 +23,10 @@ xref
 0000000009 00000 n 
 0000000058 00000 n 
 0000000115 00000 n 
-0000000187 00000 n 
-0000000313 00000 n 
+0000000241 00000 n 
+0000000353 00000 n 
 trailer
-<< /Root 1 0 R /Size 6 >>
+<< /Size 6 /Root 1 0 R >>
 startxref
-441
+423
 %%EOF

@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 	"unicode/utf8"
+
+	"applysmith/internal/store"
 )
 
 // job is one claimed occurrence on its way through the queue to a goroutine.
@@ -97,7 +99,7 @@ func (s *Scheduler) Cancel(runID string) bool {
 }
 
 func (s *Scheduler) finishQueued(j *job, f Finish) {
-	if err := s.repo.Finish(context.WithoutCancel(s.runCtx), f); err != nil {
+	if err := s.settle(context.WithoutCancel(s.runCtx), func(ctx context.Context) error { return s.repo.Finish(ctx, f) }); err != nil {
 		s.log.Error("recording the end of a queued run failed", "run", j.runID, "error", err.Error())
 	}
 	s.ended(f)
@@ -110,7 +112,7 @@ func (s *Scheduler) execute(ctx context.Context, j *job) {
 	defer s.wg.Done()
 	end := context.WithoutCancel(ctx)
 	defer func() {
-		if err := s.leases.release(end, j.holder); err != nil {
+		if err := s.settle(end, func(ctx context.Context) error { return s.leases.release(ctx, j.holder) }); err != nil {
 			s.log.Error("releasing leases failed", "run", j.runID, "error", err.Error())
 		}
 		s.runMu.Lock()
@@ -142,7 +144,7 @@ func (s *Scheduler) execute(ctx context.Context, j *job) {
 			}
 		}
 	}
-	if err := s.repo.Finish(end, f); err != nil {
+	if err := s.settle(end, func(ctx context.Context) error { return s.repo.Finish(ctx, f) }); err != nil {
 		s.log.Error("recording the end of a run failed", "run", j.runID, "error", err.Error())
 	}
 	s.ended(f)
@@ -210,6 +212,28 @@ func (s *Scheduler) followUp(ctx context.Context, j *job) {
 	next.followUp = true
 	s.submit(ctx, next)
 	s.changed()
+}
+
+// settleWaits are the waits between attempts at a write that ends a run; the
+// last repeats.
+var settleWaits = [...]time.Duration{time.Second, 5 * time.Second, 30 * time.Second}
+
+// settle runs write, which records the end of a run, until it succeeds, fails
+// with anything but a busy writer, or the scheduler stops. The writer can be
+// held past the busy timeout (the daily snapshot), and an end left unrecorded
+// keeps the run running, so the schedule skips every later occurrence as busy
+// until the next start. On stop the sweep ends what is still running.
+func (s *Scheduler) settle(ctx context.Context, write func(ctx context.Context) error) error {
+	for n := 0; ; n++ {
+		err := write(ctx)
+		if !errors.Is(err, store.ErrBusy) {
+			return err
+		}
+		s.log.Warn("the writer is busy; retrying the end of a run", "error", err.Error())
+		if s.sleep(s.runCtx, settleWaits[min(n, len(settleWaits)-1)]) != nil || s.runCtx.Err() != nil {
+			return err
+		}
+	}
 }
 
 func (s *Scheduler) ended(f Finish) {

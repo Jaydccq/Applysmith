@@ -22,12 +22,10 @@ describe("stylesheet", () => {
   // The colour tokens of one theme block, read from the stylesheet.
   const tokens = (block: string): Record<string, string> =>
     Object.fromEntries(Array.from(block.matchAll(/--([a-z-]+):\s*(#[0-9a-f]{6})\b/g), (m) => [m[1], m[2]]));
-  // WCAG 2 relative luminance of a #rrggbb colour: each channel is linearized, then weighted.
-  const linear = (hex: string, at: number) => {
-    const v = parseInt(hex.slice(at, at + 2), 16) / 255;
-    return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  const luminance = (hex: string) => {
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
   };
-  const luminance = (hex: string) => 0.2126 * linear(hex, 1) + 0.7152 * linear(hex, 3) + 0.0722 * linear(hex, 5);
   const contrast = (a: string, b: string) => {
     if (!a || !b) return 0;
     const [x, y] = [luminance(a), luminance(b)].sort((p, q) => q - p);

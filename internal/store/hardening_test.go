@@ -94,7 +94,7 @@ func TestBackupNeedsAWorkspaceIdentifier(t *testing.T) {
 	}
 }
 
-func TestBackupReleasesTheWriterAfterTheSnapshot(t *testing.T) {
+func TestBackupLeavesTheWriterFreeDuringTheCopy(t *testing.T) {
 	f := newFixture(t)
 	var writeErr error
 	_, err := f.s.Backup(f.ctx, BackupOptions{Out: filepath.Join(t.TempDir(), "bk"), WorkspaceRoot: f.root,

@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
-	"sync/atomic"
 	"testing"
 	"time"
 
@@ -535,45 +534,34 @@ func TestConcurrentUserFileChangeFailsBackup(t *testing.T) {
 	}
 }
 
-func TestBackupDrainsWriters(t *testing.T) {
+// The snapshot reads on its own connection, so a writer active the whole time
+// neither waits for it nor is waited for: the snapshot holds what was
+// committed when it began.
+func TestBackupRunsBesideAnActiveWriter(t *testing.T) {
 	f := newFixture(t)
 	held, release := make(chan struct{}), make(chan struct{})
-	var writerDone atomic.Bool
 	writer := make(chan error, 1)
 	go func() {
 		writer <- f.s.Write(f.ctx, func(tx *sql.Tx) error {
-			close(held)
-			<-release
 			if _, err := tx.Exec(`INSERT INTO workspace_meta (key, value) VALUES ('late', '1')`); err != nil {
 				return err
 			}
-			writerDone.Store(true)
+			close(held)
+			<-release
 			return nil
 		})
 	}()
 	<-held
 
 	out := filepath.Join(t.TempDir(), "bk")
-	acquired := make(chan bool, 1)
-	res := make(chan error, 1)
-	go func() {
-		_, err := f.s.Backup(f.ctx, BackupOptions{Out: out, WorkspaceRoot: f.root,
-			afterAcquire: func() { acquired <- writerDone.Load() }})
-		res <- err
-	}()
-	select {
-	case <-acquired:
-		t.Fatal("backup took the writer connection while a writer was active")
-	case <-time.After(200 * time.Millisecond):
-	}
+	ctx, cancel := context.WithTimeout(f.ctx, 10*time.Second)
+	defer cancel()
+	_, err := f.s.Backup(ctx, BackupOptions{Out: out, WorkspaceRoot: f.root})
 	close(release)
+	if err != nil {
+		t.Fatalf("backup beside an active writer: %v", err)
+	}
 	if err := <-writer; err != nil {
-		t.Fatal(err)
-	}
-	if !<-acquired {
-		t.Fatal("backup proceeded before the writer finished")
-	}
-	if err := <-res; err != nil {
 		t.Fatal(err)
 	}
 	db, err := openImmutable(filepath.Join(out, backupDBName))
@@ -581,8 +569,8 @@ func TestBackupDrainsWriters(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer db.Close()
-	if n := count(t, db, `SELECT count(*) FROM workspace_meta WHERE key = 'late'`); n != 1 {
-		t.Errorf("snapshot missed the drained writer's commit")
+	if n := count(t, db, `SELECT count(*) FROM workspace_meta WHERE key = 'late'`); n != 0 {
+		t.Errorf("snapshot holds a write that was not committed when it began")
 	}
 }
 

@@ -14,7 +14,13 @@
 %% because the list resets it when it begins: the space is taken back before
 %% the list instead (measured: 21 pt above the list against 13 pt between
 %% paragraphs, now 13 pt above and below). A contact separator stays on the
-%% line of the item before it.
+%% line of the item before it, and the profile links take a line of their own,
+%% so the first line never ends in a separator. The recipient lines (the
+%% company, then the role as the subject) stand between the date and the
+%% salutation, where a reader and a screening program look for them. The PDF
+%% title and author are the applicant's, not the class defaults. A line break
+%% before data is written \\{}, so data that begins with [ or * is not read as
+%% the break's argument.
 
 \documentclass[<% paper .Paper %>]{cover}
 \usepackage{fancyhdr}
@@ -25,17 +31,19 @@
 \rfoot{Page \thepage \hspace{0pt}}
 \thispagestyle{empty}
 \renewcommand{\headrulewidth}{0pt}
+\hypersetup{pdftitle={<% tex .Title %>}, pdfauthor={<% tex .Name %>}}
 \begin{document}
 
-\namesection{}{\Huge{<% tex .Name %>}}{<% range $i, $l := .Contact %><% if $i %>~| <% end %><% if $l.URL %>\href{<% url $l.URL %>}{<% tex $l.Label %>}<% else %><% tex $l.Label %><% end %><% end %>
+\namesection{}{\Huge{<% tex .Name %>}}{<% range $i, $l := .Contact %><% if $i %>~| <% end %><% if $l.URL %>\href{<% url $l.URL %>}{<% tex $l.Label %>}<% else %><% tex $l.Label %><% end %><% end %><% if .Links %>\\{}<% range $i, $l := .Links %><% if $i %>~| <% end %>\href{<% url $l.URL %>}{<% tex $l.Label %>}<% end %><% end %>
 }
 
 \currentdate{<% tex .Date %>}\mbox{}\\
-\lettercontent{<% tex .Salutation %>}
+<% if .Recipient %>\lettercontent{<% range $i, $l := .Recipient %><% if $i %>\\{}<% end %><% tex $l %><% end %>}
+<% end %>\lettercontent{<% tex .Salutation %>}
 <% range .Blocks %>
 \lettercontent{<% rich .Text %>}
 <% if .Bullets %>
-{\raggedright\fontspec[Path = fonts/raleway/]{Raleway-Medium}\fontsize{11pt}{13pt}\selectfont
+{\raggedright\fontspec[Path = fonts/raleway/, Kerning=Off, Numbers=Lining]{Raleway-Medium}\fontsize{11pt}{13pt}\selectfont
 \vspace{-\parskip}\vspace{-\topsep}\vspace{-\partopsep}\begin{itemize}
 <% range .Bullets %>    \item <% rich . %>
 <% end %>\end{itemize}\par}

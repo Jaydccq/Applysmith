@@ -51,8 +51,10 @@ var EnglishLabels = ResumeLabels{Summary: "Summary", Competencies: "Core Compete
 
 // Resume is everything the résumé template may print.
 type Resume struct {
-	Paper        Paper
-	Labels       ResumeLabels
+	Paper  Paper
+	Labels ResumeLabels
+	// Title is the PDF's document title.
+	Title        string
 	FirstName    string
 	LastName     string
 	Address      string
@@ -78,10 +80,18 @@ type Block struct {
 
 // Cover is everything the cover-letter template may print.
 type Cover struct {
-	Paper      Paper
-	Name       string
-	Contact    []Link
-	Date       string
+	Paper Paper
+	Name  string
+	// Title is the PDF's document title.
+	Title string
+	// Contact is the first contact line (email, phone); Links, the profile
+	// links, take the line under it.
+	Contact []Link
+	Links   []Link
+	Date    string
+	// Recipient holds the lines between the date and the salutation: the
+	// company, then the role as the letter's subject.
+	Recipient  []string
 	Salutation string
 	Blocks     []Block
 	Closing    string

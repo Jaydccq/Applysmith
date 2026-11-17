@@ -70,35 +70,27 @@ type BackupOptions struct {
 	ProductVersion string
 	Now            func() time.Time
 
-	// afterAcquire runs once the writer connection is held (Store.Backup only).
-	afterAcquire func()
-	// afterVacuum runs once the database snapshot is written and the writer
-	// has been released.
+	// afterVacuum runs once the database snapshot is written and its
+	// connection released.
 	afterVacuum func()
 	// afterCopy runs between the user-file copy and the final revision check.
 	afterCopy func()
 }
 
-// Backup snapshots a live store. It takes the only writer connection while the
-// database snapshot is written, so active writers are drained and new ones
-// queue (and fail with ErrBusy past the busy timeout) instead of racing it.
-// The writer is released as soon as the snapshot exists; copying the user
-// files then runs beside normal writes. Cancelling ctx stops the copy and
-// removes the partial output.
+// Backup snapshots a live store. The snapshot is written on a connection of
+// its own (VACUUM INTO is refused on the query-only readers), which under WAL
+// reads one consistent state of the database without the writer: writes go on
+// beside it, and the snapshot holds what was committed when it began. Holding
+// the writer instead stalled every write for as long as the copy of a large
+// database took, past the busy timeout (docs/architecture/scheduler.md).
+// Cancelling ctx stops the copy and removes the partial output.
 func (s *Store) Backup(ctx context.Context, opts BackupOptions) (*Manifest, error) {
-	conn, err := s.rw.Conn(ctx)
-	if err != nil {
-		return nil, typed(err)
-	}
-	defer conn.Close()
-	if opts.afterAcquire != nil {
-		opts.afterAcquire()
-	}
-	return backup(ctx, conn, conn.Close, opts)
+	return BackupOffline(ctx, s.path, opts)
 }
 
-// BackupOffline snapshots a database nobody else has open. The caller holds
-// the workspace lock; the database is not migrated.
+// BackupOffline snapshots the database at dbPath through a connection of its
+// own. Store.Backup uses it for a live store; otherwise the caller holds the
+// workspace lock. The database is not migrated.
 func BackupOffline(ctx context.Context, dbPath string, opts BackupOptions) (*Manifest, error) {
 	q := url.Values{}
 	q.Add("_pragma", fmt.Sprintf("busy_timeout(%d)", defaultBusyTimeout.Milliseconds()))

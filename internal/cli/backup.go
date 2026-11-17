@@ -42,8 +42,8 @@ func (e *env) backup(ctx context.Context, args []string) int {
 	return 2
 }
 
-// backupCreate asks the owning server when one runs, so active writers are
-// drained by the process that owns them; otherwise it takes the workspace lock
+// backupCreate asks the owning server when one runs, so the snapshot is taken
+// by the process that owns the database; otherwise it takes the workspace lock
 // and snapshots the database itself.
 func (e *env) backupCreate(ctx context.Context, args []string) int {
 	fs := e.flags("backup create")

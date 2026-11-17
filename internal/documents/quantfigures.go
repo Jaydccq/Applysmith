@@ -20,17 +20,11 @@ var (
 		"through", "throughout", "around", "among", "during", "under", "without", "since", "until", "between", "because", "but", "so", "then",
 		"where", "including", "like")
 
-	// numberWords are the spelled numbers zero to nineteen and the tens twenty to ninety.
-	numberWords = func() map[string]float64 {
-		words := map[string]float64{}
-		for n, w := range strings.Fields("zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen") {
-			words[w] = float64(n)
-		}
-		for n, w := range strings.Fields("twenty thirty forty fifty sixty seventy eighty ninety") {
-			words[w] = float64(20 + 10*n)
-		}
-		return words
-	}()
+	numberWords = map[string]float64{
+		"zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+		"eleven": 11, "twelve": 12, "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17, "eighteen": 18,
+		"nineteen": 19, "twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90,
+	}
 	magnitudes = map[string]float64{"hundred": 100, "thousand": 1e3, "million": 1e6, "billion": 1e9}
 	// suffixMagnitudes scale a digit number: 5K, 2.5M, 3 billion.
 	suffixMagnitudes = map[string]float64{"k": 1e3, "thousand": 1e3, "m": 1e6, "mn": 1e6, "million": 1e6, "b": 1e9, "bn": 1e9, "billion": 1e9}

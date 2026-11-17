@@ -2,6 +2,7 @@ package scheduler
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"os"
@@ -323,6 +324,67 @@ func TestScheduler_Timers_RetentionRuleFailureDoesNotStopTheOthers(t *testing.T)
 	h.tick()
 	if !ran {
 		t.Fatal("a later rule did not run")
+	}
+}
+
+// A run whose end cannot be recorded because another holder (the daily
+// snapshot) keeps the writer past the busy timeout must still end: the
+// schedule would otherwise skip every later occurrence as busy.
+func TestScheduler_RunEndIsRecordedOnceTheWriterIsFree(t *testing.T) {
+	h := newHarnessWith(t, store.Options{BusyTimeout: 20 * time.Millisecond})
+	held, release := make(chan struct{}), make(chan struct{})
+	var once sync.Once
+	first := true
+	h.kind("test.busy", nil, false, func(ctx context.Context, in Invocation) (string, error) {
+		h.mu.Lock()
+		h.calls["test.busy"] = append(h.calls["test.busy"], h.clock.Now())
+		hold := first
+		first = false
+		h.mu.Unlock()
+		if hold {
+			go h.st.Write(context.Background(), func(*sql.Tx) error { close(held); <-release; return nil })
+			<-held
+		}
+		return "ran", nil
+	})
+	h.s = h.scheduler("sched_a", func(o *Options) {
+		o.Sleep = func(ctx context.Context, d time.Duration) error {
+			once.Do(func() { close(release) })
+			return ctx.Err()
+		}
+	})
+	if err := h.s.Start(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { h.s.Stop(context.Background()) })
+	sc := h.add("a", "test.busy", hourly(), PolicySkip)
+	h.step(2 * time.Hour)
+	if d := h.decisions(sc.ID); !eq(d, "fired", "fired") {
+		t.Fatalf("decisions %v", d)
+	}
+	var running int
+	if err := h.st.Read().QueryRow(`SELECT count(*) FROM runs WHERE status IN ('queued', 'running')`).Scan(&running); err != nil {
+		t.Fatal(err)
+	}
+	if running != 0 {
+		t.Fatalf("%d runs left running", running)
+	}
+}
+
+// A rule that runs out its budget (the runs board waiting on Telegram edits at
+// one a second) ends alone: the rules after it still run in the same sweep.
+func TestScheduler_Timers_ASlowRetentionRuleDoesNotStarveTheOthers(t *testing.T) {
+	old := retentionRuleLimit
+	retentionRuleLimit = 50 * time.Millisecond
+	defer func() { retentionRuleLimit = old }()
+	h := newHarness(t)
+	h.start()
+	var fine error = errors.New("did not run")
+	h.s.AddRetention("stuck", func(ctx context.Context) error { <-ctx.Done(); return ctx.Err() })
+	h.s.AddRetention("fine", func(ctx context.Context) error { fine = ctx.Err(); return nil })
+	h.tick()
+	if fine != nil {
+		t.Fatalf("the rule after a slow one: %v", fine)
 	}
 }
 

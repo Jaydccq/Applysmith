@@ -442,8 +442,8 @@ func checkLetter(m Manifest, d LetterDoc) Gate {
 		}
 	}
 	if d.Language == "en" {
-		if w := m.words(d); w < 250 || w > 300 {
-			g.warn("length", "the body has %d words; the English target is 250 to 300 and thin evidence is not padded", w)
+		if w := m.words(d); w < letterMinWords || w > letterMaxWords {
+			g.warn("length", "the body has %d words; the English target is %s and thin evidence is not padded", w, letterWordsText)
 		}
 	}
 	return g

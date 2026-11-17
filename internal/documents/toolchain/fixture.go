@@ -68,9 +68,11 @@ func syntheticCover(paper assets.Paper) assets.Cover {
 		Contact: []assets.Link{
 			{Label: "alex.example@example.com", URL: "mailto:alex.example@example.com"},
 			{Label: "+1 555 0100"},
-			{Label: "Profile", URL: "https://www.example.com/in/alex-example"},
 		},
+		Links:      []assets.Link{{Label: "Profile", URL: "https://www.example.com/in/alex-example"}},
+		Title:      "Alex Example - Cover Letter",
 		Date:       "October 11, 2026",
+		Recipient:  []string{"Example Systems", "Re: Platform Engineer"},
 		Salutation: "Dear Hiring Team,",
 		Blocks: []assets.Block{
 			{Text: "I am writing about the Platform Engineer role at Example Systems. " + specials},

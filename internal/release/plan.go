@@ -54,7 +54,7 @@ func bunPath() string {
 // guard file fails here too.
 func guardExport(export string) error {
 	return runCmd(export, []string{"APPLYSMITH_GUARD_RELEASE=1", "APPLYSMITH_GUARD_ROOT=" + export},
-		[]string{"go", "test", "-count=1", "-run", "^TestRepository$", "./internal/guard/"})
+		[]string{"go", "test", "-count=1", "-timeout", "60m", "-run", "^TestRepository$", "./internal/guard/"})
 }
 
 // packageExport builds the ad-hoc signed application bundle and disk image from

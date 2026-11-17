@@ -186,15 +186,27 @@ func unheldRule(m Manifest) string {
 	return b.String()
 }
 
+// vagueRule holds a draft to the gate's reading of amounts (quantvague.go): a
+// word of amount is a figure, and a requirement's own is not the applicant's.
+const vagueRule = "- A word of amount counts as a number: many, several, multiple, numerous, a few, dozens, significantly, dramatically and the like are written only where a cited evidence line uses the same word, and never copied from a requirement.\n"
+
 // resumeRules are the grounding rules of a résumé draft. A refinement of a
 // résumé carries the same text, so it is held to the same rules.
 const resumeRules = "Rules:\n- Use only the evidence lines below. Cite the evidence ids each sentence rests on in its evidence field, never in the text itself.\n" +
 	"- Every number, percentage, amount and count must appear in a cited evidence line with the same unit.\n" +
+	vagueRule +
 	"- Write bullets only for the listed entries; an entry key is an id, never a name. Each entry goes once, in the group named after its key.\n" +
 	"- Do not invent employers, products, technologies, titles, dates, projects or outcomes.\n" +
 	"- Do not write names, contact details, locations or a relocation statement.\n" +
 	"- At most one metric in a bullet may be bold, written **like this**.\n" +
-	"- A competency's text is a comma-separated list of skills, tools or practices, each written as an evidence line writes it; never a sentence or an achievement.\n"
+	"- A competency's text is a comma-separated list of skills, tools or practices, each written as an evidence line writes it; never a sentence or an achievement.\n" +
+	"How to write it:\n" +
+	"- A reader, and the software that screens for one, looks for the posting's own words. Where a cited evidence line holds a skill a requirement names, write it in a bullet or a competency, spelled as the evidence line spells it.\n" +
+	"- Profile: two or three sentences of at most 60 words, with no \"I\" or \"my\": the kind of work the evidence shows that this role asks for, then one result worded as its evidence line words it, with that line cited in profileEvidence.\n" +
+	"- Competencies: three to five lines. A label names a category the posting cares about, and its text lists three to ten items, those a requirement names first. Fold a line of fewer than three items into another.\n" +
+	"- A bullet is one sentence of at most 30 words that opens with a past-tense action verb and says what was built or changed, with which tools, and the result its evidence line states. Shorten the evidence line rather than rewording it: keep its verb, its figures and the noun each figure counts, so \"contributed to\" never becomes \"led\".\n" +
+	"- Every listed entry gets bullets, a project as well as a role: none is left out. Within an entry the bullets that answer a requirement come first, and an entry whose evidence holds three or four separate achievements gets a bullet for each.\n" +
+	"- One achievement is told once, in one bullet. No first person, and no filler such as \"responsible for\", \"various\", \"successfully\" or \"in order to\".\n"
 
 // resumePrompt asks for one résumé draft from the frozen manifest.
 func resumePrompt(m Manifest, lang string, pages int) string {
@@ -212,17 +224,36 @@ func resumePrompt(m Manifest, lang string, pages int) string {
 	return b.String()
 }
 
+// The length an English letter aims for, as the prompt asks for it and the
+// gate warns about it. A letter of one page that a screener reads to the end
+// is short: three one-sentence bullets and four framing sentences.
+const (
+	letterMinWords  = 120
+	letterMaxWords  = 260
+	letterWordsText = "120 to 260"
+)
+
 // letterRules are the grounding rules of a cover-letter draft, shared with its
 // refinement.
 const letterRules = "Rules:\n- The salutation, sign-off, date and any relocation statement are added by the system; do not write them.\n" +
 	"- Every sentence you write is about the applicant and may use only the evidence lines below. Cite their ids in openingEvidence and each bullet's evidence, never in the text itself.\n" +
 	"- Every number, and every product or technology name, you write must appear in a cited evidence line. Do not recite the whole résumé.\n" +
+	vagueRule +
 	"- You never write a fact about the company. To state one, list 1 or 2 fact ids from the company facts below in companyFacts (none is fine): the system prints a company paragraph of those facts, word for word, between your evidence paragraph and your closing. Do not retype, paraphrase or announce them, and in your own sentences and bullets before it never point ahead with \"below\", \"the following\", \"as follows\", \"next\", \"later\", \"after this\", \"further down\" or a closing colon.\n" +
 	"- The closing comes after the company paragraph. Write it about yourself and the role only: do not mention the company's work or reuse the words of the facts you listed, and use no it, its, they, them, their, there, so, this, that, these, those, the same, such, likewise or \"so did\" for anything but \"this role\", \"this position\" or \"this opportunity\".\n" +
 	"- Name something specific to the role from the posting, or list a company fact in companyFacts. No stock enthusiasm phrases.\n" +
 	"- Do not state where you live or would work, your right to work, or a number of years that no evidence line states; a requirement's own number is not yours.\n" +
 	"- Count nothing of the letter itself (\"two projects show\"): introduce the bullets with a plain sentence that ends in a full stop.\n" +
-	"- Every paragraph must end with terminal punctuation. Target 250 to 300 words for English; shorter is fine when evidence is thin.\n"
+	"- Every paragraph must end with terminal punctuation.\n" +
+	"How to write it:\n" +
+	"- Opening, at most two sentences: name the role, and the company when one is given, then the one result or strength of yours that answers what the role asks for first. Keep lists of skills out of it.\n" +
+	"- Body: one sentence about your work that names the needs of the role the bullets answer. It does not mention the letter, its bullets or \"examples\".\n" +
+	"- A bullet is one achievement in one sentence of at most 35 words that opens with a past-tense verb: what you built or changed, with what, and the result its evidence line states. Shorten the evidence line rather than rewording it: keep its verb, its figures and the noun each figure counts. Each bullet answers a different requirement, and three requirements with evidence get three bullets. Never add a second sentence that explains, restates or praises the first.\n" +
+	"- Closing, at most two sentences: the part of the role's work you want to take on, named in a few words of your own with no number or amount, then an offer to talk about the role.\n" +
+	"- A fact, a result or a list is written once: the opening, the body, the bullets and the closing never repeat one another.\n" +
+	"- Where a cited evidence line holds a skill a requirement names, name it, spelled as the evidence line spells it.\n" +
+	"- Write plainly in the first person. No filler such as \"my work connects\", \"my experience spans\", \"hands-on\", \"proven track record\", \"measurable results\", \"strongest contributions\" or \"I am confident\".\n" +
+	"- Aim for " + letterWordsText + " words in English. Never add a sentence to reach a length; shorter is right when the evidence is thin.\n"
 
 // letterPrompt asks for the paired letter from the same manifest and résumé.
 func letterPrompt(m Manifest, r ResumeDoc, lang string) string {

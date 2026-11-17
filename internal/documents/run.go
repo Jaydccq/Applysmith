@@ -776,9 +776,10 @@ func (j *job) draftLetter(ctx context.Context, m Manifest, r ResumeDoc) (LetterD
 		sal = "Dear " + m.Recipient + ","
 	}
 	voice, voiceRead := j.voiceRule()
+	retry := ""
 	for attempt := 1; attempt <= 2 && !j.noModel; attempt++ {
 		var draft LetterDraft
-		err := j.callModel(ctx, "cover-letter", letterPrompt(m, r, lang)+voice, letterSchema, &draft, LetterTimeout)
+		err := j.callModel(ctx, "cover-letter", letterPrompt(m, r, lang)+voice+retry, letterSchema, &draft, LetterTimeout)
 		if err != nil {
 			if ctx.Err() != nil {
 				return LetterDoc{}, Gate{}, err
@@ -795,6 +796,7 @@ func (j *job) draftLetter(ctx context.Context, m Manifest, r ResumeDoc) (LetterD
 		} else {
 			j.keep(fmt.Sprintf("cover-letter-rejected-%d.json", attempt), doc)
 			j.warnOn(KindCover, "model letter attempt %d was rejected (%s)", attempt, codes(g))
+			retry = retryNote(g)
 		}
 	}
 	if j.noModel {
@@ -814,6 +816,18 @@ func (j *job) draftLetter(ctx context.Context, m Manifest, r ResumeDoc) (LetterD
 		j.warnOn(KindCover, "the letter is short because the selected evidence is thin; it was not padded")
 	}
 	return doc, g, nil
+}
+
+// retryNote tells the second letter attempt why the first was refused, so it
+// does not write the same sentence again. The findings quote only the draft
+// and the evidence, which the prompt already holds.
+func retryNote(g Gate) string {
+	var b strings.Builder
+	b.WriteString("An earlier draft was refused for the reasons below. Write a new letter that gives none of them:\n")
+	for _, f := range g.Errors {
+		b.WriteString(dataBlock("refused", f.Code+": "+f.Detail))
+	}
+	return b.String()
 }
 
 func normalizeLetter(d LetterDraft) LetterDraft {

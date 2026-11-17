@@ -123,13 +123,7 @@ func TestExtractPDFTextPoppler(t *testing.T) {
 	}
 	// A real one-page PDF, with correct byte offsets and a text content stream.
 	content := "BT /F1 12 Tf 14 TL 72 720 Td " + strings.Repeat("(Harbor berth allocation solver.) Tj T* ", 8) + "ET"
-	objects := []string{
-		"<< /Pages 2 0 R /Type /Catalog >>",
-		"<< /Count 1 /Kids [4 0 R] /Type /Pages >>",
-		"<< /BaseFont /Courier /Subtype /Type1 /Type /Font >>",
-		"<< /Contents 5 0 R /MediaBox [0 0 595 842] /Parent 2 0 R /Resources << /Font << /F1 3 0 R >> >> /Type /Page >>",
-		fmt.Sprintf("<< /Length %d >>\nstream\n%s\nendstream", len(content), content),
-	}
+	objects := []string{"<< /Type /Catalog /Pages 2 0 R >>", "<< /Type /Pages /Kids [3 0 R] /Count 1 >>", "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>", "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>", fmt.Sprintf("<< /Length %d >>\nstream\n%s\nendstream", len(content), content)}
 	var pdf strings.Builder
 	pdf.WriteString("%PDF-1.4\n")
 	offsets := []int{0}

@@ -12,7 +12,6 @@ internal/release 1
 internal/lazyregexp 2 pure
 internal/flight 2
 internal/engine/stamp 3 pure
-internal/usstates 3 pure
 internal/engine/bundler 5
 internal/extension/builder 6
 internal/extension 7

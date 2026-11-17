@@ -80,9 +80,9 @@ func TestLiveBackupRejectsBadOutputUpFront(t *testing.T) {
 	}
 }
 
-// A backup that waits for the writer must not hold the request open: the
-// route answers at once and the caller polls.
-func TestLiveBackupDoesNotHoldTheRequest(t *testing.T) {
+// A live backup runs beside an active writer: the route answers at once and
+// the operation succeeds while the write is still open.
+func TestLiveBackupRunsBesideAnActiveWriter(t *testing.T) {
 	h := newHarness(t)
 	hold, release := make(chan struct{}), make(chan struct{})
 	writerDone := make(chan error, 1)
@@ -94,25 +94,36 @@ func TestLiveBackupDoesNotHoldTheRequest(t *testing.T) {
 		})
 	}()
 	<-hold
-	out := filepath.Join(t.TempDir(), "backup")
-	start := time.Now()
-	r := h.postBackup(out)
-	if r.StatusCode != 202 || time.Since(start) > 2*time.Second {
-		t.Fatalf("%d after %s: %s", r.StatusCode, time.Since(start), r.body)
+	r := h.postBackup(filepath.Join(t.TempDir(), "backup"))
+	if r.StatusCode != 202 {
+		close(release)
+		t.Fatalf("%d: %s", r.StatusCode, r.body)
 	}
-	loc := r.Header.Get("Location")
-	if d := h.do(call{path: loc, useToken: true}).data(); d["state"] != "running" {
+	d := h.pollBackup(r.Header.Get("Location"))
+	close(release)
+	if d["state"] != "succeeded" {
 		t.Errorf("while the writer is held: %v", d)
 	}
-	if second := h.postBackup(filepath.Join(t.TempDir(), "other")); second.StatusCode != 409 || second.errCode() != "conflict" {
-		t.Errorf("a second backup while one runs: %d %s", second.StatusCode, second.body)
-	}
-	close(release)
 	if err := <-writerDone; err != nil {
 		t.Fatal(err)
 	}
-	if d := h.pollBackup(loc); d["state"] != "succeeded" {
-		t.Errorf("%v", d)
+}
+
+// Only one backup runs at a time.
+func TestASecondBackupWhileOneRunsConflicts(t *testing.T) {
+	h := newHarness(t)
+	release, running := make(chan struct{}), make(chan struct{})
+	if _, e := h.srv.backups.start(func() (*wire.BackupResult, *apikit.Error) {
+		close(running)
+		<-release
+		return nil, apikit.NewErr(wire.CodeInternal, "stopped")
+	}); e != nil {
+		t.Fatal(e)
+	}
+	<-running
+	defer close(release)
+	if second := h.postBackup(filepath.Join(t.TempDir(), "other")); second.StatusCode != 409 || second.errCode() != "conflict" {
+		t.Errorf("a second backup while one runs: %d %s", second.StatusCode, second.body)
 	}
 }
 

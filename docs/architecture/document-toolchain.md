@@ -179,6 +179,20 @@ this does not prove a new macOS-user installation or Gatekeeper first launch.
   into the text layer before the address. The contact check of task 3.7a
   ignores them and requires the address itself as a whole token
   ([document-verification.md](document-verification.md)).
+- XeTeX applies Raleway's pair kerning as a gap in the text run, and pypdf
+  reads a wide gap as a space: 2026-11 letters extracted as "Dear Hiring
+  T eam," and "pgvector ,". Poppler joined them, so the split depended on the
+  reader. The class now loads the body font with `Kerning=Off` (and
+  `Numbers=Lining`, since Raleway's default figures are old-style), and the
+  `word-coverage` check fails a word the layer holds only split
+  ([document-verification.md](document-verification.md)). Lato Regular was
+  tried as the body font and rejected: pypdf then extracted the page with no
+  spaces between words at all. Of 30 stored letters, 24 held a split word;
+  recompiled with the new options none did.
+- The résumé had the same fault in Latin Modern Sans: pypdf read "AWS" as
+  "A WS" and "WAVE" as "WA VE". The template loads the class's two families
+  again through fontspec with `Kerning=Off`; the embedded fonts and the page
+  count of the measured résumé stayed the same.
 - Link annotations come out as the canonical URL (`?ref=a&b=2#top`,
   `%7Ealex_example/50%25`), checked with pypdf on the compiled PDFs.
 - Compiling and verifying passed with all network access denied
@@ -307,8 +321,8 @@ licence evidence is [third_party/document-sources.json](../../third_party/docume
 
 | File | Original SHA-256 (upstream) | Shipped SHA-256 |
 |---|---|---|
-| `cover.cls` | `db606a00acbec168ce93fdd70b6cc380ccd0a4b8c62fea71b21e503f9e72d39e` | `27d368bede24fc0c1e2b185da5b6fd5b18f714aabb858765cdf8fcf1addd09d8` |
-| `cover.tex` | `b6408a865d110a63ebaf032a7a8bd403b5d1183f6835e0e886c5f2a042960628` | `40a298c7489e13d84d770d4d058428b9fdf2c91719f13f42bff03183bae9ed04` |
+| `cover.cls` | `db606a00acbec168ce93fdd70b6cc380ccd0a4b8c62fea71b21e503f9e72d39e` | `ff42dab01997d03cb526bb8f3557153ee2f42dee264236285635719780629ceb` |
+| `cover.tex` | `b6408a865d110a63ebaf032a7a8bd403b5d1183f6835e0e886c5f2a042960628` | `1823f277be3d4c6da17a81a78f42fe9882c6904864ec4fcfe8e7af8aa21963c5` |
 | `fonts/lato/Lato-Bold.ttf` | `bf1b8130069b44b9148eeece35e5423bedac49777ba746615b826b8276574a7b` | `bf1b8130069b44b9148eeece35e5423bedac49777ba746615b826b8276574a7b` |
 | `fonts/lato/Lato-Hairline.ttf` | `80dc280e8a05b80d7a566a15b379bba422a776e5bc58b92a9b8f3a9bbea7eb03` | `80dc280e8a05b80d7a566a15b379bba422a776e5bc58b92a9b8f3a9bbea7eb03` |
 | `fonts/lato/Lato-Italic.ttf` | `8c863f833b12bc8486671d26e3a58b13b0f9eaff1d6b10398e7c107a9b7ee05a` | `8c863f833b12bc8486671d26e3a58b13b0f9eaff1d6b10398e7c107a9b7ee05a` |
@@ -318,7 +332,7 @@ licence evidence is [third_party/document-sources.json](../../third_party/docume
 | `fonts/raleway/Raleway-ExtraLight.otf` | `e19adb1e85c11d4982d8a12ff351237da5f0d1c07ceb01b3687045619ba2d864` | `e19adb1e85c11d4982d8a12ff351237da5f0d1c07ceb01b3687045619ba2d864` |
 | `fonts/raleway/Raleway-Medium.otf` | `84fdac3c3378ba1518315a71867cfdcba2ae2658bcbf40a51d6704640ffbd5af` | `84fdac3c3378ba1518315a71867cfdcba2ae2658bcbf40a51d6704640ffbd5af` |
 | `requirements.txt` | none (product-owned) | `a3a8a8db971d48fe0a0bf74227e241b13166bd2df2e4daa8513c83eefff9b011` |
-| `resume.tex` | `54645495edc618ef829ed99f752b02cd296f156a590b750440722d8fb031fd80` | `211b263f9b71cb8efe65c21a92ac10905e7ecaf57813860a4f34bda0d8dfecf7` |
+| `resume.tex` | `54645495edc618ef829ed99f752b02cd296f156a590b750440722d8fb031fd80` | `0da2b0961b58b875e85c6423b808d1df628abb9c76baf4c499b690cfa2f88f3b` |
 | `verify_layout.py` | `c876e62bdf36ec3d1d662bb92871265df1eafb4aa8942fda6cf5b11622af4bd3` | `99140f1f912d25a3f6cfa13e4f3544e3f9607f3700064bbd2ca75af972582471` |
 | `verify_pdf.py` | `1763f8f37f672a16faba76380fb3f9703a0d4e99512117dd166ebc68af030db9` | `ab202d0de8e7e50a973f0791195245aec75c08f331afc56f4f65173544bae466` |
 

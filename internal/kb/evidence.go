@@ -46,10 +46,12 @@ func trustOf(kind string) string {
 
 // Fact is a piece of evidence with its provenance.
 type Fact struct {
-	ID            string   `json:"id"`
-	Text          string   `json:"text"`
-	SourceKind    string   `json:"sourceKind"`
-	SourceRef     string   `json:"sourceRef"`
+	ID         string `json:"id"`
+	Text       string `json:"text"`
+	SourceKind string `json:"sourceKind"`
+	SourceRef  string `json:"sourceRef"`
+	// Title is the title of the document the fact comes from, when it has one.
+	Title         string   `json:"title,omitempty"`
 	Score         float64  `json:"score"`
 	Trust         string   `json:"trust"`
 	Stage         string   `json:"stage"`
@@ -118,7 +120,7 @@ func factFromSection(d *indexedDoc, sec *indexedSection, score float64, stage st
 	}
 	text := clip(sec.Text, sectionBudget)
 	base := Fact{
-		SourceKind: d.Kind, SourceRef: ref, Score: score, Trust: trustOf(d.Kind), Stage: stage,
+		SourceKind: d.Kind, SourceRef: ref, Title: d.Title, Score: score, Trust: trustOf(d.Kind), Stage: stage,
 		Reasons: reasons, AllowedFacts: allowed, Provenance: []string{d.Kind + ":" + ref},
 	}
 	var out []Fact

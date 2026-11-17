@@ -214,6 +214,17 @@ func (b *builder) addCV(cv string) {
 		src := "cv.md#" + sec.Heading
 		lines := append(append([]string(nil), sec.Bullets...), sec.Prose...)
 		switch {
+		// A heading such as "Project Experience" names both groups: its
+		// sections are projects, which have no employer to match.
+		case sec.Level >= 3 && isProjectGroup(sec.Group):
+			title := sec.Heading
+			if t, _, _, _, ok := headingEntry(sec.Heading); ok {
+				title = t
+			}
+			key := b.addEntry(EntryProject, title, "", "", "", "")
+			for _, l := range lines {
+				b.addEvidence(src, "cv", key, l)
+			}
 		case sec.Level >= 3 && isExperienceGroup(sec.Group):
 			key := b.entryFor(sec.Heading, EntryExperience)
 			if key == "" && !hasEmployment {
@@ -224,15 +235,6 @@ func (b *builder) addCV(cv string) {
 				key = b.addEntry(EntryExperience, title, org, "", start, end)
 			}
 			for _, l := range sec.Bullets {
-				b.addEvidence(src, "cv", key, l)
-			}
-		case sec.Level >= 3 && isProjectGroup(sec.Group):
-			title := sec.Heading
-			if t, _, _, _, ok := headingEntry(sec.Heading); ok {
-				title = t
-			}
-			key := b.addEntry(EntryProject, title, "", "", "", "")
-			for _, l := range lines {
 				b.addEvidence(src, "cv", key, l)
 			}
 		case sec.Level <= 2 && isProjectGroup(sec.Group):
@@ -371,6 +373,7 @@ func snippetCategory(ref string) string {
 }
 
 func (b *builder) addSnippets(facts []kb.Fact) {
+	projects := map[string]string{}
 	for _, f := range facts {
 		if f.SourceKind != kb.KindSnippet || strings.HasPrefix(f.ID, "semantic:") {
 			continue
@@ -390,11 +393,19 @@ func (b *builder) addSnippets(facts []kb.Fact) {
 		entry := ""
 		switch cat {
 		case kb.CatProjects:
-			title := heading
-			if title == "" {
-				title = strings.TrimSuffix(path[strings.LastIndex(path, "/")+1:], ".md")
+			// One project per knowledge document, named by the document: a
+			// section heading ("Why I am proud of it") is not a project.
+			if entry = projects[path]; entry == "" {
+				title := f.Title
+				if title == "" {
+					title = heading
+				}
+				if title == "" {
+					title = strings.TrimSuffix(path[strings.LastIndex(path, "/")+1:], ".md")
+				}
+				entry = b.addEntry(EntryProject, title, "", "", "", "")
+				projects[path] = entry
 			}
-			entry = b.addEntry(EntryProject, title, "", "", "", "")
 		case kb.CatExperience:
 			entry = b.entryFor(f.Text+" "+heading, EntryExperience)
 		}

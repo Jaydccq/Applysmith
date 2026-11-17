@@ -123,14 +123,20 @@ binary_directory="$(swift build --configuration "$configuration" --show-bin-path
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 cp "$binary_directory/personal-cu" "$app/Contents/MacOS/personal-cu"
 cp -R "$binary_directory/PersonalCU_PersonalCU.bundle" "$app/Contents/Resources/"
-info="$app/Contents/Info.plist"
-rm -f "$info"
-plutil -create xml1 "$info"
-for entry in CFBundleIdentifier="$bundle_id" CFBundleName=PersonalCU CFBundleExecutable=personal-cu \
-  CFBundlePackageType=APPL CFBundleShortVersionString=0.2.0 CFBundleVersion=2 LSMinimumSystemVersion=14.0; do
-  plutil -insert "${entry%%=*}" -string "${entry#*=}" "$info"
-done
-plutil -insert LSUIElement -bool YES "$info"
+cat > "$app/Contents/Info.plist" <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleIdentifier</key><string>$bundle_id</string>
+<key>CFBundleName</key><string>PersonalCU</string>
+<key>CFBundleExecutable</key><string>personal-cu</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleShortVersionString</key><string>0.2.0</string>
+<key>CFBundleVersion</key><string>2</string>
+<key>LSMinimumSystemVersion</key><string>14.0</string>
+<key>LSUIElement</key><true/>
+</dict></plist>
+PLIST
 sign_app
 echo "Built $PWD/$app"
 }

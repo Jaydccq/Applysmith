@@ -264,7 +264,7 @@ func TestDocuments_RealVerify_CoverListFont(t *testing.T) {
 	if o := compileFixture(t, open, KindCover, tex, expectCover(c), assets.PaperA4); o.state != PDFReady {
 		t.Fatalf("the template's own list must pass: %s %v", o.state, o.failing())
 	}
-	broken := mutate(t, tex, "\\fontspec[Path = fonts/raleway/]{Raleway-Medium}\\fontsize{11pt}{13pt}\\selectfont\n", "\n", 1)
+	broken := mutate(t, tex, "\\fontspec[Path = fonts/raleway/, Kerning=Off, Numbers=Lining]{Raleway-Medium}\\fontsize{11pt}{13pt}\\selectfont\n", "\n", 1)
 	o := compileFixture(t, open, KindCover, broken, expectCover(c), assets.PaperA4)
 	if o.status("final/fonts") != toolchain.Fail || o.state != PDFFailed {
 		t.Fatalf("state %s, fonts %+v", o.state, o.checks["final/fonts"])

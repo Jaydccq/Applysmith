@@ -106,7 +106,7 @@ func TestCoverLetter_StructureAndLength(t *testing.T) {
 	if !short.OK() || !hasWarning(short, "length") {
 		t.Errorf("a shorter grounded letter is allowed with a warning: errors %+v warnings %+v", short.Errors, short.Warnings)
 	}
-	in := letter(250)
+	in := letter(200)
 	if g := checkLetter(m, in); hasWarning(g, "length") {
 		t.Errorf("%d words are inside the target: %+v", m.words(in), g.Warnings)
 	}

@@ -58,7 +58,6 @@ func expectResume(r assets.Resume) Expectation {
 // and the signature below it.
 func expectCover(c assets.Cover) Expectation {
 	e := Expectation{Name: c.Name, Fonts: coverFonts}
-	e.Order = []string{c.Name, c.Date, c.Salutation}
 	src := []string{c.Name}
 	for i, l := range c.Contact {
 		switch {
@@ -71,7 +70,18 @@ func expectCover(c assets.Cover) Expectation {
 		}
 		src = append(src, l.Label)
 	}
-	src = append(src, c.Date, c.Salutation)
+	for _, l := range c.Links {
+		e.Others = append(e.Others, l.Label)
+		src = append(src, l.Label)
+	}
+	e.Order = []string{c.Name, c.Date}
+	src = append(src, c.Date)
+	for _, line := range c.Recipient {
+		e.Order = append(e.Order, line)
+		src = append(src, line)
+	}
+	e.Order = append(e.Order, c.Salutation)
+	src = append(src, c.Salutation)
 	for _, b := range c.Blocks {
 		if t := unbold(b.Text); t != "" {
 			e.Order = append(e.Order, t)

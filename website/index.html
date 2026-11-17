@@ -47,6 +47,7 @@
   <a class="brand" href="#top"><img id="brand-mark" alt="" width="36" height="36">Applysmith</a>
   <nav aria-label="Sections">
     <a href="#how">How it works</a>
+    <a href="#inside">Inside</a>
     <a href="#private">Private by design</a>
     <a href="#rules">The rules</a>
     <a href="#compare">Compare</a>
@@ -90,6 +91,25 @@
   </div>
 
   <div class="paper" data-scene="5">
+    <section id="inside" class="sheet-section">
+      <h2>See it at work.</h2>
+      <p class="lede">Four screens from the demo workspace. The job seeker, Alex Example, and every company are fictional, and the demo ran without a model, so its report says the score is simulated.</p>
+      <div class="tour">
+        <div class="tour-tabs" role="tablist" aria-label="Screens of the dashboard">
+          <button type="button" role="tab" id="tab-inbox" aria-controls="shot-inbox" aria-selected="true"><strong>The inbox</strong><span>Postings wait with their source and rank. Evaluate the ones worth a look and dismiss the rest.</span></button>
+          <button type="button" role="tab" id="tab-report" aria-controls="shot-report"><strong>A report</strong><span>A score out of five, a recommendation and the deciding factors, down to each missed must-have.</span></button>
+          <button type="button" role="tab" id="tab-form" aria-controls="shot-form"><strong>A dry run</strong><span>The sample form, filled on every page and stopped before Submit, each stage with its result.</span></button>
+          <button type="button" role="tab" id="tab-runs" aria-controls="shot-runs"><strong>The runs board</strong><span>Everything running, waiting for you or finished in the last seven days.</span></button>
+        </div>
+        <div class="tour-panels">
+          <figure role="tabpanel" id="shot-inbox" aria-labelledby="tab-inbox"><img data-shot="inbox" width="1440" height="757" alt="The Inbox tab of the Discovery page, with sample postings and their Evaluate buttons."></figure>
+          <figure role="tabpanel" id="shot-report" aria-labelledby="tab-report"><img data-shot="report" width="1440" height="757" loading="lazy" alt="A report for a sample posting, with its score, its recommendation and the deciding factors."></figure>
+          <figure role="tabpanel" id="shot-form" aria-labelledby="tab-form"><img data-shot="form" width="1440" height="757" loading="lazy" alt="The run of the sample form: filled, nothing submitted, each stage with its result."></figure>
+          <figure role="tabpanel" id="shot-runs" aria-labelledby="tab-runs"><img data-shot="runs" width="1440" height="757" loading="lazy" alt="The Runs board with one finished dry run and two finished evaluations."></figure>
+        </div>
+      </div>
+    </section>
+
     <section id="private" class="sheet-section">
       <h2>Yours, on your machine.</h2>
       <p class="lede">Nothing leaves the computer except calls to the services you choose to connect.</p>
@@ -144,6 +164,17 @@
         </table>
       </div>
       <p class="fine-ink">From each tool’s own website, checked 16 November 2026. A dash means its pages do not say.</p>
+    </section>
+
+    <section id="questions" class="sheet-section">
+      <h2>Questions.</h2>
+      <div class="questions">
+        <details><summary>Will it ever submit an application without me?</summary><p>No. A dry run fills every page and stops before Submit. Submitting needs your explicit request for that application, or a confirmation you complete in the dashboard. A schedule can never fill a form or submit.</p></details>
+        <details><summary>Where does my data go?</summary><p>It stays in one folder you choose. The only network traffic is to the services you connect: a language-model provider, Gmail, Telegram, job boards and the sites you apply to.</p></details>
+        <details><summary>Do I need an AI account?</summary><p>To evaluate postings, write documents and answer free-text questions, yes: one language-model provider on your own account. That can be an API key, your ChatGPT plan, or a command-line tool you are already signed in to. To look around, the Offline choice needs none, and its reports say so.</p></details>
+        <details><summary>What does it cost?</summary><p>Applysmith is free and open source under the MIT licence. What you pay for is your own model provider, held by a spend cap for each day: 2 US dollars unless you change it.</p></details>
+        <details><summary>Does it run on Windows or Linux?</summary><p>It supports macOS 13 or later with Google Chrome 120 or later. Other operating systems are unverified.</p></details>
+      </div>
     </section>
   </div>
 

@@ -16,11 +16,28 @@ stack is sealed.
 | Colors, type and layout | `src/style.css` |
 | The scene: arrangements, lights, camera per section | `src/scene.js` |
 | Brand mark | `../web/src/assets/career-cat.webp`, shared with the dashboard |
+| The four screens | `../docs/user-guide/images/tutorial-0{4,5,6,7}-*.webp`, shared with the tutorial |
 
 Every claim about Applysmith comes from `README.md`, `docs/setup` and
 `docs/user-guide`; check a claim there before changing the words. The page
 links to the source at `https://github.com/Jaydccq/Applysmith` and to no download, because
 no public one exists yet.
+
+## The screens and the questions
+
+"See it at work" shows four screenshots of the demo workspace, one at a time,
+chosen by a tab or the arrow keys. They are the tutorial's own images, imported
+from `docs/user-guide/images` in `src/main.js`, so the site adds no image to
+the repository; when the tutorial's screenshots are retaken the site shows the
+new ones at its next build. Each must show the demo workspace only.
+
+The product videos (`video/`) are not on the page: their files are far over
+the one-mebibyte limit for a tracked file (`internal/guard/budgets.go`), and
+the page calls no other host that could hold them.
+
+Each answer under "Questions" restates `README.md`, `docs/setup/00-prerequisites.md`
+or `docs/setup/09-llm.md` (the providers, the Offline choice and the default
+spend cap).
 
 ## The comparison table
 

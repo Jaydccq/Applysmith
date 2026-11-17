@@ -134,7 +134,7 @@ func TestRender_ListStaysOutsideLetterContent(t *testing.T) {
 	if i < 0 || j < i || strings.Contains(s[i:j], `\end{itemize}`) {
 		t.Fatalf("the list must follow its paragraph macro, not sit inside it:\n%s", s)
 	}
-	if !strings.Contains(s, `\fontspec[Path = fonts/raleway/]{Raleway-Medium}`) {
+	if !strings.Contains(s, `\fontspec[Path = fonts/raleway/, Kerning=Off, Numbers=Lining]{Raleway-Medium}`) {
 		t.Error("the list is not set in the body font")
 	}
 	// The list resets \topsep when it begins: a rendered letter had 21 pt
@@ -145,6 +145,15 @@ func TestRender_ListStaysOutsideLetterContent(t *testing.T) {
 	two, err := RenderCover(Cover{Paper: PaperA4, Name: "A", Contact: []Link{{Label: "a"}, {Label: "b"}}, Closing: "Bye"})
 	if err != nil || !strings.Contains(string(two), "{a~| b\n}") {
 		t.Errorf("a contact separator may start a wrapped line: %v\n%s", err, two)
+	}
+	// The profile links take their own line, and the company and the subject
+	// stand between the date and the salutation.
+	head, err := RenderCover(Cover{Paper: PaperA4, Name: "A", Title: "A - Cover Letter", Date: "D", Salutation: "S", Closing: "Bye",
+		Contact: []Link{{Label: "a"}}, Links: []Link{{Label: "p", URL: "https://example.com/p"}}, Recipient: []string{"Example Corp", "Re: Engineer"}})
+	if hs := string(head); err != nil || !strings.Contains(hs, `{a\\{}\href{https://example.com/p}{p}`+"\n}") ||
+		!strings.Contains(hs, `\currentdate{D}\mbox{}\\`+"\n"+`\lettercontent{Example Corp\\{}Re: Engineer}`+"\n"+`\lettercontent{S}`) ||
+		!strings.Contains(hs, "pdftitle={A - Cover Letter}") {
+		t.Errorf("letter head: %v\n%s", err, head)
 	}
 	if bytes.Contains(out, []byte(`\closing{Bye\\}`)) {
 		t.Error("closing must not carry its own line break")

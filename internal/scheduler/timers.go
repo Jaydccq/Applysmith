@@ -183,7 +183,19 @@ func (s *Scheduler) AddRetention(name string, fn func(ctx context.Context) error
 	s.ret.rules = append(s.ret.rules, retentionRule{name, fn})
 }
 
+// retentionRuleLimit bounds one rule of the sweep, so a rule that waits on
+// something slow (the runs board withdraws Telegram messages at one a second)
+// ends alone instead of leaving the rules after it no time.
+var retentionRuleLimit = 5 * time.Minute
+
 func (r *retention) Name() string { return "retention-sweep" }
+
+// Limit gives the sweep every rule's budget.
+func (r *retention) Limit() time.Duration {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	return time.Duration(len(r.rules)+1) * retentionRuleLimit
+}
 func (r *retention) Describe() string {
 	return "Daily at 04:00 local time: applies every retention rule of the product"
 }
@@ -236,6 +248,9 @@ func (r *retention) Tick(ctx context.Context, now time.Time) error {
 }
 
 func (r *retention) runRule(ctx context.Context, rule retentionRule) (err error) {
+	ctx, cancel := context.WithTimeout(ctx, retentionRuleLimit)
+	defer cancel()
+	defer context.AfterFunc(r.s.runCtx, cancel)() // a stop does not wait out a rule's budget
 	defer func() {
 		if p := recover(); p != nil {
 			err = fmt.Errorf("panic: %v", p)

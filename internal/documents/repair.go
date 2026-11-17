@@ -217,6 +217,10 @@ const (
 	letterLineChars  = 89
 	letterLinePt     = 14.4
 	letterItemGapPt  = 6.6
+	// letterSignGapPt is the two empty lines the class sets over the
+	// signature. A letter's spill counts text alone, so a signature alone on
+	// the last page needs this much more to come back.
+	letterSignGapPt = 26.0
 	// tightSavingPt is what the spacing adjustment saves per bullet: the 2pt
 	// between two bullets, and for an entry's last bullet the 2pt of the
 	// entry's closing space.
@@ -503,7 +507,7 @@ func (j *job) repairResume(v *version, d defect, rr *RepairRound) (resume, lette
 // repairLetter cuts ranked bullets, then trailing sentences, to the excess.
 func (j *job) repairLetter(v *version, d defect, rr *RepairRound) bool {
 	cur := cloneLetter(*v.letter)
-	need := withMargin(d.excessPt, rr.Round, letterLinePt)
+	need := withMargin(d.excessPt, rr.Round, letterLinePt+letterSignGapPt)
 	removed, any := 0.0, false
 	for n := 0; n < maxCutsPerRound && (n == 0 || removed < need); n++ {
 		bullets, sents := letterCandidates(v.m, cur)

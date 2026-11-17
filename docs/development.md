@@ -372,6 +372,11 @@ manifest gate; neighboring files remain checked. Lockfiles (`go.sum`,
 `bun.lock`) are not compared: the package managers write them from `go.mod`
 and `package.json`, which are.
 
+Public data and fixed formats stay as written even when they match: state and
+number-word tables, PDF and property-list skeletons, published formulas and
+configuration option names are listed in `allow.yml` with a reason naming the
+data or format, not rewritten to dodge the check (owner, 2026-11-17).
+
 Lowercased alphanumeric/underscore tokens include comments. Findings report
 only file pairs and scores: at least 15 percent shared distinct word 5-grams
 when the candidate has at least 60, any exact 30-token run (with exact longest

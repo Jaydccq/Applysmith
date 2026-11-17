@@ -1,5 +1,9 @@
 import "./style.css";
 import mark from "../../web/src/assets/career-cat.webp";
+import inbox from "../../docs/user-guide/images/tutorial-04-inbox.webp";
+import report from "../../docs/user-guide/images/tutorial-05-report.webp";
+import form from "../../docs/user-guide/images/tutorial-06-sample-form-filled.webp";
+import runs from "../../docs/user-guide/images/tutorial-07-runs-board.webp";
 import { startScene } from "./scene.js";
 
 document.getElementById("brand-mark").src = mark;
@@ -20,5 +24,30 @@ copy.addEventListener("click", async () => {
   copy.textContent = "Copied";
   setTimeout(() => { copy.textContent = "Copy"; }, 1600);
 });
+
+// The screens: one is shown at a time, chosen by its tab or the arrow keys.
+const shots = { inbox, report, form, runs };
+for (const img of document.querySelectorAll("[data-shot]")) img.src = shots[img.dataset.shot];
+const tabs = [...document.querySelectorAll(".tour [role=tab]")];
+const show = (tab) => {
+  for (const t of tabs) {
+    const on = t === tab;
+    t.setAttribute("aria-selected", on);
+    t.tabIndex = on ? 0 : -1;
+    document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+  }
+};
+tabs.forEach((tab, i) => {
+  tab.addEventListener("click", () => show(tab));
+  tab.addEventListener("keydown", (e) => {
+    const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    const next = tabs[(i + step + tabs.length) % tabs.length];
+    show(next);
+    next.focus();
+  });
+});
+show(tabs[0]);
 
 startScene(document.getElementById("scene"));

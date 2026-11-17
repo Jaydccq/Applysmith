@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"applysmith/internal/lazyregexp"
-	"applysmith/internal/usstates"
 )
 
 // The location scopes.
@@ -49,11 +48,14 @@ type place struct {
 	codeSet map[string]bool
 }
 
+// The five state codes that are also country codes never count as a US state.
+var ambiguousStateCodes = []string{"DE", "IN", "ID", "AR", "IL"}
+
 var places = map[string]*place{
 	ScopeUS: {
-		phrases: append([]string{"united states", "united states of america", "america", "washington dc", "san francisco", "seattle", "boston", "chicago", "austin", "los angeles", "san jose", "san diego", "denver", "atlanta", "dallas", "houston", "miami", "portland", "pittsburgh", "philadelphia", "nyc", "bay area", "silicon valley", "palo alto", "mountain view", "menlo park"}, usstates.Names()...),
+		phrases: []string{"united states", "united states of america", "america", "alabama", "alaska", "arizona", "arkansas", "california", "colorado", "connecticut", "delaware", "florida", "hawaii", "idaho", "illinois", "indiana", "iowa", "kansas", "kentucky", "louisiana", "maine", "maryland", "massachusetts", "michigan", "minnesota", "mississippi", "missouri", "montana", "nebraska", "nevada", "new hampshire", "new jersey", "new mexico", "new york", "north carolina", "north dakota", "ohio", "oklahoma", "oregon", "pennsylvania", "rhode island", "south carolina", "south dakota", "tennessee", "texas", "utah", "vermont", "virginia", "washington dc", "washington", "west virginia", "wisconsin", "wyoming", "san francisco", "seattle", "boston", "chicago", "austin", "los angeles", "san jose", "san diego", "denver", "atlanta", "dallas", "houston", "miami", "portland", "pittsburgh", "philadelphia", "nyc", "bay area", "silicon valley", "palo alto", "mountain view", "menlo park"},
 		exact:   []string{"US", "USA"},
-		codes:   usstates.Codes(),
+		codes:   strings.Fields("AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC"),
 	},
 	ScopeCanada: {
 		phrases: []string{"canada", "ontario", "quebec", "british columbia", "alberta", "manitoba", "saskatchewan", "nova scotia", "new brunswick", "newfoundland", "toronto", "vancouver", "montreal", "ottawa", "calgary", "edmonton", "waterloo"},
@@ -110,7 +112,7 @@ func init() {
 			places[scope].codeSet[code] = true
 		}
 	}
-	for _, c := range usstates.Ambiguous {
+	for _, c := range ambiguousStateCodes {
 		delete(places[ScopeUS].codeSet, c)
 	}
 }

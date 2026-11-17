@@ -2,6 +2,7 @@ package documents
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -77,6 +78,57 @@ func dateRange(l language, e Entry) string {
 	return start + " - " + end
 }
 
+// sortKey orders an entry by when it ended, then by when it began: a current
+// entry sorts as the far future, and a date that is not numeric as the past.
+func sortKey(e Entry) [2]int {
+	ym := func(s string) int {
+		y, mo := "", ""
+		if m := yearMonthRE.FindStringSubmatch(s); m != nil {
+			y, mo = m[1], m[2]
+		} else if m := monthYearRE.FindStringSubmatch(s); m != nil {
+			y, mo = m[2], m[1]
+		}
+		yn, _ := strconv.Atoi(y)
+		mn, _ := strconv.Atoi(mo)
+		return yn*12 + mn
+	}
+	end := ym(e.End)
+	if end == 0 {
+		// No end on record (a degree in progress): its start places it.
+		end = ym(e.Start)
+	}
+	if isCurrent(e.End) && (e.End != "" || e.Kind == EntryExperience) {
+		end = 1 << 30
+	}
+	return [2]int{end, ym(e.Start)}
+}
+
+// datedEntries are the selected experience and education entries, newest
+// first within each kind: the order a reader and a screening program expect.
+// Entries of equal dates keep the order of the user's sources.
+func (m Manifest) datedEntries() []Entry {
+	var out []Entry
+	for _, key := range m.SelectedEntries {
+		if e, ok := m.entry(key); ok {
+			out = append(out, e)
+		}
+	}
+	sort.SliceStable(out, func(i, j int) bool {
+		a, b := sortKey(out[i]), sortKey(out[j])
+		return a[0] > b[0] || (a[0] == b[0] && a[1] > b[1])
+	})
+	return out
+}
+
+// gradeNote labels a numeric grade average ("GPA 3.8"); a grade in words
+// ("First Class Honours") says what it is.
+func gradeNote(l language, note string) string {
+	if note != "" && note[0] >= '0' && note[0] <= '9' {
+		return l.grade + " " + note
+	}
+	return note
+}
+
 func contactLinks(c Contact) []assets.Link {
 	var out []assets.Link
 	for _, l := range c.Links {
@@ -94,7 +146,7 @@ func buildResume(m Manifest, d ResumeDoc, paper assets.Paper) (assets.Resume, er
 		return assets.Resume{}, fmt.Errorf("%w: unsupported language %q", ErrInvalid, d.Language)
 	}
 	first, last := splitName(m.Contact.FullName)
-	r := assets.Resume{Paper: paper, Labels: l.labels, FirstName: first, LastName: last, Phone: m.Contact.Phone,
+	r := assets.Resume{Paper: paper, Labels: l.labels, Title: m.Contact.FullName + " - " + l.resumeTitle, FirstName: first, LastName: last, Phone: m.Contact.Phone,
 		Email: m.Contact.Email, Links: contactLinks(m.Contact), Profile: Normalize(d.Profile)}
 	r.Address = m.Contact.Location
 	if m.Contact.Relocation {
@@ -116,15 +168,11 @@ func buildResume(m Manifest, d ResumeDoc, paper assets.Paper) (assets.Resume, er
 		return out
 	}
 	exp, proj := bullets(d.Experience), bullets(d.Projects)
-	for _, key := range m.SelectedEntries {
-		e, ok := m.entry(key)
-		if !ok {
-			continue
-		}
-		a := assets.Entry{Dates: dateRange(l, e), Title: e.Title, Organization: e.Organization, Location: e.Location, Note: e.Note}
+	for _, e := range m.datedEntries() {
+		a := assets.Entry{Dates: dateRange(l, e), Title: e.Title, Organization: e.Organization, Location: e.Location, Note: gradeNote(l, e.Note)}
 		switch e.Kind {
 		case EntryExperience:
-			a.Bullets = exp[key]
+			a.Bullets = exp[e.Key]
 			r.Experience = append(r.Experience, a)
 		case EntryEducation:
 			r.Education = append(r.Education, a)
@@ -146,12 +194,18 @@ func buildCover(m Manifest, d LetterDoc, paper assets.Paper, now time.Time) (ass
 	if !ok {
 		return assets.Cover{}, fmt.Errorf("%w: unsupported language %q", ErrInvalid, d.Language)
 	}
-	c := assets.Cover{Paper: paper, Name: m.Contact.FullName, Date: l.date(d.Language, now), Salutation: d.Salutation, Closing: l.closing}
+	c := assets.Cover{Paper: paper, Name: m.Contact.FullName, Title: m.Contact.FullName + " - " + l.letterTitle,
+		Date: l.date(d.Language, now), Salutation: d.Salutation, Closing: l.closing, Links: contactLinks(m.Contact)}
 	c.Contact = append(c.Contact, assets.Link{Label: m.Contact.Email, URL: "mailto:" + m.Contact.Email})
 	if m.Contact.Phone != "" {
 		c.Contact = append(c.Contact, assets.Link{Label: m.Contact.Phone})
 	}
-	c.Contact = append(c.Contact, contactLinks(m.Contact)...)
+	if m.Company != "" {
+		c.Recipient = append(c.Recipient, m.Company)
+	}
+	if role := m.roleTitle(); role != "" {
+		c.Recipient = append(c.Recipient, fmt.Sprintf(l.subject, role))
+	}
 	c.Blocks = append(c.Blocks, assets.Block{Text: Normalize(d.Opening)})
 	if strings.TrimSpace(d.Body) != "" || len(d.Bullets) > 0 {
 		blk := assets.Block{Text: Normalize(d.Body)}
@@ -228,11 +282,11 @@ func resumeMarkdown(m Manifest, d ResumeDoc) string {
 		}
 	}
 	var exp, edu []string
-	for _, k := range m.SelectedEntries {
-		if e, ok := m.entry(k); ok && e.Kind == EntryExperience {
-			exp = append(exp, k)
-		} else if ok {
-			edu = append(edu, k)
+	for _, e := range m.datedEntries() {
+		if e.Kind == EntryExperience {
+			exp = append(exp, e.Key)
+		} else {
+			edu = append(edu, e.Key)
 		}
 	}
 	section(l.labels.Experience, exp, d.Experience)

@@ -430,6 +430,34 @@ Apply after a second of reads keeps a 3 s look. The other large packages
 122 to 26 s, agent 112 to 16 s) open a new database per test; part of each
 difference is the load, since the run before started at 48.
 
+## The overnight writer stalls (2026-11-17)
+
+The owner's database was 282 MB (`gmail_bodies` 104 MB, `inbox` 23 MB,
+`llm_embeddings` 18 MB, `apply_runs` 17 MB). Two built-in timers starved the
+single writer, and the fixes are in [scheduler.md](scheduler.md):
+
+- The 02:00 snapshot held the writer for its `VACUUM INTO`: about 15 s inside
+  the app (the same copy took 2.2 s with the `sqlite3` command line, which is
+  C SQLite and an idle file). Every write waiting longer than the 5 s busy
+  timeout failed; one of them was the end of a `gmail.sync` run, which then
+  blocked that schedule until a restart. The snapshot now reads beside the
+  writer; a live backup through the server measured 15 s with no busy error.
+- The 04:00 retention sweep gave all its rules one minute. The runs board rule
+  withdrew 160 Telegram messages of entries finished over 14 days earlier, at
+  one a second, so it used the minute and every later rule failed; the slot
+  record failed with the expired context too, so the sweep repeated every
+  minute for about ten minutes each night. Each rule now has its own budget.
+
+Not explained: `GET /api/runs/summary` answered 503 (no reader within its
+wait) at 00:40, 01:00 and 01:10, the `wal-checkpoint` timer missed its
+deadline at those times, and the `gmail-alerts` and `gmail-reminders` timers
+both ran out their minute at 01:12. The host did not sleep (`pmset -g log`),
+App Nap is held off (`app/appnap_darwin.go`), and the visible-signals query
+that both Gmail timers start with took 144 ms on a copy (4,983 signals). The
+server log of that hour holds no other request or error to explain it; the
+goroutine dump written at a stall (`.applysmith/logs/stall.txt`) is where to
+look when it recurs.
+
 ## Limits of these numbers
 
 The machine is shared with other builds and test runs, which is why every

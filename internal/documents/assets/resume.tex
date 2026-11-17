@@ -34,6 +34,14 @@
 
 \usepackage[utf8]{inputenc}
 \ifpdftex\usepackage[T1]{fontenc}\fi
+% Pair kerning tucks "W" under "A", and a PDF reader takes the overlap for a
+% word break: an applicant tracking system read "AWS" as "A WS". The fonts are
+% the class's own, loaded again without kerning.
+\ifpdftex\else
+\usepackage{fontspec}
+\setsansfont{Latin Modern Sans}[Kerning=Off]
+\setmainfont{Latin Modern Roman}[Kerning=Off]
+\fi
 % moderncv loads hyperref in an \AtEndPreamble hook, so the settings go in a
 % hook of our own. pdfpagemode=UseNone keeps the PDF from opening fullscreen.
 \AtEndPreamble{\hypersetup{
@@ -41,7 +49,7 @@
     linkcolor=blue,
     filecolor=magenta,
     urlcolor=blue,
-    pdftitle={Curriculum vitae},
+    pdftitle={<% tex .Title %>},
     pdfpagemode=UseNone,
 }}
 \usepackage[scale=0.80]{geometry}

@@ -58,3 +58,30 @@ entries:
   - rule: similarity
     file: internal/agent/pirpc/testdata/turn-tool-then-answer.jsonl
     reason: a transcript recorded from the pi agent; its event shape is pi's RPC protocol, not code written here
+  - rule: similarity
+    file: internal/discovery/scope.go
+    reason: its US state names and postal codes are public data, kept as a plain table
+  - rule: similarity
+    file: internal/evaluate/geo.go
+    reason: its US state names and postal codes are public data, kept as a plain table
+  - rule: similarity
+    file: internal/documents/quantfigures.go
+    reason: its spelled-number words are public data, kept as a plain table
+  - rule: similarity
+    file: internal/kb/dedup.go
+    reason: its spelled-number words are public data, kept as a plain table
+  - rule: similarity
+    file: computeruse/scripts/build-app.sh
+    reason: the Info.plist it writes is Apple's fixed property-list format
+  - rule: similarity
+    file: internal/documents/toolchain/run_test.go
+    reason: the one-page test PDF it writes is the fixed PDF object structure
+  - rule: similarity
+    file: internal/engine/testdata/resume-alex-example.pdf
+    reason: a minimal synthetic PDF; its tokens are the fixed PDF object structure
+  - rule: similarity
+    file: web/src/styles.test.ts
+    reason: its contrast helper is the published WCAG 2 relative-luminance formula
+  - rule: similarity
+    file: extension/tsconfig.json
+    reason: its option names are the TypeScript compiler's own vocabulary

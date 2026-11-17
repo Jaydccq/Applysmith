@@ -66,9 +66,17 @@ type harness struct {
 
 func newHarness(t *testing.T) *harness {
 	t.Helper()
+	return newHarnessWith(t, store.Options{})
+}
+
+// newHarnessWith is newHarness over a store opened with opts (its clock is
+// always the harness clock).
+func newHarnessWith(t *testing.T, opts store.Options) *harness {
+	t.Helper()
 	h := &harness{t: t, clock: &fakeClock{wall: baseTime}, reg: NewRegistry(), online: true, calls: map[string][]time.Time{},
 		path: filepath.Join(t.TempDir(), "applysmith.db")}
-	st, err := store.Open(context.Background(), h.path, store.Options{Now: h.clock.Now})
+	opts.Now = h.clock.Now
+	st, err := store.Open(context.Background(), h.path, opts)
 	if err != nil {
 		t.Fatal(err)
 	}

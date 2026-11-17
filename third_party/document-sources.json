@@ -14,7 +14,7 @@
         "cover.cls keeps that class line for line (name and cover commands added, margins and imports changed); ai-job-search cover_letters/OpenFonts/fonts/lato/Lato-Lig.ttf and raleway/Raleway-Medium.otf have the same git blob ids as the Deedy-Resume OpenFonts files"
       ],
       "original_sha256": "db606a00acbec168ce93fdd70b6cc380ccd0a4b8c62fea71b21e503f9e72d39e",
-      "shipped_sha256": "27d368bede24fc0c1e2b185da5b6fd5b18f714aabb858765cdf8fcf1addd09d8",
+      "shipped_sha256": "ff42dab01997d03cb526bb8f3557153ee2f42dee264236285635719780629ceb",
       "licence": {
         "spdx": "Apache-2.0 AND MIT",
         "texts": [
@@ -27,7 +27,8 @@
       "modifications": [
         "Attribution and change notice header added (Apache-2.0 section 4).",
         "Font directory changed from OpenFonts/fonts/ to fonts/ (the private build directory layout).",
-        "Lato file names changed from Lato 1 names (Lig, Reg, Hai, Bol, LigIta, RegIta) to the Lato 2 file names shipped here (Light, Regular, Hairline, Bold, LightItalic, Italic)."
+        "Lato file names changed from Lato 1 names (Lig, Reg, Hai, Bol, LigIta, RegIta) to the Lato 2 file names shipped here (Light, Regular, Hairline, Bold, LightItalic, Italic).",
+        "The body font (Raleway Medium) is loaded with Kerning=Off and Numbers=Lining wherever the class selects it: a text extractor read a kerned pair as a word break, and old-style figures read badly in a measurement."
       ],
       "review": "pending"
     },
@@ -40,7 +41,7 @@
         "revision": "a011214d60f943770e33f7d5f070e1a5f91e3822"
       },
       "original_sha256": "b6408a865d110a63ebaf032a7a8bd403b5d1183f6835e0e886c5f2a042960628",
-      "shipped_sha256": "40a298c7489e13d84d770d4d058428b9fdf2c91719f13f42bff03183bae9ed04",
+      "shipped_sha256": "1823f277be3d4c6da17a81a78f42fe9882c6904864ec4fcfe8e7af8aa21963c5",
       "licence": {
         "spdx": "MIT",
         "texts": [
@@ -55,7 +56,9 @@
         "Body paragraphs are a range over blocks, each optionally followed by a list set outside \\lettercontent in the body font, as the example prescribes.",
         "The font path of the list wrapper follows the class (fonts/raleway/).",
         "A blank line follows the date, and the list's top space is taken back before it begins and 3 pt follow it, so the spacing between date, salutation, paragraphs and list is even.",
-        "A contact separator is tied to the item before it, so a wrapped contact line never starts with one."
+        "A contact separator is tied to the item before it, so a wrapped contact line never starts with one.",
+        "The profile links are set on a line of their own under the email and phone, and the list wrapper loads the body font as the class does (no pair kerning, lining figures).",
+        "Recipient lines (the company, then the role as the subject) are set between the date and the salutation, and the PDF title and author are set from the data."
       ],
       "review": "pending"
     },
@@ -269,7 +272,7 @@
         "revision": "a011214d60f943770e33f7d5f070e1a5f91e3822"
       },
       "original_sha256": "54645495edc618ef829ed99f752b02cd296f156a590b750440722d8fb031fd80",
-      "shipped_sha256": "211b263f9b71cb8efe65c21a92ac10905e7ecaf57813860a4f34bda0d8dfecf7",
+      "shipped_sha256": "0da2b0961b58b875e85c6423b808d1df628abb9c76baf4c499b690cfa2f88f3b",
       "licence": {
         "spdx": "MIT",
         "texts": [
@@ -280,7 +283,8 @@
       "copyright": "Copyright (c) 2026 Mads Lorentzen",
       "modifications": [
         "Placeholders and the setup comments are replaced by Go text/template actions (delimiters <% and %>); every action is an encoder call (tex, rich for text that may hold one bold span, url, paper).",
-        "Paper size is an enumerated option; the PDF title is a fixed string.",
+        "The class's Latin Modern fonts are loaded again through fontspec with Kerning=Off, so a PDF reader does not take a kerned pair for a word break (AWS read as A WS).",
+        "Paper size is an enumerated option; the PDF title is the applicant's name and the document's name, from the data.",
         "Sections are data-driven and omitted when empty; the publications, honors and references sections of the example are removed.",
         "Section headings come from a per-language label set, a Selected Projects section is added and each experience or project entry is set in a minipage so an entry is never split across pages.",
         "The list that wrapped each section is removed: entries are set directly under their heading and competencies, the summary and languages as \\cvitem lines, so no stray outer marker appears beside an entry. A Summary section heads the profile paragraph.",

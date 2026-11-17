@@ -60,7 +60,18 @@ than an internal server error. A later distinct occurrence can run normally.
 
 - Retention sweep: runs at the first tick of a server and then once per 04:00
   slot; a machine asleep at 04:00 runs it on wake (parity Q-12). Rules register
-  with `AddRetention`.
+  with `AddRetention`. Each rule has its own 5-minute budget
+  (`retentionRuleLimit`) and the sweep the sum: one rule sharing a single
+  minute with all the others (the runs board withdrawing Telegram messages at
+  one a second) left the rest none, and the slot record, written with the
+  expired context, made the whole sweep repeat every minute. A rule that runs
+  out its budget is logged and runs again at the next slot.
+- Ending a run: the writes that record a run's end and release its leases are
+  retried while the writer is busy (`Scheduler.settle`: after 1 s, 5 s, then
+  every 30 s) until they land or the scheduler stops, with the job still
+  holding its slot. An end left unrecorded kept the run `running`, and the
+  schedule skipped every later occurrence as busy until the next start (the
+  2026-11-17 Gmail sync, stuck from 02:00 to 10:39 behind the daily snapshot).
 - Packs: `daily`, `twice-daily`, `hiring-signals-daily`, `memory-nightly`,
   `agent-improve-nightly` and `maintenance` use `fire-once`; `browser-boards`
   uses `skip` (parity Q-13). An entry whose kind is not registered is reported as
@@ -92,7 +103,8 @@ than an internal server error. A later distinct occurrence can run normally.
 - `user-data-snapshot` is a built-in timer (`internal/scheduler/backup.go`): the
   first tick at or after 02:00 local time that follows the last completed slot
   (so a machine asleep at 02:00 snapshots on waking) writes the same verified
-  backup as `applysmith backup create` through `Store.Backup`, into
+  backup as `applysmith backup create` through `Store.Backup` (on a
+  connection of its own, beside the writer, never holding it), into
   `<workspace>-backups/snapshot-YYYYMMDD-HHMMSS` beside the workspace
   (`launch.SnapshotDir`; the API server runs the timer only when its config
   names a directory, so tests and embedded servers write nothing). It has a

@@ -57,7 +57,7 @@ Runs board and notifications are views over the same records.
 | Discovery | Sources, the board registry, hiring signals, leads, the inbox: [discovery.md](discovery.md), [signals.md](signals.md), [leads.md](leads.md) |
 | Evaluation | Gates, screening, scoring computed in Go, reports: [evaluation.md](evaluation.md) |
 | Messages | Outreach and follow-up drafts that are never sent: [evaluation.md](evaluation.md#message-drafts) |
-| Documents | Tailored résumé and cover letter with evidence grounding, typeset by external tools: [document-toolchain.md](document-toolchain.md), [document-grounding.md](document-grounding.md) |
+| Documents | Tailored résumé and cover letter with evidence grounding, typeset by external tools: [document-toolchain.md](document-toolchain.md), [document-grounding.md](document-grounding.md), [document-writing.md](document-writing.md) |
 | Apply | One staged runner shared by the CLI, the dashboard and the agent; safety gates decide every Submit: [apply.md](apply.md), [gates.md](gates.md) |
 | Tracker | Statuses, events and follow-ups: [tracker.md](tracker.md) |
 | Gmail | Outcomes, the action inbox and briefs: [gmail.md](gmail.md) |

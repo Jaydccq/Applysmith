@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 
 	unorm "golang.org/x/text/unicode/norm"
 
@@ -266,6 +267,23 @@ func wordsCheck(e Expectation, text string) toolchain.Check {
 			missing = append(missing, w)
 		}
 	}
+	// A word the layer holds only with a space inside it ("T eam") is whole
+	// to a reader and broken to a program that searches the text: the letter
+	// font's pair kerning once produced it.
+	var split []string
+	low := folded(text)
+	for w := range src {
+		if r := []rune(w); !have[w] && len(r) >= 3 && splitIn(low, r) {
+			split = append(split, w)
+		}
+	}
+	if len(split) > 0 {
+		sort.Strings(split)
+		if len(split) > 5 {
+			split = split[:5]
+		}
+		return result(CheckWords, []string{"words are split by a space in the text layer: " + strings.Join(split, ", ")}, "")
+	}
 	kept := float64(len(src)-len(missing)) / float64(len(src))
 	if kept < wordCoverageAt {
 		sort.Strings(missing)
@@ -277,6 +295,31 @@ func wordsCheck(e Expectation, text string) toolchain.Check {
 	}
 	return result(CheckWords, nil, fmt.Sprintf("%.0f%% of %d distinct words found", kept*100, len(src)))
 }
+
+// splitIn reports whether the folded text holds the word with one space
+// inside it, on one line, as a token of its own.
+func splitIn(low string, word []rune) bool {
+	for i := 1; i < len(word); i++ {
+		needle := string(word[:i]) + " " + string(word[i:])
+		for from := 0; ; {
+			at := strings.Index(low[from:], needle)
+			if at < 0 {
+				break
+			}
+			at += from
+			end := at + len(needle)
+			before, _ := utf8.DecodeLastRuneInString(low[:at])
+			after, _ := utf8.DecodeRuneInString(low[end:])
+			if !isWordRune(before) && !isWordRune(after) {
+				return true
+			}
+			from = at + 1
+		}
+	}
+	return false
+}
+
+func isWordRune(r rune) bool { return unicode.IsLetter(r) || unicode.IsDigit(r) }
 
 // orderCheck requires the anchors to appear in reading order. Each is searched
 // from the end of the previous one, so only a genuine reordering fails.

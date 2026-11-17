@@ -4,13 +4,11 @@ package evaluate
 
 import (
 	"regexp"
-	"slices"
 	"strings"
 	"sync"
 
 	"applysmith/internal/identity"
 	"applysmith/internal/lazyregexp"
-	"applysmith/internal/usstates"
 )
 
 // country is one entry of the built-in dictionary. Names are folded.
@@ -71,9 +69,13 @@ var countries = []country{
 	{"CL", "CLP", []string{"chile"}, []string{"santiago"}},
 }
 
-// usStateCodes are the state codes that signal the US: usstates.Ambiguous are
-// country codes too.
-var usStateCodes = slices.DeleteFunc(usstates.Codes(), func(c string) bool { return slices.Contains(usstates.Ambiguous, c) })
+// usStates are folded names; their codes are in usStateCodes.
+var usStates = []string{"alabama", "alaska", "arizona", "arkansas", "california", "colorado", "connecticut", "delaware", "florida", "hawaii", "idaho", "illinois", "indiana", "iowa", "kansas", "kentucky", "louisiana", "maine", "maryland", "massachusetts", "michigan", "minnesota", "mississippi", "missouri", "montana", "nebraska", "nevada", "new hampshire", "new jersey", "new mexico", "new york", "north carolina", "north dakota", "ohio", "oklahoma", "oregon", "pennsylvania", "rhode island", "south carolina", "south dakota", "tennessee", "texas", "utah", "vermont", "virginia", "west virginia", "washington", "wisconsin", "wyoming", "district of columbia"}
+
+// usStateCodes omits the five codes that are also country codes (Delaware and
+// Germany, Indiana and India, Idaho and Indonesia, Arkansas and Argentina,
+// Illinois and Israel): they are not a US state signal.
+var usStateCodes = strings.Fields("AL AK AZ CA CO CT FL GA HI IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC")
 
 var caProvinces = []string{"ontario", "quebec", "british columbia", "alberta", "manitoba", "saskatchewan", "nova scotia", "new brunswick", "newfoundland", "prince edward island"}
 var caProvinceCodes = strings.Fields("ON QC BC AB MB SK NS NB NL PE YT NT NU")
@@ -109,7 +111,7 @@ func Geography(location string, allowed []string, allowRemote bool) geoVerdict {
 	// States and provinces first, so "New Mexico" is not read as Mexico.
 	masked := folded
 	usSignal, caSignal := false, false
-	for _, s := range usstates.Names() {
+	for _, s := range usStates {
 		if w := wordRE(s); w.MatchString(masked) {
 			usSignal = true
 			masked = w.ReplaceAllString(masked, " ")
