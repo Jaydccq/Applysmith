@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light dark">
+<title>Applysmith</title>
+<style>
+  :root { --bg: #fff; --fg: #1b1f24; --muted: #5b6570; --line: #d5dae0; --accent: #1f5fbf; --ok: #176b3a; --bad: #a3261e; --warn-bg: #fff4d6; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #1c2128; --fg: #e6e9ed; --muted: #9aa5b1; --line: #3a424c; --accent: #6aa5ff; --ok: #5fcf8a; --bad: #ff8a80; --warn-bg: #3b3220; } }
+  body { margin: 0; width: 340px; background: var(--bg); color: var(--fg); font: 13px/1.45 system-ui, sans-serif; }
+  #app { padding: 12px 14px 14px; }
+  header { display: flex; justify-content: space-between; align-items: center; }
+  h1 { font-size: 15px; margin: 0; } h2 { font-size: 13px; margin: 12px 0 4px; }
+  .pill { font-size: 11px; padding: 2px 8px; border-radius: 10px; border: 1px solid var(--line); }
+  .pill.connected { color: var(--ok); } .pill.offline, .pill.unpaired { color: var(--bad); }
+  .row { display: flex; justify-content: space-between; gap: 8px; padding: 2px 0; } .k { color: var(--muted); }
+  .notice { color: var(--muted); margin: 6px 0; min-height: 0; } .warn { background: var(--warn-bg); padding: 6px 8px; border-radius: 6px; }
+  button { display: block; width: 100%; margin: 6px 0; padding: 6px 8px; font: inherit; color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 6px; cursor: pointer; }
+  button:hover:not(:disabled) { border-color: var(--accent); } button:disabled { opacity: .5; cursor: default; }
+  input:not([type=checkbox]) { box-sizing: border-box; width: 100%; padding: 6px 8px; font: inherit; color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 6px; }
+  .switch { display: flex; gap: 8px; align-items: center; padding: 3px 0; }
+  details { margin-top: 8px; } summary { cursor: pointer; color: var(--muted); } a { color: var(--accent); display: inline-block; margin: 6px 0; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+</style>
+</head>
+<body><div id="app">Loading</div><script src="popup.js"></script></body>
+</html>

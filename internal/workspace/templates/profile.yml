@@ -1,0 +1,118 @@
+# Applysmith profile. Every value starts blank. A blank is "not answered yet":
+# the application never fills a blank on your behalf and leaves the matching
+# form field for you.
+# Never put passwords, tokens or API keys in this file. Secrets live in the OS
+# keychain (Settings in the dashboard, or `applysmith secrets set`).
+version: 1
+
+candidate:
+  full_name:          # e.g. Alex Example
+  preferred_name:
+  email:              # e.g. ada@example.com
+  phone:
+  date_of_birth:      # optional, YYYY-MM-DD; used only to answer age questions
+  address:
+    line1:            # may hold @ask-me to leave the field for yourself
+    line2:
+    city:
+    county:           # optional
+    region:
+    postal_code:
+    country:          # ISO 3166-1 alpha-2, e.g. GB
+
+links:                # absolute https URLs
+  linkedin:
+  github:
+  portfolio:
+  other: []
+
+# Leave the sponsorship answers blank until you decide: blank means "not
+# answered", it is never read as "no".
+work_authorization:
+  authorized_countries: []
+  citizenships: []
+  requires_sponsorship_now:
+  requires_sponsorship_future:
+  visa_status:
+  security_clearance:
+
+targets:
+  # Example: - title: Backend Engineer
+  #            seniority: senior
+  #            priority: primary
+  roles: []
+  locations: []
+  compensation:
+    currency:         # ISO 4217, e.g. GBP
+    period:           # year or hour
+    minimum:
+    target:
+
+preferences:
+  relocation:
+    default:          # open or closed
+    places: []
+    excluded: []
+  work_modes: []      # any of remote, hybrid, onsite
+  max_days_in_office:
+  max_travel_percent:
+
+# Example: - id: backend
+#            label: Backend
+#            file: resumes/backend.pdf
+#            default: true
+resumes: []
+
+history:
+  # Example: - employer: Example Corp
+  #            title: Engineer
+  #            start: 2020-01
+  #            end: present
+  employment: []
+  education: []
+
+# Example: - name: Go
+#            years: 4
+#            level: advanced
+skills: []
+
+# Your own relationships with companies, for questions such as "Have you
+# worked for Acme before?" or "Do you have a relative at Acme?". Families:
+# employment, relative, friend, prior-application, prior-interview. Jobs in
+# history.employment count as employment already. A question is answered No
+# from absence only after you list a family under `complete` with the date you
+# confirmed its list is whole; adding a relationship with a later `recorded`
+# date asks you to confirm again.
+# Example: relationships:
+#            - family: relative
+#              company: Example Corp
+#              person_name: Sam Example
+#              relation: Sibling
+#              current: true
+#              recorded: YYYY-MM-DD
+#          complete:
+#            employment: YYYY-MM-DD
+#            relative: YYYY-MM-DD
+company_relationships:
+  relationships: []
+  complete: {}
+
+# Employers that batch applying leaves to you. Absent means Apple, Microsoft,
+# Alphabet, Amazon, Meta, NVIDIA and Tesla; a present list (even empty) is used
+# exactly as written.
+# batch_skip_companies: []
+
+eligibility_gate:
+  reject_seniority: []
+  allowed_countries: []
+  allowed_currencies: []
+
+scan:
+  defaults: {}
+
+notifications:
+  quiet_hours:
+    enabled:
+    start:            # HH:MM
+    end:              # HH:MM
+    timezone:         # IANA name, e.g. Europe/London

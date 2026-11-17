@@ -1,0 +1,211 @@
+# Shipped sender taxonomy: generic, public sender domains only. A user file
+# named gmail-senders.yml in the workspace is merged over this one: lists are
+# concatenated without duplicates and maps are overlaid, the override winning.
+# Domains match themselves and their subdomains.
+
+# Applicant-tracking systems whose mail is trusted as hiring mail.
+trusted_ats:
+  - greenhouse.io
+  - greenhouse-mail.io
+  - lever.co
+  - hire.lever.co
+  - ashbyhq.com
+  - smartrecruiters.com
+  - icims.com
+  - myworkday.com
+  - workday.com
+  - jobvite.com
+  - successfactors.com
+  - sapsf.com
+  - workablemail.com
+  - workable.com
+  - bamboohr.com
+  - recruitee.com
+  - teamtailor.com
+  - taleo.net
+  - oraclecloud.com
+  - breezy.hr
+  - pinpointhq.com
+  - dayforcehcm.com
+  - paylocity.com
+  - hirebridge.com
+  - brassring.com
+  - avature.net
+  - eightfold.ai
+
+# Systems that put the employer's slug in the sender's local part.
+multi_tenant_ats:
+  - greenhouse-mail.io
+  - hire.lever.co
+  - ashbyhq.com
+  - smartrecruiters.com
+  - icims.com
+  - jobvite.com
+  - workablemail.com
+  - recruitee.com
+  - teamtailor.com
+  - breezy.hr
+
+# Vendors that mail for many employers; a vendor's own domain is never the
+# employer. Assessment platforms are listed here too.
+vendor_ats:
+  - greenhouse.io
+  - greenhouse-mail.io
+  - lever.co
+  - hire.lever.co
+  - ashbyhq.com
+  - smartrecruiters.com
+  - icims.com
+  - myworkday.com
+  - workday.com
+  - jobvite.com
+  - successfactors.com
+  - sapsf.com
+  - workablemail.com
+  - workable.com
+  - bamboohr.com
+  - recruitee.com
+  - teamtailor.com
+  - taleo.net
+  - oraclecloud.com
+  - dayforcehcm.com
+  - paylocity.com
+  - hirebridge.com
+  - brassring.com
+  - avature.net
+  - hackerrank.com
+  - hackerrankforwork.com
+  - codesignal.com
+  - codility.com
+  - coderbyte.com
+  - litmus.com
+  - hirevue.com
+  - dover.com
+
+# Scheduling tools; the employer is never in their From header.
+scheduling_tools:
+  - calendly.com
+  - cal.com
+  - zcal.co
+  - savvycal.com
+  - chilipiper.com
+  - youcanbook.me
+  - goodtime.io
+  - calendar.google.com
+  - schedule.lever.co
+  - zoom.us
+
+# Webmail: an address here earns no trust from a signature and supplies no
+# employer.
+webmail:
+  - gmail.com
+  - googlemail.com
+  - outlook.com
+  - hotmail.com
+  - live.com
+  - msn.com
+  - yahoo.com
+  - icloud.com
+  - me.com
+  - aol.com
+  - proton.me
+  - protonmail.com
+  - qq.com
+  - 163.com
+
+# A domain mapped to the only event types it may produce.
+restricted_senders:
+  linkedin.com: [applied_confirmation, action_required]
+  indeed.com: [applied_confirmation, action_required]
+  indeedapply.com: [applied_confirmation, action_required]
+  glassdoor.com: [applied_confirmation]
+  ziprecruiter.com: [applied_confirmation, action_required]
+  builtin.com: [applied_confirmation]
+  jobgether.com: [applied_confirmation]
+  wellfound.com: [applied_confirmation, action_required]
+  dice.com: [applied_confirmation, action_required]
+  monster.com: [applied_confirmation]
+  simplyhired.com: [applied_confirmation]
+  handshake.com: [applied_confirmation, action_required]
+
+# Tenant slug (lowercase, no punctuation) to the employer's display name.
+tenant_overrides: {}
+
+generic_display_names:
+  - recruiting
+  - recruiter
+  - talent
+  - careers
+  - jobs
+  - hr
+  - hiring
+  - notifications
+  - no reply
+  - noreply
+  - do not reply
+  - donotreply
+  - support
+  - team
+  - info
+  - hello
+  - alerts
+
+opaque_display_names:
+  - system
+  - mailer
+  - mailer-daemon
+  - postmaster
+  - admin
+  - administrator
+  - service
+  - automated message
+
+generic_local_parts:
+  - no-reply
+  - noreply
+  - donotreply
+  - do-not-reply
+  - jobs
+  - careers
+  - talent
+  - recruiting
+  - recruitment
+  - hr
+  - hiring
+  - notifications
+  - notification
+  - mailer
+  - system
+  - alerts
+  - info
+  - hello
+  - support
+  - team
+  - apply
+  - applications
+  - candidates
+
+tenant_slug_suffixes:
+  - careers
+  - jobs
+  - recruiting
+  - recruitment
+  - talent
+  - hr
+  - hiring
+  - workday
+
+job_board_brands:
+  - jobgether
+  - jobs2web
+  - nexxt
+  - adzuna
+  - dice
+  - builtin
+  - naukri
+  - efinancialcareers
+  - remotehunter
+  - ziprecruiter
+  - glassdoor
+  - simplyhired
+  - monster

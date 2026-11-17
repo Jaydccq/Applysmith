@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Senior Platform Engineer - Harborlight Analytics (sample application)</title>
+<style>
+body { font: 16px/1.5 system-ui, sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; color: #1f2328; }
+.note { background: #fff8c5; border: 1px solid #d4a72c; padding: .75rem 1rem; border-radius: 6px; }
+label { display: block; font-weight: 600; margin-top: 1rem; }
+input[type=text], input[type=email], input[type=tel], select, textarea { width: 100%; padding: .4rem; font: inherit; box-sizing: border-box; }
+fieldset { margin-top: 1rem; border: 1px solid #d0d7de; border-radius: 6px; }
+fieldset label { display: inline; font-weight: normal; margin-right: 1rem; }
+button { margin-top: 1.5rem; padding: .5rem 1.25rem; font: inherit; }
+</style>
+</head>
+<body>
+<p class="note" role="note">This is the Applysmith demo's sample application form. It is served by Applysmith on this computer and sends nothing anywhere: pressing Submit only shows a message.</p>
+<h1>Senior Platform Engineer</h1>
+<p>Harborlight Analytics (a fictional company) - Remote, United States</p>
+<form id="application" novalidate>
+  <label for="first_name">First name *</label>
+  <input id="first_name" name="first_name" type="text" autocomplete="given-name" required>
+  <label for="last_name">Last name *</label>
+  <input id="last_name" name="last_name" type="text" autocomplete="family-name" required>
+  <label for="email">Email *</label>
+  <input id="email" name="email" type="email" autocomplete="email" required>
+  <label for="phone">Phone</label>
+  <input id="phone" name="phone" type="tel" autocomplete="tel">
+  <label for="city">City *</label>
+  <input id="city" name="city" type="text" autocomplete="address-level2" required>
+  <label for="resume">Resume/CV *</label>
+  <input id="resume" name="resume" type="file" accept=".pdf" required>
+  <fieldset>
+    <legend>Are you legally authorized to work in the United States? *</legend>
+    <label><input type="radio" name="authorized" value="Yes" required> Yes</label>
+    <label><input type="radio" name="authorized" value="No"> No</label>
+  </fieldset>
+  <fieldset>
+    <legend>Will you now or in the future require visa sponsorship to work for us? *</legend>
+    <label><input type="radio" name="sponsorship" value="Yes" required> Yes</label>
+    <label><input type="radio" name="sponsorship" value="No"> No</label>
+  </fieldset>
+  <label for="work_mode">Which way of working do you prefer?</label>
+  <select id="work_mode" name="work_mode">
+    <option value="">Select</option>
+    <option>Remote</option>
+    <option>Hybrid</option>
+    <option>On-site</option>
+  </select>
+  <button type="submit">Submit application</button>
+</form>
+<p id="result" role="status"></p>
+<script>
+document.getElementById('application').addEventListener('submit', function (e) {
+  e.preventDefault();
+  document.getElementById('result').textContent = 'This sample form sends nothing. In the demo workspace Applysmith never presses Submit on a real application.';
+});
+</script>
+</body>
+</html>

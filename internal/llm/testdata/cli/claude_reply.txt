@@ -1,0 +1,2 @@
+The role fits your background in distributed systems.
+Two gaps: no on-call history, and no Kubernetes.

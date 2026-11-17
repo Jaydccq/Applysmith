@@ -1,0 +1,38 @@
+[
+  {
+    "company": "Harborlight Analytics",
+    "title": "Senior Platform Engineer",
+    "location": "Remote, United States",
+    "remote": true,
+    "url": "https://careers.harborlight.example/jobs/1001-senior-platform-engineer",
+    "jobId": "1001",
+    "compensation": "$135,000 - $160,000",
+    "employmentType": "Full-time",
+    "department": "Infrastructure",
+    "description": "Harborlight Analytics is a fictional company used by the Applysmith demo.\n\nWe build forecasting tools for regional shipping ports. Our platform team of six runs the deployment pipeline, the Kubernetes clusters and the observability stack for twelve product teams.\n\nWhat you will do\n- Own the self-service deployment pipeline and its golden paths.\n- Run our Kubernetes clusters on a managed cloud service with Terraform.\n- Lead incident reviews and turn their findings into platform changes.\n\nWhat we look for\n- 5+ years of backend or infrastructure engineering.\n- Production experience with Go or another compiled language.\n- Kubernetes and Terraform in production.\n- Clear writing; we work asynchronously across time zones.\n\nThe salary range is $135,000 to $160,000 a year. This role is remote within the United States. We do not sponsor visas for this role."
+  },
+  {
+    "company": "Quillfern Health",
+    "title": "Backend Engineer, Scheduling",
+    "location": "Durham, NC (hybrid)",
+    "remote": false,
+    "url": "https://jobs.quillfern.example/postings/backend-engineer-scheduling-2207",
+    "jobId": "2207",
+    "compensation": "$125,000 - $145,000",
+    "employmentType": "Full-time",
+    "department": "Engineering",
+    "description": "Quillfern Health is a fictional company used by the Applysmith demo.\n\nWe help community clinics schedule appointments. The scheduling team owns the booking API, the reminder service and the calendar sync.\n\nResponsibilities\n- Design and build services in Go on PostgreSQL.\n- Improve the reliability of the reminder service, which sends 400,000 reminders a week.\n- Work with clinic staff to understand how they schedule.\n\nRequirements\n- 4+ years building backend services.\n- Strong SQL and data modelling.\n- Experience with message queues.\n\nHybrid: two days a week in our Durham office. Salary $125,000 to $145,000."
+  },
+  {
+    "company": "Tallowbrook Freight",
+    "title": "Staff Site Reliability Engineer",
+    "location": "Chicago, IL (on-site)",
+    "remote": false,
+    "url": "https://tallowbrook.example/careers/staff-sre-3310",
+    "jobId": "3310",
+    "compensation": "$180,000 - $210,000",
+    "employmentType": "Full-time",
+    "department": "Reliability",
+    "description": "Tallowbrook Freight is a fictional company used by the Applysmith demo.\n\nWe route freight trains. Our reliability team keeps the dispatch systems running around the clock.\n\nYou will\n- Set the reliability strategy for dispatch and tracking.\n- Manage a team of four site reliability engineers.\n- Be on call for a 24/7 control room.\n\nYou have\n- 10+ years in operations or site reliability engineering.\n- 3+ years managing engineers.\n- Experience with safety-critical systems.\n\nThis role is on-site in Chicago, five days a week."
+  }
+]

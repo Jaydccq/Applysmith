@@ -1,0 +1,5 @@
+# Locked document-verification requirements. Install only into the private venv
+# with: pip install --require-hashes --only-binary=:all: --no-deps -r requirements.txt
+# pypdf 6.19.0 has no runtime dependency on Python 3.11 or newer.
+pypdf==6.19.0 \
+    --hash=sha256:7e5d6e730e7dae87d560a2cee218b852f6498c8be61966f3cd02ead971e48d14

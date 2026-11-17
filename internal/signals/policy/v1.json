@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "typeWeight": {"funding": 1.0, "leadership": 0.6, "expansion": 0.9, "product": 0.4, "other": 0.2},
+  "strengthBand": {
+    "explicit_headcount": [0.67, 1.0],
+    "explicit_unquantified": [0.34, 0.66],
+    "vague": [0.0, 0.33]
+  },
+  "sourceFactor": {"edgar": 1.0, "alerts": 0.7, "hn-hiring": 0.8, "hn": 0.5, "web": 0.5, "x": 0.5, "other": 0.4},
+  "halfLifeDays": {"funding": 90, "leadership": 60, "expansion": 60, "product": 45, "other": 30},
+  "weakCap": 0.15,
+  "tiers": {"hot": 0.25, "warm": 0.08, "watch": 0.03}
+}

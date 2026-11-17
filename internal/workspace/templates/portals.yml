@@ -1,0 +1,30 @@
+# Where Applysmith looks for postings.
+version: 1
+
+filters:
+  title:
+    positive: []        # a title must contain one of these (empty allows any)
+    negative:           # a title containing any of these is rejected
+      - intern
+      - internship
+    # Example: - term: senior
+    #            weight: 2    (-10 to 10; ranks, never rejects)
+    seniority_boost: []
+  locations:
+    include: []
+    exclude: []
+  skip_companies: []
+
+# Example: - name: Example Corp
+#            ats: greenhouse
+#            slug: example-corp
+companies: []
+
+sources: {}
+
+concurrency:
+  list: 4
+  detail: 6
+
+registry:
+  enabled: true

@@ -1,0 +1,26 @@
+{
+  "reasons": [
+    "no-entry",
+    "input-mismatch",
+    "narrative-deferred",
+    "placeholder-empty",
+    "ambiguous",
+    "low-confidence",
+    "destructive-option",
+    "section-policy",
+    "context-policy",
+    "duplicate-link",
+    "self-id-policy",
+    "ask-me",
+    "ai-instruction",
+    "unsupported",
+    "response-mismatch",
+    "model-abstain",
+    "budget-exhausted",
+    "no-route",
+    "sensitive-category",
+    "no-grounding",
+    "upstream-error",
+    "too-many-options"
+  ]
+}

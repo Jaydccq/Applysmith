@@ -1,0 +1,105 @@
+%% Resume template for LuaLaTeX with moderncv (banking style, blue).
+%%
+%% Adapted from cv/main_example.tex of ai-job-search (MIT, commit
+%% a011214d60f943770e33f7d5f070e1a5f91e3822). Every template action is
+%% expanded by Go text/template; the only functions available to an action are
+%% the encoders of internal/documents/tex, so content is always literal.
+%%
+%% .Tight, the only layout adjustment, narrows the gaps between entries; the font
+%% size and geometry scale below are the readability bounds and stay put.
+
+\documentclass[11pt,<% paper .Paper %>,sans]{moderncv}
+\moderncvstyle{banking}
+% The style's contact icons extract as words ("MOBILE-ALT", "Envelope") from
+% the PDF text an applicant tracking system reads, so the contact line is text.
+\renewcommand*{\mobilephonesymbol}{}
+\renewcommand*{\fixedphonesymbol}{}
+\renewcommand*{\emailsymbol}{}
+\renewcommand*{\homepagesymbol}{}
+\moderncvcolor{blue}
+
+% The banking style copies the pre-scheme accent colour, so the name and
+% section headings stay black unless they are set again after \moderncvcolor.
+\renewcommand*{\namefont}{\fontsize{34}{36}\bfseries\upshape}
+% The style ties the two names with a space of the body font, too narrow beside
+% the name's own size for a PDF reader to see a word break: an applicant
+% tracking system read "JordanAvery" as one name. The space is the name font's,
+% and the body font's tie is taken back.
+\renewcommand*{\firstnamestyle}[1]{{\namefont\textcolor{firstnamecolor}{#1}\nobreakspace}}
+\renewcommand*{\lastnamestyle}[1]{\hspace{-\fontdimen2\font}{\namefont\textcolor{lastnamecolor}{#1}}}
+\colorlet{firstnamecolor}{color1}
+\colorlet{lastnamecolor}{color1}
+\colorlet{namecolor}{color1}
+\renewcommand*{\sectionstyle}[1]{{\sectionfont\color{color1}#1}}
+
+\usepackage[utf8]{inputenc}
+\ifpdftex\usepackage[T1]{fontenc}\fi
+% moderncv loads hyperref in an \AtEndPreamble hook, so the settings go in a
+% hook of our own. pdfpagemode=UseNone keeps the PDF from opening fullscreen.
+\AtEndPreamble{\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+    pdftitle={Curriculum vitae},
+    pdfpagemode=UseNone,
+}}
+\usepackage[scale=0.80]{geometry}
+\usepackage{import}
+
+\name{<% tex .FirstName %>}{<% tex .LastName %>}
+<% if .Address %>\address{<% tex .Address %>}{}{}
+<% end %><% if .Phone %>\phone[mobile]{<% tex .Phone %>}
+<% end %>\email{<% tex .Email %>}
+<% if .Links %>\extrainfo{<% range $i, $l := .Links %><% if $i %>, <% end %>\href{<% url $l.URL %>}{<% tex $l.Label %>}<% end %>}
+<% end %>
+\begin{document}
+
+\makecvtitle
+
+<% if .Profile %>\section{<% tex .Labels.Summary %>}
+\vspace{1pt}
+\cvitem{}{<% rich .Profile %>}
+
+<% end %><% if .Competencies %>\section{<% tex .Labels.Competencies %>}
+\vspace{1pt}
+<% range .Competencies %>
+\cvitem{}{\textbf{<% tex .Label %>}: <% rich .Text %>}
+<% end %>
+
+<% end %><% if .Experience %>\section{<% tex .Labels.Experience %>}
+\vspace{3pt}
+<% range .Experience %>
+\begin{minipage}{\linewidth}\cventry{<% tex .Dates %>}{<% tex .Title %>}{<% tex .Organization %>}{<% tex .Location %>}{}{<% if .Bullets %>\vspace{1pt}
+\begin{itemize}<% if $.Tight %>\topsep0pt\itemsep0pt\parsep0pt<% else %>\topsep2pt\itemsep2pt<% end %>
+<% range .Bullets %>    \item {<% rich . %>}
+<% end %>\end{itemize}<% end %>}\end{minipage}
+
+\vspace{<% if $.Tight %>1<% else %>3<% end %>pt}
+<% end %>
+
+<% end %><% if .Projects %>\section{<% tex .Labels.Projects %>}
+\vspace{3pt}
+<% range .Projects %>
+\begin{minipage}{\linewidth}\cventry{<% tex .Dates %>}{<% tex .Title %>}{<% tex .Organization %>}{<% tex .Location %>}{}{<% if .Bullets %>\vspace{1pt}
+\begin{itemize}<% if $.Tight %>\topsep0pt\itemsep0pt\parsep0pt<% else %>\topsep2pt\itemsep2pt<% end %>
+<% range .Bullets %>    \item {<% rich . %>}
+<% end %>\end{itemize}<% end %>}\end{minipage}
+
+\vspace{<% if $.Tight %>1<% else %>3<% end %>pt}
+<% end %>
+
+<% end %><% if .Education %>\section{<% tex .Labels.Education %>}
+\vspace{1pt}
+<% range .Education %>
+\cventry{<% tex .Dates %>}{<% tex .Title %>}{<% tex .Organization %>}{<% tex .Location %>}{}{<% if .Note %>\vspace{1pt}
+<% tex .Note %><% end %>}
+
+\vspace{<% if $.Tight %>1<% else %>3<% end %>pt}
+<% end %>
+
+<% end %><% if .Languages %>\section{<% tex .Labels.Languages %>}
+\vspace{1pt}
+\cvitem{}{<% tex .Languages %>}
+
+<% end %>\end{document}

@@ -1,0 +1,29 @@
+# Safety policy. The defaults are the most restrictive useful settings; this
+# file is edited only by you, from the dashboard, never by an agent.
+version: 1
+
+# Hours to back off a site after each risk signal; 0 disables that cooldown.
+cooldowns:
+  captcha: 168
+  rate_limited: 168
+  account_locked: 720
+  verification_required: 72
+  login_redirect: 168
+  silent_degradation: 24
+
+captcha_solver: on      # on or off
+
+remote_access:
+  mode: off             # off or tunnel
+  tunnel_port: 47321
+  allow_screenshots: false
+  tunnel:
+    binary: auto
+    public_url:
+
+tracker:
+  followup:
+    first_after_days: 8
+    repeat_every_days: 7
+    max_followups: 2    # 0 disables follow-ups
+    close_after_days: 35

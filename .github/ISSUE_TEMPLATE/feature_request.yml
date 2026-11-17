@@ -1,0 +1,39 @@
+name: Feature request
+description: Suggest a new capability or a change to an existing one.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: The need
+      description: Describe the job-search task this would help with and where Applysmith falls short of it now.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: How it should behave from your side of the screen.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Part of Applysmith
+      options:
+        - Dashboard
+        - Command line
+        - Apply and autofill
+        - Discovery and evaluation
+        - Gmail and tracking
+        - Chrome extension
+        - Ask Agent
+        - Other
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Safety rules
+      description: Applysmith never submits, creates accounts or sends mail without the user asking (docs/architecture/policies.md).
+      options:
+        - label: This request keeps those rules.
+          required: true

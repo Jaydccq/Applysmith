@@ -1,0 +1,20 @@
+{
+  "Candidacy": 1,
+  "Stage": {"id": "onsite-1", "type": "behavioral", "at": "2026-10-20T15:00:00Z", "format": "video", "interviewers": ["Sam Sample"], "userConfirmed": true, "recordedAt": "2026-10-11T09:00:00Z"},
+  "Company": "Example Corp",
+  "Role": "Backend Engineer",
+  "Posting": {"Text": "# Posting\n\nBackend Engineer at Example Corp\n\nRequirements:\n- Own a backend service end to end in Go\n- Experience with PostgreSQL and SQL data modelling\n- Ability to mentor engineers and lead code review\n", "Ref": "documents/example-corp/v1/posting.md", "Label": "Job description", "State": "frozen"},
+  "PostingKind": "dossier",
+  "Requirements": [
+    "Own a backend service end to end in Go",
+    "Experience with PostgreSQL and SQL data modelling",
+    "Ability to mentor engineers and lead code review"
+  ],
+  "Resume": {"Text": "# Alex Example\n\n## Experience\n\n- Led the platform migration and cut incidents by 40% across 12 services\n- Mentored four engineers in code review and design\n- Owned on-call for a 99.9% availability target\n", "Ref": "documents/example-corp/v1/resume.md", "Label": "Submitted résumé, version 1", "State": "frozen"},
+  "Cover": {"Text": "Dear Example Corp team, I am applying for the Backend Engineer role.", "Ref": "documents/example-corp/v1/cover-letter.md", "Label": "Submitted cover letter, version 1", "State": "frozen"},
+  "Facts": [
+    {"Text": "Example Corp builds scheduling software for marine survey teams.", "Source": "knowledge/companies/example.com.md"},
+    {"Text": "The platform team runs the ingestion services in Go on PostgreSQL.", "Source": "knowledge/companies/example.com.md"}
+  ],
+  "BriefState": "frozen"
+}

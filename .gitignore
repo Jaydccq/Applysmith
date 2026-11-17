@@ -1,0 +1,47 @@
+# Runtime state and user data
+.applysmith/
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.log
+.env
+.env.*
+
+# Browser profiles
+chrome-profile/
+Local State
+DevToolsActivePort
+
+# Build outputs and generated bundles
+/bin/
+/applysmith
+/applysmith.exe
+/app/build/
+/app/.mygo/
+dist/
+/internal/engine/generated/*
+!/internal/engine/generated/.gitkeep
+/internal/extension/generated/*
+!/internal/extension/generated/.gitkeep
+*.syso
+*.test
+*.pprof
+*.prof
+/computeruse/.build/
+/computeruse/.swiftpm/
+/computeruse/dist/
+
+# Product videos: demo screenshots and renders (video/README.md)
+/video/shots/
+
+# Local tooling scratch (browser snapshots and throwaway build caches)
+/.playwright-mcp/
+/.tmp-gocache/
+
+# Dependencies
+node_modules/
+
+# OS and editor
+.DS_Store

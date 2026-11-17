@@ -1,0 +1,60 @@
+# The answers the Answer Bank page offers for the shipped choice questions,
+# by entry id (answerbank.ShapeOf). Each choice is "Label|variant|variant":
+# the label is what the page shows and what a written question gets; the label
+# and its variants are the option labels the matcher looks for on a form, best
+# first. "decline" is the shipped decline choice with its eight wordings.
+# Yes or no questions, dates, links and numbers take their shape from the
+# entry's input types and are not listed here. An entry not listed keeps a
+# free answer: its forms' options vary too much for one list.
+choices:
+  application-submitter-identity: ["I am the applicant|The applicant|I'm the real candidate|Myself|Self|Applicant", "Someone on my behalf|Third party|Agent"]
+  salutation: ["Mr|Mr.", "Ms|Ms.", "Mrs|Mrs.", "Miss", "Mx|Mx.", "Dr|Dr."]
+  phone-device-type: ["Mobile|Cell|Cellular|Mobile phone", "Home|Landline|Home phone", "Work|Business|Work phone"]
+  address-type: ["Home|Residential|Home address", "Mailing|Postal|Mailing address"]
+  desired-career-level: ["Internship|Intern", "Entry level|Entry Level|Entry-Level|New Grad|New Graduate|Early Career|Junior", "Mid level|Mid-Level|Mid Level|Intermediate", "Senior|Senior Level|Senior-Level", "Lead|Staff|Principal", "Manager|Management", "Director|Executive"]
+  current-degree-year: ["First year|Freshman|1st year", "Second year|Sophomore|2nd year", "Third year|Junior|3rd year", "Fourth year|Senior|4th year", "Fifth year or later|5th year|5th year or later", "Graduate student|Graduate|Graduate Student"]
+  current-level-education-pursuing: ["Associate's degree|Associate|Associate's|Associate Degree", "Bachelor's degree|Bachelor's|Bachelor|Bachelors|Bachelor's Degree|Undergraduate", "Master's degree|Master's|Master|Masters|Master's Degree", "MBA", "Doctorate|PhD|Ph.D.|Doctoral|Doctoral Degree", "Other"]
+  highest-level-education: ["High school|High School|High School Diploma|GED", "Associate's degree|Associate|Associate's|Associate Degree", "Bachelor's degree|Bachelor's|Bachelor|Bachelors|Bachelor's Degree", "Master's degree|Master's|Master|Masters|Master's Degree", "MBA", "Doctorate|PhD|Ph.D.|Doctoral|Doctoral Degree", "Other"]
+  expected-graduation-month: ["January|Jan", "February|Feb", "March|Mar", "April|Apr", "May", "June|Jun", "July|Jul", "August|Aug", "September|Sep|Sept", "October|Oct", "November|Nov", "December|Dec"]
+  expected-graduation-term: ["Spring", "Summer", "Fall|Autumn", "Winter"]
+  clearance-active-status: ["Active|Current", "Inactive|Lapsed", "Expired", "None|Not applicable|N/A"]
+  clearance-agency: ["Department of Defense|DoD|DOD", "Department of Energy|DOE", "Department of Homeland Security|DHS", "Department of State|State Department|DOS", "Intelligence Community|IC", "Other", "None|Not applicable|N/A"]
+  security-clearance: ["None|No clearance|No", "Public Trust", "Confidential", "Secret", "Top Secret", "TS/SCI|Top Secret/SCI|TS/SCI with Polygraph", "DOE Q|Q clearance", "DOE L|L clearance"]
+  under-18-work-permit: ["Yes", "No", "Not applicable|N/A|I am 18 or older"]
+  current-immigration-status: ["F-1 OPT|OPT|F1 OPT|Optional Practical Training|F-1 OPT (Post-Completion)", "F-1 STEM OPT|STEM OPT|STEM OPT Extension|F-1 STEM OPT Extension", "F-1 CPT|CPT|Curricular Practical Training|F-1 Curricular Practical Training", "F-1 student|F-1|F1|F-1 Student Visa", "J-1|J1|J-1 Exchange Visitor", "J-2|J2|J-2 Dependent", "H-1B|H1B|H-1B Visa", "H-4 EAD|H4 EAD|H-4|H-4 Dependent", "L-1|L1|L-1 Visa", "L-2 EAD|L2 EAD|L-2|L-2 Dependent", "O-1|O1|O-1 Visa", "TN|TN Visa", "E-3|E3|E-3 Visa", "Green card holder|Permanent resident|Lawful permanent resident|Green Card", "U.S. citizen|US Citizen|Citizen|United States Citizen", "Asylee|Asylum granted", "Refugee", "TPS|Temporary Protected Status", "DACA|Deferred Action for Childhood Arrivals", "Pending adjustment of status|Adjustment of status|I-485 pending|Pending Green Card (I-485)", "Other"]
+  us-citizen-status: ["U.S. citizen|US Citizen|U.S. Citizen|Citizen", "U.S. national|US National", "Lawful permanent resident|Permanent Resident|Green Card Holder", "Refugee or asylee|Refugee|Asylee|Asylum granted", "Neither|Other|Non-citizen"]
+  primary-cloud-platform: ["AWS|Amazon Web Services", "Microsoft Azure|Azure", "Google Cloud|GCP|Google Cloud Platform", "Oracle Cloud|OCI", "IBM Cloud", "Other", "None"]
+  years-relevant-experience: ["Less than 1 year|0-1 years|Under 1 year|0-1", "1-2 years|1-2", "3-5 years|3-5", "6-10 years|6-10|5-10 years", "More than 10 years|10+ years|10+|Over 10 years"]
+  eeo-disability: ["Yes, I have a disability|Yes, I have a disability (or previously had a disability)|Yes", "No, I do not have a disability|No, I don't have a disability|No", decline]
+  eeo-ethnicity: ["Hispanic or Latino|Hispanic/Latino|Yes", "Not Hispanic or Latino|No", decline]
+  eeo-gender: ["Male|Man", "Female|Woman", "Non-binary|Nonbinary|Non binary", decline]
+  eeo-lgbtq-identification: ["Yes", "No", decline]
+  eeo-orientation: ["Heterosexual|Straight", "Gay|Gay or Lesbian", "Lesbian", "Bisexual", "Asexual", "Queer", decline]
+  eeo-race: ["American Indian or Alaska Native", "Asian", "Black or African American|Black", "Native Hawaiian or Other Pacific Islander", "White", "Two or more races|Two or More Races|Multiracial", decline]
+  eeo-transgender: ["Yes", "No", decline]
+  eeo-veteran: ["I am a protected veteran|Protected veteran|I identify as one or more of the classifications of protected veteran|Yes", "I am not a protected veteran|Not a protected veteran|No", decline]
+  first-generation-college: ["Yes", "No", decline]
+  low-income-background: ["Yes", "No", decline]
+  military-branch: ["Army|U.S. Army", "Navy|U.S. Navy", "Air Force|U.S. Air Force", "Marine Corps|U.S. Marine Corps|Marines", "Coast Guard|U.S. Coast Guard", "Space Force|U.S. Space Force", "National Guard", "None|Not applicable|N/A", decline]
+  military-service-status: ["Veteran", "Active duty|Active Duty", "Reserve|Reservist", "National Guard", "Never served|None|Not applicable|N/A", decline]
+  pronouns: ["He/him|he/him|He/Him", "She/her|she/her|She/Her", "They/them|they/them|They/Them", decline]
+  wotc-long-term-unemployed: ["Yes", "No", decline]
+  wotc-snap-recipient: ["Yes", "No", decline]
+  wotc-ssi-recipient: ["Yes", "No", decline]
+  wotc-tanf-family: ["Yes", "No", decline]
+  wotc-vocational-rehab-referral: ["Yes", "No", decline]
+  availability-notice-period: ["Immediately|None|No notice|Available immediately", "1 week|One week", "2 weeks|Two weeks", "3 weeks|Three weeks", "1 month|One month|4 weeks", "2 months|Two months", "3 months or more|3 months|Three months|More than 3 months"]
+  offer-start-availability: ["Immediately|Available immediately", "1 week|One week|Within 1 week", "2 weeks|Two weeks|Within 2 weeks", "3 weeks|Three weeks", "1 month|One month|4 weeks|Within a month", "2 months|Two months", "3 months or more|3 months|Three months|More than 3 months"]
+  days-per-week-onsite: ["0|None|Fully remote", "1", "2", "3", "4", "5|Fully on-site|Fully onsite"]
+  desired-employment-type: ["Full-time|Full time|Permanent", "Part-time|Part time", "Contract|Contractor", "Internship|Intern", "Temporary|Temp", "Freelance"]
+  relocation-or-local: ["I am local|Local|I live locally", "I am willing to relocate|Willing to relocate|Relocate", "Neither"]
+  job-source: ["LinkedIn", "Company website|Company Website|Careers page|Company careers site", "Indeed", "Job board|Other job board", "Referral|Employee referral|Employee Referral", "Recruiter|Recruiter outreach", "Career fair|University|Campus", "Social media", "Other"]
+  referral-source: ["LinkedIn", "Company website|Company Website|Careers page|Company careers site", "Indeed", "Job board|Other job board", "Referral|Employee referral|Employee Referral", "Recruiter|Recruiter outreach", "Career fair|University|Campus", "Social media", "Other"]
+  shift-availability: ["Day|Days|Morning", "Evening|Evenings|Afternoon", "Night|Nights|Overnight", "Weekend|Weekends", "Rotating|Rotating shifts", "On call|On-call"]
+  company-types-worked-at: ["Early-stage startup|Early Stage Startup (<20 employees)|Early Stage Startup", "Startup|Startup (20-200)", "Growth-stage startup|Growth Stage Startup (200+)|Growth Stage Startup|Scale-up", "Mid-size enterprise|Mid Enterprise|Mid-size company", "Big Tech|Large tech company"]
+  product-types-worked-on: ["B2B SaaS|SaaS|Enterprise SaaS", "B2B other|B2B Other", "Consumer|B2C|Consumer apps", "Developer tools|Developer Tool|Developer Tools|Dev tools", "Other"]
+  content-types-created: ["Written documentation|Written content for blogs or documentation|Documentation|Technical writing", "Demo videos|Demo videos of software products|Product demos", "Tutorial videos|Tutorial-like video content for SaaS|Tutorials", "Promotional videos|Promotional videos with graphical animations", "Vlogs|Live-action vlogs", "Documentaries|Live-action documentaries", "Graphics and images|Graphics and images for social media or blogs|Social media graphics"]
+  audit-firms-worked-at: ["Deloitte", "PwC|PricewaterhouseCoopers", "EY|Ernst & Young", "KPMG", "Grant Thornton", "BDO", "RSM", "None|None of the above"]
+# The levels a language-proficiency entry's speaking, listening, reading and
+# writing take.
+levels: ["Native or bilingual|Native|Bilingual|Native or Bilingual", "Fluent|Full professional|Full Professional Proficiency", "Professional working|Professional Working Proficiency|Advanced", "Limited working|Limited Working Proficiency|Intermediate", "Elementary|Elementary Proficiency|Basic|Beginner"]

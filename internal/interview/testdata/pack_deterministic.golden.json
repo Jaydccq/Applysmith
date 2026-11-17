@@ -1,0 +1,141 @@
+{
+  "candidacyId": 1,
+  "stage": "onsite-1",
+  "revision": 0,
+  "generation": "deterministic",
+  "createdAt": "",
+  "roleBrief": "Backend Engineer at Example Corp. Requirements: Own a backend service end to end in Go. Experience with PostgreSQL and SQL data modelling. Ability to mentor engineers and lead code review.",
+  "companyBrief": "Example Corp. Example Corp builds scheduling software for marine survey teams. The platform team runs the ingestion services in Go on PostgreSQL.",
+  "hooks": [
+    {
+      "text": "Example Corp builds scheduling software for marine survey teams.",
+      "sources": [
+        "knowledge/companies/example.com.md"
+      ]
+    },
+    {
+      "text": "The platform team runs the ingestion services in Go on PostgreSQL.",
+      "sources": [
+        "knowledge/companies/example.com.md"
+      ]
+    }
+  ],
+  "claims": [
+    "Led the platform migration and cut incidents by 40% across 12 services",
+    "Mentored four engineers in code review and design",
+    "Owned on-call for a 99.9% availability target"
+  ],
+  "questions": [
+    {
+      "category": "story",
+      "prompt": "Tell me about a project you are proud of and what you personally did.",
+      "storyIds": [],
+      "sources": []
+    },
+    {
+      "category": "motivation",
+      "prompt": "Why this company and this role, and why now?",
+      "storyIds": [],
+      "sources": []
+    },
+    {
+      "category": "trade-off",
+      "prompt": "Describe a decision where you had to trade one goal for another. What did you choose and why?",
+      "storyIds": [],
+      "sources": []
+    },
+    {
+      "category": "requirement",
+      "prompt": "Describe your experience with this requirement: Own a backend service end to end in Go",
+      "storyIds": [
+        "alerts-ownership"
+      ],
+      "sources": [
+        "documents/example-corp/v1/posting.md",
+        "story:alerts-ownership"
+      ]
+    },
+    {
+      "category": "requirement",
+      "prompt": "Describe your experience with this requirement: Experience with PostgreSQL and SQL data modelling",
+      "storyIds": [],
+      "sources": [
+        "documents/example-corp/v1/posting.md"
+      ]
+    },
+    {
+      "category": "requirement",
+      "prompt": "Describe your experience with this requirement: Ability to mentor engineers and lead code review",
+      "storyIds": [
+        "review-mentoring"
+      ],
+      "sources": [
+        "documents/example-corp/v1/posting.md",
+        "story:review-mentoring"
+      ]
+    }
+  ],
+  "priorFeedback": [],
+  "gaps": [
+    {
+      "text": "No story in your story bank covers the requirement \"Experience with PostgreSQL and SQL data modelling\". Mine a story for it.",
+      "kind": "story",
+      "target": "Experience with PostgreSQL and SQL data modelling"
+    }
+  ],
+  "nextActions": [
+    {
+      "text": "Mine a story for \"Experience with PostgreSQL and SQL data modelling\", on the Wiki page or by asking the assistant.",
+      "kind": "story",
+      "target": "Experience with PostgreSQL and SQL data modelling"
+    },
+    {
+      "text": "Practice the likely questions with mock turns.",
+      "kind": "practice",
+      "target": "onsite-1"
+    },
+    {
+      "text": "After the interview, record how it went: the next packs of this stage and the later ones use it.",
+      "kind": "debrief",
+      "target": "onsite-1"
+    }
+  ],
+  "sources": [
+    {
+      "kind": "dossier",
+      "ref": "documents/example-corp/v1/posting.md",
+      "label": "Job description",
+      "state": "frozen"
+    },
+    {
+      "kind": "dossier",
+      "ref": "documents/example-corp/v1/resume.md",
+      "label": "Submitted résumé, version 1",
+      "state": "frozen"
+    },
+    {
+      "kind": "dossier",
+      "ref": "documents/example-corp/v1/cover-letter.md",
+      "label": "Submitted cover letter, version 1",
+      "state": "frozen"
+    },
+    {
+      "kind": "company-brief",
+      "ref": "knowledge/companies/example.com.md",
+      "label": "Company brief: knowledge/companies/example.com.md",
+      "state": "frozen"
+    },
+    {
+      "kind": "story",
+      "ref": "story:alerts-ownership",
+      "label": "Cutting alert noise before launch",
+      "state": "user-confirmed"
+    },
+    {
+      "kind": "story",
+      "ref": "story:review-mentoring",
+      "label": "Mentoring through code review",
+      "state": "user-confirmed"
+    }
+  ]
+}

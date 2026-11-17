@@ -1,0 +1,14 @@
+# Wire declarations for the dashboard. The generator reads only
+# internal/api/wire, which imports nothing embedded, so it runs on a fresh
+# checkout. scalars.go is written by hand on the TypeScript side below because
+# the generator is syntactic and cannot see how SafeInt and Time travel as
+# JSON.
+packages:
+  - path: "applysmith/internal/api/wire"
+    output_path: "web/src/wire/index.ts"
+    exclude_files:
+      - scalars.go
+    frontmatter: |
+      // Scalars: see internal/api/wire/scalars.go for the rules both sides keep.
+      export type SafeInt = number;
+      export type Time = string;

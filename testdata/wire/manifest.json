@@ -1,0 +1,18 @@
+[
+  {"file":"failure-unauthenticated.json","type":"Failure","valid":true},
+  {"file":"failure-rate-limited.json","type":"Failure","valid":true},
+  {"file":"failure-unknown-code.json","type":"Failure","valid":false},
+  {"file":"success-health-minimal.json","type":"SuccessHealth","valid":true},
+  {"file":"success-health-detailed.json","type":"SuccessHealth","valid":true},
+  {"file":"probe-offset-time.json","type":"ContractProbe","valid":true,"canonical":"probe-offset-time.canonical.json"},
+  {"file":"probe-zoneless-time.json","type":"ContractProbe","valid":false},
+  {"file":"probe-max-safe-int.json","type":"ContractProbe","valid":true},
+  {"file":"probe-negative-max-safe-int.json","type":"ContractProbe","valid":true},
+  {"file":"probe-unsafe-int.json","type":"ContractProbe","valid":false},
+  {"file":"probe-fractional-int.json","type":"ContractProbe","valid":false},
+  {"file":"probe-exponent-int.json","type":"ContractProbe","valid":false},
+  {"file":"probe-unknown-field.json","type":"ContractProbe","valid":false},
+  {"file":"board-snapshot.json","type":"BoardSnapshot","valid":true},
+  {"file":"board-notice-configuration.json","type":"BoardNotice","valid":true},
+  {"file":"stream-reset.json","type":"StreamReset","valid":true}
+]

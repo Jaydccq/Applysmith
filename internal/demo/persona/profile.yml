@@ -1,0 +1,112 @@
+# Demo workspace profile. Every value belongs to the fictional example persona
+# Alex Example; nothing here is a real person's data. The demo never submits,
+# creates an account or reads mail; only its own fictional documents are
+# uploaded.
+version: 1
+
+candidate:
+  full_name: Alex Example
+  preferred_name: Alex
+  email: alex@example.com
+  phone: "+1 919 555 0142"
+  address:
+    line1: 1 Example Street
+    city: Durham
+    county: Durham County
+    region: NC
+    postal_code: "27701"
+    country: US
+
+links:
+  # On the real domain on purpose: application forms reject a LinkedIn link
+  # that is not on linkedin.com. The slug is fictional.
+  linkedin: https://www.linkedin.com/in/alex-example-applysmith-demo
+  github: https://github.example.org/alex-example
+  portfolio: https://alex.example.org
+
+work_authorization:
+  authorized_countries: [US]
+  requires_sponsorship_now: false
+  requires_sponsorship_future: false
+  visa_status: citizen
+  security_clearance: none
+
+targets:
+  roles:
+    - title: Platform Engineer
+      seniority: senior
+      priority: primary
+    - title: Backend Engineer
+      seniority: senior
+      priority: secondary
+  locations: [Durham, NC, anywhere or remote]
+  compensation:
+    currency: USD
+    period: year
+    minimum: 120000
+    target: 145000
+
+preferences:
+  relocation:
+    default: closed
+  work_modes: [remote, hybrid]
+  max_days_in_office: 2
+  max_travel_percent: 10
+
+resumes:
+  - id: platform
+    label: Platform engineering
+    file: resumes/alex-example-platform.pdf
+    default: true
+    description: The example persona's one-page résumé.
+
+history:
+  employment:
+    - employer: Northwind Labs
+      title: Senior Platform Engineer
+      start: 2022-04
+      end: present
+      location: Durham, NC
+      summary: Runs the internal deployment platform for forty product teams.
+    - employer: Contoso Cloud
+      title: Backend Engineer
+      start: 2019-08
+      end: 2022-03
+      location: Raleigh, NC
+      summary: Built the order and billing services in Go on PostgreSQL.
+    - employer: Fabrikam Robotics
+      title: Software Engineer
+      start: 2017-07
+      end: 2019-07
+      location: Raleigh, NC
+      summary: Wrote the telemetry ingest service for a fleet of warehouse robots.
+  education:
+    - school: Example University
+      degree: BSc
+      field: Computer Science
+      start: 2013-09
+      end: 2017-05
+
+skills:
+  - name: Go
+    years: 7
+    level: advanced
+  - name: Kubernetes
+    years: 6
+    level: advanced
+  - name: PostgreSQL
+    years: 9
+    level: advanced
+  - name: Terraform
+    years: 4
+    level: intermediate
+  - name: Python
+    years: 9
+    level: advanced
+
+batch_skip_companies: []
+
+eligibility_gate:
+  reject_seniority: [intern]
+  allowed_countries: [US]
+  allowed_currencies: [USD]

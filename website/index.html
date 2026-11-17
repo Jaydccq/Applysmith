@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Applysmith: local-first job search for your Mac</title>
+<meta name="description" content="Applysmith finds job postings, scores each one against you, tailors your résumé and cover letter and fills the application, on your own Mac. It never submits without you.">
+<link rel="canonical" href="https://www.ovreni.org/">
+<meta name="theme-color" content="#0f2a1f">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Applysmith">
+<meta property="og:url" content="https://www.ovreni.org/">
+<meta property="og:title" content="Applysmith: a workshop for your job search">
+<meta property="og:description" content="It finds postings, scores them against you, tailors your résumé and fills the forms, on your own Mac. Submit stays yours.">
+<meta property="og:image" content="https://www.ovreni.org/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Applysmith: a workshop for your job search.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Applysmith",
+  "url": "https://www.ovreni.org/",
+  "image": "https://www.ovreni.org/og.jpg",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "macOS 13 or later",
+  "description": "A local-first job-search workshop for the Mac: it finds postings, scores each one against you, tailors your résumé and cover letter and fills the application. It never submits without you."
+}
+</script>
+<script type="module" src="/src/main.js"></script>
+</head>
+<body>
+<a class="skip" href="#how">Skip to content</a>
+<canvas id="scene" aria-hidden="true"></canvas>
+
+<header class="nav">
+  <a class="brand" href="#top"><img id="brand-mark" alt="" width="36" height="36">Applysmith</a>
+  <nav aria-label="Sections">
+    <a href="#how">How it works</a>
+    <a href="#private">Private by design</a>
+    <a href="#rules">The rules</a>
+    <a href="#compare">Compare</a>
+    <a class="nav-cta" href="#demo">Try the demo</a>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero" data-scene="0">
+    <h1>A workshop for your job search.</h1>
+    <p class="lede">Applysmith finds postings, scores them against you, tailors your résumé and fills the forms. It runs on your own Mac, and it never submits without you.</p>
+    <p class="actions">
+      <a class="button" href="#how">See how it works</a>
+      <a class="quiet" href="#demo">Try the demo first</a>
+    </p>
+    <p class="fine">For macOS 13 or later, with Google Chrome.</p>
+  </section>
+
+  <div id="how" class="steps">
+    <section class="step" data-scene="1">
+      <span class="count">1</span>
+      <h2>It finds the postings.</h2>
+      <p>Job sources, hiring signals and leads land in one inbox. Scans can run on a schedule, and a schedule can never fill a form or submit.</p>
+    </section>
+    <section class="step" data-scene="2">
+      <span class="count">2</span>
+      <h2>It weighs each one against you.</h2>
+      <p>Every posting gets a score, and a report that names the deciding factors. A clear “skip” saves you the hour as surely as a match earns it.</p>
+    </section>
+    <section class="step" data-scene="3">
+      <span class="count">3</span>
+      <h2>It prepares the documents.</h2>
+      <p>A résumé and a cover letter tailored to the posting, grounded in what you really did. Nothing is claimed that your own record does not support.</p>
+    </section>
+    <section class="step" data-scene="4">
+      <span class="count">4</span>
+      <h2>It fills the form. You sign it off.</h2>
+      <p>Applications are filled in a Chrome window of its own, from answers you reviewed. A dry run fills every page and stops before Submit.</p>
+    </section>
+  </div>
+
+  <div class="paper" data-scene="5">
+    <section id="private" class="sheet-section">
+      <h2>Yours, on your machine.</h2>
+      <p class="lede">Nothing leaves the computer except calls to the services you choose to connect.</p>
+      <dl class="facts">
+        <div><dt>One server, on loopback only</dt><dd>A single process serves the dashboard, the scheduler and the agent. It listens to this computer and nothing else.</dd></div>
+        <div><dt>One folder you choose</dt><dd>Your profile, CV, answer bank and reports are plain files. Open them, edit them, back them up.</dd></div>
+        <div><dt>Secrets in the keychain</dt><dd>Passwords and API keys go to the macOS keychain, never into a file.</dd></div>
+      </dl>
+    </section>
+
+    <section id="rules" class="sheet-section">
+      <h2>Rules it cannot break.</h2>
+      <p class="lede">The product enforces them, so you do not have to remember them.</p>
+      <ul class="rules">
+        <li><strong>Submit is yours.</strong> Submitting needs your explicit request for that application, or a confirmation you complete in the dashboard.</li>
+        <li><strong>No invented answers.</strong> A work-authorization or self-identification question without your answer is left blank.</li>
+        <li><strong>No duplicates.</strong> A posting you apply to twice is stopped.</li>
+        <li><strong>Schedules never submit.</strong> They can scan, read mail and send digests. They cannot fill a form or create an account.</li>
+      </ul>
+    </section>
+
+    <section class="sheet-section">
+      <h2>Four ways in, one workshop.</h2>
+      <dl class="ways">
+        <div><dt>Desktop app</dt><dd>A window, a menu-bar item and notifications.</dd></div>
+        <div><dt>Dashboard</dt><dd>Eighteen pages, from today’s shortlist to every run’s audit trail.</dd></div>
+        <div><dt>Command line</dt><dd><code>applysmith</code> for setup, scans, evaluation, tracking and backup.</dd></div>
+        <div><dt>Chrome extension</dt><dd>A side panel for your everyday Chrome, paired to the server.</dd></div>
+      </dl>
+    </section>
+    <section id="compare" class="sheet-section">
+      <h2>How it compares.</h2>
+      <p class="lede">Most tools in this space run in the cloud, and several send applications for you. Applysmith keeps your record on your Mac and leaves Submit to you.</p>
+      <div class="compare" role="region" aria-labelledby="compare-caption" tabindex="0">
+        <table>
+          <caption id="compare-caption">Applysmith and similar job-search tools</caption>
+          <thead>
+            <tr><th scope="col">Tool</th><th scope="col">Runs as</th><th scope="col">Finds postings</th><th scope="col">Scores the fit</th><th scope="col">Tailors the résumé</th><th scope="col">Fills forms</th><th scope="col">Submits without you</th></tr>
+          </thead>
+          <tbody>
+            <tr class="ours"><th scope="row">Applysmith</th><td>An app on your Mac</td><td>Yes</td><td>Score and report</td><td>Yes, and a letter</td><td>Yes</td><td>Never</td></tr>
+            <tr><th scope="row">career-ops</th><td>Open source, in your own AI command line</td><td>Yes</td><td>Score and report</td><td>Yes, and a letter</td><td>Yes, stops before Submit</td><td>Never</td></tr>
+            <tr><th scope="row">Simplify</th><td>Extension and web account</td><td>Yes</td><td>—</td><td>Paid plan</td><td>Yes</td><td>Paid Autopilot, no review step</td></tr>
+            <tr><th scope="row">Jobright</th><td>Web account</td><td>Yes</td><td>Job matching</td><td>Yes</td><td>Yes</td><td>Says it applies to hundreds a day</td></tr>
+            <tr><th scope="row">JobCopilot</th><td>Web account</td><td>Yes</td><td>—</td><td>Yes</td><td>Yes</td><td>Yes, on your behalf</td></tr>
+            <tr><th scope="row">LoopCV</th><td>Web account</td><td>Yes</td><td>—</td><td>CV variants</td><td>Yes</td><td>Yes, from the free plan</td></tr>
+            <tr><th scope="row">LazyApply</th><td>Extension and web account</td><td>—</td><td>—</td><td>—</td><td>Yes</td><td>Yes, up to 1,500 a day</td></tr>
+            <tr><th scope="row">AIApply</th><td>Web account</td><td>Yes</td><td>Résumé match score</td><td>Yes, and a letter</td><td>—</td><td>Yes, with Auto-Apply credits</td></tr>
+            <tr><th scope="row">Teal</th><td>Extension and web account</td><td>Saves them from job boards</td><td>Keyword match</td><td>Yes</td><td>—</td><td>—</td></tr>
+            <tr><th scope="row">Huntr</th><td>Web account</td><td>—</td><td>—</td><td>Paid plan</td><td>Yes</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="fine-ink">From each tool’s own website, checked 16 November 2026. A dash means its pages do not say.</p>
+    </section>
+  </div>
+
+  <section id="demo" class="closing" data-scene="6">
+    <h2>Start with the demo.</h2>
+    <p class="lede">A separate folder with a fictional job seeker, Alex Example, and three sample postings. Nothing of yours is touched, and nothing is ever submitted.</p>
+    <p class="command"><code id="demo-command">applysmith demo init</code><button type="button" id="copy" aria-live="polite">Copy</button></p>
+  </section>
+</main>
+
+<footer>
+  <span>Applysmith</span>
+  <span>Local-first job search for macOS</span>
+</footer>
+</body>
+</html>

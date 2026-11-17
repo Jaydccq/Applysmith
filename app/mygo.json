@@ -1,0 +1,8 @@
+{
+  "name": "Applysmith",
+  "identifier": "dev.applysmith.app",
+  "version": "0.0.1",
+  "icon": "icons/icon.png",
+  "out": "build",
+  "resources": ["../NOTICE", "../third_party/licenses", "../third_party/NOTICE-dependencies.txt"]
+}

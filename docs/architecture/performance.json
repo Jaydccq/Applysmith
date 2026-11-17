@@ -1,0 +1,1005 @@
+{
+ "schema": 1,
+ "generated": "2026-10-12T22:08:52Z",
+ "environment": {
+  "commit": "5560993ae",
+  "dirty": true,
+  "machine": "Apple M3",
+  "cpus": 8,
+  "memoryGB": 16,
+  "macOS": "26.2 (25C56)",
+  "kernel": "25.2.0",
+  "go": "go1.27.1 darwin/arm64",
+  "bun": "1.3.5",
+  "chrome": "Google Chrome 155.0.8059.40",
+  "mygo": "mygo 0.4.1"
+ },
+ "parameters": {
+  "startupSamplesPerCase": 7,
+  "suiteRuns": 3,
+  "memorySettleSeconds": 4,
+  "maxLoad1": 8,
+  "loadWaitSeconds": 300
+ },
+ "load1AtStart": 12.47,
+ "load1AtEnd": 4.31,
+ "sizesBytes": {
+  "appBundle": 40277496,
+  "appBinary": 40247328,
+  "diskImage": 11531442,
+  "cliBinary": 53605874,
+  "engineBundle": 423159,
+  "extensionBundle": 827036,
+  "dashboardAssets": 723077
+ },
+ "startup": [
+  {
+   "target": "Applysmith.app",
+   "cold": [
+    {
+     "servedMS": 954.284,
+     "load1": 7.86,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 253.6875,
+      "byKindMB": {
+       "app": 160.21875,
+       "webview": 93.46875
+      },
+      "processes": 4
+     }
+    },
+    {
+     "servedMS": 1492.435,
+     "load1": 74.47,
+     "loaded": true,
+     "settledMemory": {
+      "totalMB": 344.71875,
+      "byKindMB": {
+       "app": 238.359375,
+       "webview": 106.359375
+      },
+      "processes": 5
+     }
+    },
+    {
+     "servedMS": 1131.78,
+     "load1": 7.86,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 261.625,
+      "byKindMB": {
+       "app": 162.609375,
+       "webview": 99.015625
+      },
+      "processes": 4
+     }
+    },
+    {
+     "servedMS": 770.11,
+     "load1": 7.77,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 234.8125,
+      "byKindMB": {
+       "app": 136.5,
+       "webview": 98.3125
+      },
+      "processes": 4
+     }
+    },
+    {
+     "servedMS": 766.743,
+     "load1": 6.96,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 265.890625,
+      "byKindMB": {
+       "app": 166.09375,
+       "webview": 99.796875
+      },
+      "processes": 4
+     }
+    },
+    {
+     "servedMS": 706.294,
+     "load1": 6.49,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 265.234375,
+      "byKindMB": {
+       "app": 166.015625,
+       "webview": 99.21875
+      },
+      "processes": 4
+     }
+    },
+    {
+     "servedMS": 688.101,
+     "load1": 6.21,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 272.125,
+      "byKindMB": {
+       "app": 167,
+       "webview": 105.125
+      },
+      "processes": 4
+     }
+    }
+   ],
+   "warm": [
+    {
+     "servedMS": 189.909,
+     "load1": 5.49,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 213.390625,
+      "byKindMB": {
+       "app": 128.140625,
+       "webview": 85.25
+      },
+      "processes": 4
+     }
+    },
+    {
+     "servedMS": 190.736,
+     "load1": 5.5,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 255.75,
+      "byKindMB": {
+       "app": 157.015625,
+       "webview": 98.734375
+      },
+      "processes": 4
+     }
+    },
+    {
+     "servedMS": 204.117,
+     "load1": 5.7,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 264.703125,
+      "byKindMB": {
+       "app": 164.328125,
+       "webview": 100.375
+      },
+      "processes": 4
+     }
+    },
+    {
+     "servedMS": 215.836,
+     "load1": 5.72,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 258.03125,
+      "byKindMB": {
+       "app": 159.046875,
+       "webview": 98.984375
+      },
+      "processes": 4
+     }
+    },
+    {
+     "servedMS": 232.611,
+     "load1": 6.15,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 261.078125,
+      "byKindMB": {
+       "app": 157.171875,
+       "webview": 103.90625
+      },
+      "processes": 4
+     }
+    },
+    {
+     "servedMS": 251.374,
+     "load1": 6.14,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 217.171875,
+      "byKindMB": {
+       "app": 121.859375,
+       "webview": 95.3125
+      },
+      "processes": 4
+     }
+    },
+    {
+     "servedMS": 236.616,
+     "load1": 6.87,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 253.609375,
+      "byKindMB": {
+       "app": 157.59375,
+       "webview": 96.015625
+      },
+      "processes": 4
+     }
+    }
+   ],
+   "coldMS": {
+    "n": 7,
+    "min": 688.101,
+    "median": 770.11,
+    "p90": 1492.435,
+    "max": 1492.435
+   },
+   "warmMS": {
+    "n": 7,
+    "min": 189.909,
+    "median": 215.836,
+    "p90": 251.374,
+    "max": 251.374
+   },
+   "coldRSSMB": {
+    "n": 7,
+    "min": 234.8125,
+    "median": 265.234375,
+    "p90": 344.71875,
+    "max": 344.71875
+   },
+   "warmRSSMB": {
+    "n": 7,
+    "min": 213.390625,
+    "median": 255.75,
+    "p90": 264.703125,
+    "max": 264.703125
+   },
+   "medianWarmBreakdown": {
+    "totalMB": 255.75,
+    "byKindMB": {
+     "app": 157.015625,
+     "webview": 98.734375
+    },
+    "processes": 4
+   },
+   "loadedSamples": 1
+  },
+  {
+   "target": "applysmith serve",
+   "cold": [
+    {
+     "servedMS": 1089.026,
+     "load1": 7.2,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 40.21875,
+      "byKindMB": {
+       "app": 40.21875
+      },
+      "processes": 1
+     }
+    },
+    {
+     "servedMS": 1050.179,
+     "load1": 7.99,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 53.515625,
+      "byKindMB": {
+       "app": 53.515625
+      },
+      "processes": 1
+     }
+    },
+    {
+     "servedMS": 1144.735,
+     "load1": 7.55,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 67.65625,
+      "byKindMB": {
+       "app": 67.65625
+      },
+      "processes": 1
+     }
+    },
+    {
+     "servedMS": 670.79,
+     "load1": 7.43,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 69.90625,
+      "byKindMB": {
+       "app": 69.90625
+      },
+      "processes": 1
+     }
+    },
+    {
+     "servedMS": 764.688,
+     "load1": 6.99,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 68.75,
+      "byKindMB": {
+       "app": 68.75
+      },
+      "processes": 1
+     }
+    },
+    {
+     "servedMS": 696.298,
+     "load1": 6.59,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 69.4375,
+      "byKindMB": {
+       "app": 69.4375
+      },
+      "processes": 1
+     }
+    },
+    {
+     "servedMS": 658.82,
+     "load1": 6.31,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 70.5625,
+      "byKindMB": {
+       "app": 70.5625
+      },
+      "processes": 1
+     }
+    }
+   ],
+   "warm": [
+    {
+     "servedMS": 73.421,
+     "load1": 6.04,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 59.90625,
+      "byKindMB": {
+       "app": 59.90625
+      },
+      "processes": 1
+     }
+    },
+    {
+     "servedMS": 86.747,
+     "load1": 6.36,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 60.828125,
+      "byKindMB": {
+       "app": 60.828125
+      },
+      "processes": 1
+     }
+    },
+    {
+     "servedMS": 77.232,
+     "load1": 6.01,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 59.640625,
+      "byKindMB": {
+       "app": 59.640625
+      },
+      "processes": 1
+     }
+    },
+    {
+     "servedMS": 85.242,
+     "load1": 5.61,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 60.953125,
+      "byKindMB": {
+       "app": 60.953125
+      },
+      "processes": 1
+     }
+    },
+    {
+     "servedMS": 72.655,
+     "load1": 5.32,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 59.265625,
+      "byKindMB": {
+       "app": 59.265625
+      },
+      "processes": 1
+     }
+    },
+    {
+     "servedMS": 77.228,
+     "load1": 5.05,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 59.5625,
+      "byKindMB": {
+       "app": 59.5625
+      },
+      "processes": 1
+     }
+    },
+    {
+     "servedMS": 82.002,
+     "load1": 4.81,
+     "loaded": false,
+     "settledMemory": {
+      "totalMB": 59.421875,
+      "byKindMB": {
+       "app": 59.421875
+      },
+      "processes": 1
+     }
+    }
+   ],
+   "coldMS": {
+    "n": 7,
+    "min": 658.82,
+    "median": 764.688,
+    "p90": 1144.735,
+    "max": 1144.735
+   },
+   "warmMS": {
+    "n": 7,
+    "min": 72.655,
+    "median": 77.232,
+    "p90": 86.747,
+    "max": 86.747
+   },
+   "coldRSSMB": {
+    "n": 7,
+    "min": 40.21875,
+    "median": 68.75,
+    "p90": 70.5625,
+    "max": 70.5625
+   },
+   "warmRSSMB": {
+    "n": 7,
+    "min": 59.265625,
+    "median": 59.640625,
+    "p90": 60.953125,
+    "max": 60.953125
+   },
+   "medianWarmBreakdown": {
+    "totalMB": 59.640625,
+    "byKindMB": {
+     "app": 59.640625
+    },
+    "processes": 1
+   },
+   "loadedSamples": 0
+  }
+ ],
+ "suites": [
+  {
+   "name": "unit",
+   "command": "go test -tags dashboard ./...",
+   "runs": [
+    {
+     "wallSeconds": 232.895667917,
+     "packageSecondsSum": 1332.0309999999995,
+     "pass": 5953,
+     "fail": 0,
+     "skip": 33,
+     "failedPackages": 0,
+     "exitCode": 0,
+     "load1Start": 4.66,
+     "load1End": 11.73,
+     "load1Max": 30.18,
+     "loaded": false,
+     "peakProcessTree": {
+      "totalMB": 1651.703125,
+      "byKindMB": {
+       "app": 993.4375,
+       "test-binary": 658.265625
+      },
+      "processes": 11
+     },
+     "peakChromeMB": 58.90625
+    },
+    {
+     "wallSeconds": 386.962808458,
+     "packageSecondsSum": 2181.636,
+     "pass": 5953,
+     "fail": 0,
+     "skip": 33,
+     "failedPackages": 0,
+     "exitCode": 0,
+     "load1Start": 7.87,
+     "load1End": 19.12,
+     "load1Max": 79.25,
+     "loaded": false,
+     "peakProcessTree": {
+      "totalMB": 1326.9375,
+      "byKindMB": {
+       "app": 531.921875,
+       "test-binary": 795.015625
+      },
+      "processes": 11
+     },
+     "peakChromeMB": 53.25
+    },
+    {
+     "wallSeconds": 212.461694333,
+     "packageSecondsSum": 1163.9650000000001,
+     "pass": 5953,
+     "fail": 0,
+     "skip": 33,
+     "failedPackages": 0,
+     "exitCode": 0,
+     "load1Start": 7.76,
+     "load1End": 15.58,
+     "load1Max": 23.21,
+     "loaded": false,
+     "peakProcessTree": {
+      "totalMB": 1612.703125,
+      "byKindMB": {
+       "app": 66.921875,
+       "test-binary": 1545.78125
+      },
+      "processes": 9
+     },
+     "peakChromeMB": 0.03125
+    }
+   ],
+   "wallSeconds": {
+    "n": 3,
+    "min": 212.461694333,
+    "median": 232.895667917,
+    "p90": 386.962808458,
+    "max": 386.962808458
+   },
+   "peakTreeMB": {
+    "n": 3,
+    "min": 1326.9375,
+    "median": 1612.703125,
+    "p90": 1651.703125,
+    "max": 1651.703125
+   },
+   "peakChromeMB": {
+    "n": 3,
+    "min": 0.03125,
+    "median": 53.25,
+    "p90": 58.90625,
+    "max": 58.90625
+   }
+  },
+  {
+   "name": "browser",
+   "command": "go test -tags browser -p 1 -timeout 25m ./internal/browser/... ./internal/engine/... ./internal/extension/... ./internal/apply/... ./internal/discovery/...",
+   "runs": [
+    {
+     "wallSeconds": 1071.096124541,
+     "packageSecondsSum": 1058.9560000000001,
+     "pass": 1092,
+     "fail": 1,
+     "skip": 10,
+     "failedPackages": 1,
+     "failures": [
+      {
+       "package": "applysmith/internal/extension",
+       "test": "TestBrowser_StartHandledAfterTheReloadCommitsIsDropped",
+       "tail": [
+        "    browser_flows_test.go:502: a run was issued for a Start sent from a document that was gone (1)",
+        "--- FAIL: TestBrowser_StartHandledAfterTheReloadCommitsIsDropped (10.80s)"
+       ]
+      },
+      {
+       "package": "applysmith/internal/extension",
+       "tail": [
+        "FAIL",
+        "FAIL\tapplysmith/internal/extension\t178.057s"
+       ]
+      }
+     ],
+     "exitCode": 1,
+     "load1Start": 7.88,
+     "load1End": 8.18,
+     "load1Max": 74.57,
+     "loaded": false,
+     "peakProcessTree": {
+      "totalMB": 3079.734375,
+      "byKindMB": {
+       "app": 13.796875,
+       "chrome": 2935.234375,
+       "test-binary": 130.703125
+      },
+      "processes": 39
+     },
+     "peakChromeMB": 2935.234375
+    },
+    {
+     "wallSeconds": 1126.804601333,
+     "packageSecondsSum": 1115.3229999999999,
+     "pass": 1093,
+     "fail": 0,
+     "skip": 10,
+     "failedPackages": 0,
+     "exitCode": 0,
+     "load1Start": 30.81,
+     "load1End": 20.64,
+     "load1Max": 58.91,
+     "loaded": true,
+     "peakProcessTree": {
+      "totalMB": 3150.75,
+      "byKindMB": {
+       "app": 19.8125,
+       "chrome": 2934.75,
+       "test-binary": 196.1875
+      },
+      "processes": 36
+     },
+     "peakChromeMB": 2934.75
+    },
+    {
+     "wallSeconds": 801.142066583,
+     "packageSecondsSum": 793.8560000000001,
+     "pass": 1093,
+     "fail": 0,
+     "skip": 10,
+     "failedPackages": 0,
+     "exitCode": 0,
+     "load1Start": 8,
+     "load1End": 4.83,
+     "load1Max": 29.72,
+     "loaded": false,
+     "peakProcessTree": {
+      "totalMB": 3524.078125,
+      "byKindMB": {
+       "app": 17.03125,
+       "chrome": 3314.9375,
+       "test-binary": 192.109375
+      },
+      "processes": 40
+     },
+     "peakChromeMB": 3314.9375
+    }
+   ],
+   "wallSeconds": {
+    "n": 3,
+    "min": 801.142066583,
+    "median": 1071.096124541,
+    "p90": 1126.804601333,
+    "max": 1126.804601333
+   },
+   "peakTreeMB": {
+    "n": 3,
+    "min": 3079.734375,
+    "median": 3150.75,
+    "p90": 3524.078125,
+    "max": 3524.078125
+   },
+   "peakChromeMB": {
+    "n": 3,
+    "min": 2934.75,
+    "median": 2935.234375,
+    "p90": 3314.9375,
+    "max": 3314.9375
+   }
+  },
+  {
+   "name": "lane-chrome",
+   "command": "go test -tags browser -run ^TestMeasure_LaneChromeHeld$ ./internal/browser/",
+   "runs": [
+    {
+     "wallSeconds": 12.336919208,
+     "packageSecondsSum": 11.416,
+     "pass": 1,
+     "fail": 0,
+     "skip": 0,
+     "failedPackages": 0,
+     "exitCode": 0,
+     "load1Start": 4.83,
+     "load1End": 4.32,
+     "load1Max": 4.83,
+     "loaded": false,
+     "peakProcessTree": {
+      "totalMB": 1590.796875,
+      "byKindMB": {
+       "app": 35.03125,
+       "chrome": 1536.765625,
+       "test-binary": 19
+      },
+      "processes": 16
+     },
+     "peakChromeMB": 1536.765625
+    },
+    {
+     "wallSeconds": 11.912706666,
+     "packageSecondsSum": 11.333,
+     "pass": 1,
+     "fail": 0,
+     "skip": 0,
+     "failedPackages": 0,
+     "exitCode": 0,
+     "load1Start": 4.32,
+     "load1End": 4.46,
+     "load1Max": 4.5,
+     "loaded": false,
+     "peakProcessTree": {
+      "totalMB": 1445.46875,
+      "byKindMB": {
+       "app": 27.359375,
+       "chrome": 1401.5625,
+       "test-binary": 16.546875
+      },
+      "processes": 14
+     },
+     "peakChromeMB": 1401.5625
+    },
+    {
+     "wallSeconds": 12.700572292,
+     "packageSecondsSum": 11.695,
+     "pass": 1,
+     "fail": 0,
+     "skip": 0,
+     "failedPackages": 0,
+     "exitCode": 0,
+     "load1Start": 4.46,
+     "load1End": 4.31,
+     "load1Max": 4.46,
+     "loaded": false,
+     "peakProcessTree": {
+      "totalMB": 1497.703125,
+      "byKindMB": {
+       "app": 32.1875,
+       "chrome": 1446.796875,
+       "test-binary": 18.71875
+      },
+      "processes": 14
+     },
+     "peakChromeMB": 1446.796875
+    }
+   ],
+   "wallSeconds": {
+    "n": 3,
+    "min": 11.912706666,
+    "median": 12.336919208,
+    "p90": 12.700572292,
+    "max": 12.700572292
+   },
+   "peakTreeMB": {
+    "n": 3,
+    "min": 1445.46875,
+    "median": 1497.703125,
+    "p90": 1590.796875,
+    "max": 1590.796875
+   },
+   "peakChromeMB": {
+    "n": 3,
+    "min": 1401.5625,
+    "median": 1446.796875,
+    "p90": 1536.765625,
+    "max": 1536.765625
+   }
+  }
+ ],
+ "workloads": [
+  {
+   "name": "fill: mock-ATS board, dry run then submit",
+   "what": "One scenario per mock board (Greenhouse, Lever, Ashby, Workday, LinkedIn): fill without pressing, then submit, with one press, a confirmed ledger row and a duplicate refused.",
+   "tests": [
+    "TestE2E_Apply_DryRunThenSubmitSucceedsWithExactlyOnePress/ashby",
+    "TestE2E_Apply_DryRunThenSubmitSucceedsWithExactlyOnePress/greenhouse",
+    "TestE2E_Apply_DryRunThenSubmitSucceedsWithExactlyOnePress/lever",
+    "TestE2E_Apply_DryRunThenSubmitSucceedsWithExactlyOnePress/linkedin",
+    "TestE2E_Apply_DryRunThenSubmitSucceedsWithExactlyOnePress/workday"
+   ],
+   "count": 5,
+   "executions": 15,
+   "pass": 15,
+   "fail": 0,
+   "skip": 0,
+   "completionPercent": 100,
+   "failurePercent": 0,
+   "failedScenarios": [],
+   "scenarioElapsedMS": {
+    "n": 15,
+    "min": 9070,
+    "median": 19970,
+    "p90": 31370,
+    "max": 34250
+   }
+  },
+  {
+   "name": "fill: mock-ATS board, service refusal",
+   "what": "The same five boards answering 422: the run must stop as a defect with nothing recorded, then succeed once the board accepts.",
+   "tests": [
+    "TestE2E_Apply_ServiceRefusalStopsAsDefectAndLeavesNoSubmission/ashby",
+    "TestE2E_Apply_ServiceRefusalStopsAsDefectAndLeavesNoSubmission/greenhouse",
+    "TestE2E_Apply_ServiceRefusalStopsAsDefectAndLeavesNoSubmission/lever",
+    "TestE2E_Apply_ServiceRefusalStopsAsDefectAndLeavesNoSubmission/linkedin",
+    "TestE2E_Apply_ServiceRefusalStopsAsDefectAndLeavesNoSubmission/workday"
+   ],
+   "count": 5,
+   "executions": 15,
+   "pass": 15,
+   "fail": 0,
+   "skip": 0,
+   "completionPercent": 100,
+   "failurePercent": 0,
+   "failedScenarios": [],
+   "scenarioElapsedMS": {
+    "n": 15,
+    "min": 12780,
+    "median": 22260,
+    "p90": 27710,
+    "max": 32590.000000000004
+   }
+  },
+  {
+   "name": "fill: whole mock-ATS suite",
+   "what": "Every top-level apply test that exists only under the browser tag: the mock boards, captcha and account flows, hand-off, resume, list and process-death cases.",
+   "tests": [
+    "TestApplyChain_LinkedInFlowUrlWithNotFoundFallback",
+    "TestApplyChain_LinkedInOffsiteUrlFromOwnPostingPayloadOnly",
+    "TestApplyChain_LinkedInUnconfirmedSubmitReportsModalState",
+    "TestApply_Ashby_CheckboxGroupIsOneQuestion",
+    "TestApply_Fill_EnsuresCurrentBundleAndRefusesSecondWriter",
+    "TestApply_RoleGuard_HiddenH1Ignored",
+    "TestApply_Snapshot_PasswordValuesBlanked",
+    "TestApply_Walk_IgnoresHiddenStackedContinue",
+    "TestApply_Workday_ActiveStepAndLoadingDetection",
+    "TestBrowser_Click_OwnShadowHostIsNotCovered",
+    "TestE2E_Account_AlternateSignsInAndBecomesTheSiteOverrideWithTheDefaultUntouched",
+    "TestE2E_Account_RefusalsStopAtTheBudgetAndTheHoldBlocksTheNextRun",
+    "TestE2E_Account_SessionFromTheUsersChromeCarriesTheSignInWithoutAPassword",
+    "TestE2E_ApplyChain_AdpPagerAndFinalStepMarker",
+    "TestE2E_ApplyChain_AdpStepMarkerHiddenByLayoutOrAriaHidden",
+    "TestE2E_Apply_CancelAfterDispatchStillReachesVerdictAndRecord",
+    "TestE2E_Apply_CancelBeforeDispatchPressesNothing",
+    "TestE2E_Apply_CoveredSubmitControlIsNotPressed",
+    "TestE2E_Apply_DryRunThenSubmitSucceedsWithExactlyOnePress",
+    "TestE2E_Apply_ICIMSFramedEmailStepSubmittedOnce",
+    "TestE2E_Apply_ICIMSPuzzleWithoutSolverEndsForTheUser",
+    "TestE2E_Apply_InventoryFromEngineOnRealPage",
+    "TestE2E_Apply_InventoryStableAfterFillOnSyntheticPage",
+    "TestE2E_Apply_LadderGroundedRungAnswersTheOpenQuestionFromTheProfile",
+    "TestE2E_Apply_LadderNeverInventsAWorkAuthorizationAnswer",
+    "TestE2E_Apply_LostResponseIsRecordedUnconfirmedAndNeverRetried",
+    "TestE2E_Apply_PageDecisionPicksTheApplicationOpener",
+    "TestE2E_Apply_ProcessDeathAfterClaimOrPressLeavesADurableUncertainRowAndNoRetry",
+    "TestE2E_Apply_RepairRoundResubmitsOnTheSameClaim",
+    "TestE2E_Apply_SecondRefusalStopsNeedsUserWithOneExtraPress",
+    "TestE2E_Apply_ServiceRefusalStopsAsDefectAndLeavesNoSubmission",
+    "TestE2E_Apply_TwoConcurrentRequestsForOnePostingPressOnce",
+    "TestE2E_Captcha_BotManagerInterstitialSolvedThenTheWalkReachesTheForm",
+    "TestE2E_Captcha_FinalStepCaptchaAndSubmitPressedOnlyByTheSubmitStage",
+    "TestE2E_Captcha_TheSameInterstitialOnTheTenantHostEndsAsABotCheck",
+    "TestE2E_Handoff_BufferKeepsTheLastHundredEntries",
+    "TestE2E_Handoff_CursorReadSurvivesNavigationAndReturnsNothingTwice",
+    "TestE2E_Handoff_RecorderOfAnotherBuildIsReplacedNotDoubled",
+    "TestE2E_Handoff_Recorder_SensitiveControlsNeverLeaveThePage",
+    "TestE2E_Handoff_Watcher_DrainsAKeptTabAndEndsWhenItCloses",
+    "TestE2E_Jobvite_NextInEmbedFrameAdvanced",
+    "TestE2E_LaneWindow_LeasedAdmitsOneRunAtATime",
+    "TestE2E_List_DryRunFillsEveryRowOnOneAttachAndPressesNothing",
+    "TestE2E_List_LiveNonSubmitCreatesNoAccountBuysNoSolveAndPressesNothing",
+    "TestE2E_List_OfflineSimulationRoutesEveryCallToTheFakeProviderAndLiveNonSubmitDoesNot",
+    "TestE2E_List_SubmitPressesEachRowOnceAndAnotherListSkipsAsDuplicates",
+    "TestE2E_Oracle_WorkEducationRowsAddedOnceAndSaved",
+    "TestE2E_Probe_ChatWidgetShadowUploadIsFurnitureAndTheRealApplyIsFollowed",
+    "TestE2E_Probe_FormValidationRevalidateReleasesHiddenAsksVisibleNeverSubmits",
+    "TestE2E_Probe_FurnitureAndControlsReadAsThePageShowsThem",
+    "TestE2E_Probe_RefusalWordsAreReadWhenMarkedAndHintsWhenUnmarked",
+    "TestE2E_Probe_StallHintsStayOutOfTheRefusalReader",
+    "TestE2E_Resume_ADoneBeforeTheSignInIsFinishedSignsInNowhereAndStopsAgain",
+    "TestE2E_Resume_AFieldTheUserCorrectedIsLeftAsTheyLeftItAndTheirAnswerCompletesTheForm",
+    "TestE2E_Resume_AResumedSubmitPassesTheSubmitGateAgainAndIsPressedOnce",
+    "TestE2E_Resume_ASubmitTheGateHoldsStaysHeldAndDoneDoesNotChangeThat",
+    "TestE2E_Resume_ATabTheUserClosedBlocksTheRunAsLaneUnavailable",
+    "TestE2E_Resume_DoneFromTelegramStopsBeforeTheFinalSubmitEvenWhenTheGateAllows",
+    "TestE2E_Resume_SignedInByHandThenDoneReadsThePageAgainAndFillsTheForm",
+    "TestE2E_Snapshot_BlanksEveryPasswordValueAttribute",
+    "TestGates_Captcha_ICIMSStepSentLikeTenantCallback",
+    "TestGates_Captcha_RefusedTokenFieldBlanked",
+    "TestGates_Captcha_TokenDeliveryFieldsAndCallbacks",
+    "TestHandoff_Recorder_TrustedChangeAndPressedButtonOnly"
+   ],
+   "count": 64,
+   "executions": 192,
+   "pass": 192,
+   "fail": 0,
+   "skip": 0,
+   "completionPercent": 100,
+   "failurePercent": 0,
+   "failedScenarios": [],
+   "scenarioElapsedMS": {
+    "n": 192,
+    "min": 0,
+    "median": 1780,
+    "p90": 13100,
+    "max": 48890
+   }
+  },
+  {
+   "name": "scan: fixture boards served over HTTP",
+   "what": "The registry sweep and the board-backed sources against local fixture boards, with the failure cases (rate limit, offline host, layout change, retries).",
+   "tests": [
+    "TestA16Z_TenSecondTimeoutPerRequest",
+    "TestAmazon_SearchCappedAtOneHundredPerQuery",
+    "TestHTTPSources_NonPostingURLRefusedBeforeScoring",
+    "TestHTTPSources_OneQueryFailureDoesNotStopOthers",
+    "TestHTTPSources_ResponseWithoutRowsIsLayoutChanged",
+    "TestRegistrySweep_RunRecordCountsUnchangedAndChanged",
+    "TestSources_DescriptionCappedAndOnlyForSurvivors",
+    "TestSources_EndpointURLs",
+    "TestSources_Greenhouse_DescriptionIncludesFormQuestions",
+    "TestSources_Greenhouse_DescriptionIncludesFormQuestionsFlagsClearance",
+    "TestSources_Normalize_Greenhouse",
+    "TestSources_Normalize_LeverAshbyWorkable",
+    "TestSources_OmittedDescriptionStaysEmpty",
+    "TestSources_ResolveSlug_Table",
+    "TestSources_SmartRecruiters_LocationFallback",
+    "TestSources_SmartRecruiters_NoIdentifierDropped",
+    "TestSources_SmartRecruiters_PagesTo500ThenTruncated",
+    "TestSources_SmartRecruiters_URLFromAPIIdentifier",
+    "TestSources_Workable_AccountNameAndLocationText",
+    "TestSources_Workable_MultiLocationGateBeforeDedup",
+    "TestSources_Workable_ShortLinkNoBoard",
+    "TestSweep_304PreservesCountsStoresNewETag",
+    "TestSweep_BudgetStopsAndLeavesBoardsDue",
+    "TestSweep_FailedProbeKeepsDeadAndDelaysNext",
+    "TestSweep_FailureKinds",
+    "TestSweep_HostOfflineAbortsEarlyNoStrikes",
+    "TestSweep_NoStrikesFlushedWhenNoVisitSucceeded",
+    "TestSweep_OfflineDoesNotTripAfterASuccess",
+    "TestSweep_OldestScannedFirst",
+    "TestSweep_RateLimitBreakerDefersWithoutStrikes",
+    "TestSweep_SkipsDeadAndBlocked_ProbeRevives",
+    "TestSweep_SuccessResetsStrikes",
+    "TestSweep_ThreeFailuresDead_TransientNeverStrikes"
+   ],
+   "count": 33,
+   "executions": 99,
+   "pass": 99,
+   "fail": 0,
+   "skip": 0,
+   "completionPercent": 100,
+   "failurePercent": 0,
+   "failedScenarios": [],
+   "scenarioElapsedMS": {
+    "n": 99,
+    "min": 0,
+    "median": 170,
+    "p90": 620,
+    "max": 2850
+   }
+  },
+  {
+   "name": "scan: fixture boards read in headless Chrome",
+   "what": "One scenario per browser-read source (LinkedIn jobs and feed, Indeed, ZipRecruiter, Google Jobs, Glassdoor, new-grad feed, Jobright) on a local fixture page.",
+   "tests": [
+    "TestBrowserScan_Chrome_ClickGuardRefusesWriteControls",
+    "TestBrowserScan_Chrome_EmptyWindowAndRetiredRoute",
+    "TestBrowserScan_Chrome_OnlyScanLaneTabsOpen",
+    "TestGlassdoor_Chrome_ExtractsCardsAndDetectsASignInWall",
+    "TestGoogleJobs_Chrome_ResolvesEmployerURLFromThePanel",
+    "TestIndeed_Chrome_ChallengePageBlocksTheRun",
+    "TestIndeed_Chrome_ExtractsCardsAndFollowsTheApplyControl",
+    "TestJobright_Chrome_ReadsTheFeedClosesTheOverlayAndTagsRows",
+    "TestLinkedInFeed_Chrome_ReadsPostsAndExpandsOneThread",
+    "TestLinkedInJobs_Chrome_ExtractsCardsAndDetailsWithoutWriting",
+    "TestNewGrad_Chrome_ReadsTheJSONAPIAndEnrichesFromJobright",
+    "TestZipRecruiter_Chrome_ExtractsRedirectCardsAsMirrors"
+   ],
+   "count": 12,
+   "executions": 36,
+   "pass": 36,
+   "fail": 0,
+   "skip": 0,
+   "completionPercent": 100,
+   "failurePercent": 0,
+   "failedScenarios": [],
+   "scenarioElapsedMS": {
+    "n": 36,
+    "min": 150,
+    "median": 725,
+    "p90": 2570,
+    "max": 13160
+   }
+  }
+ ],
+ "leftoverProcesses": null
+}

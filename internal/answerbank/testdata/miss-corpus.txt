@@ -1,0 +1,24 @@
+# Frozen synthetic miss corpus: entry id, input type, a reworded or furnished form of a question the entry answers.
+# The replay records an answer for the entry and expects the matcher to fill it from that entry and no other.
+applicant-full-name	text	Full Name (required)
+email-address	text	Please enter your email address
+email-address	text	E-mail
+phone-mobile	text	Mobile phone number *
+address-city	text	City *
+address-city	text	City (required)
+address-zip	text	ZIP / Postal code
+address-zip	text	Postal Code *
+address-street	text	Street address *
+current-company	text	Current employer *
+current-company	text	Name of your current company
+current-job-title	text	What is your current job title?
+linkedin-url	url	Link to your career profile
+portfolio-url	url	Please share a link to your portfolio
+age-minimum-threshold	yes_no	Are you at least 18 years old?
+ok-to-contact	yes_no	Is it okay to contact you by email?
+currently-enrolled-student	yes_no	Are you currently enrolled in a degree program? *
+work-auth-us	yes_no	Are you authorized to be employed in the United States?
+office-attendance-ok	yes_no	Can you work in the Springfield, IL office Monday through Wednesday? (Example Corp keeps a hybrid work schedule) *
+employer-relationship-with-company	yes_no	Is your current employer a customer of Example Corp? *
+salary-expectation	text	What is the beginning of your desired annual base salary range? (please format with no commas, i.e. $50000, £50000)
+salary-expectation	text	What is the end of your desired annual base salary range? (please format with no commas, i.e. $70000, £70000)

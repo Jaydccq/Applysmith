@@ -1,0 +1,9 @@
+// The Worker's name and the account are given at the command line
+// (--name), never here; see README.md, Publishing.
+{
+  "compatibility_date": "2026-07-17",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

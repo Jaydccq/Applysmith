@@ -1,0 +1,9 @@
+{"type":"agent_start"}
+{"type":"turn_start"}
+{"type":"auto_retry_start","attempt":1,"maxAttempts":3,"delayMs":2000,"errorMessage":"529 overloaded"}
+{"type":"message_end","message":{"role":"assistant","content":[],"api":"openai-completions","provider":"fake","model":"scripted","usage":{"input":0,"output":0,"cacheRead":0,"cacheWrite":0,"reasoning":0,"totalTokens":0,"cost":{"input":0,"output":0,"cacheRead":0,"cacheWrite":0,"total":0}},"stopReason":"error","timestamp":1,"errorMessage":"529 overloaded"}}
+{"type":"auto_retry_start","attempt":2,"maxAttempts":3,"delayMs":4000,"errorMessage":"529 overloaded"}
+{"type":"message_end","message":{"role":"assistant","content":[],"api":"openai-completions","provider":"fake","model":"scripted","usage":{"input":0,"output":0,"cacheRead":0,"cacheWrite":0,"reasoning":0,"totalTokens":0,"cost":{"input":0,"output":0,"cacheRead":0,"cacheWrite":0,"total":0}},"stopReason":"error","timestamp":1,"errorMessage":"529 overloaded"}}
+{"type":"auto_retry_end","success":false,"attempt":3,"finalError":"529 overloaded_error: Overloaded"}
+{"type":"agent_end","messages":[],"willRetry":false}
+{"type":"agent_settled"}

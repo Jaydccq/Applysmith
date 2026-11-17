@@ -1,0 +1,49 @@
+%% Cover letter template for XeLaTeX with the cover class.
+%%
+%% Adapted from cover_letters/cover_example.tex of ai-job-search (MIT, commit
+%% a011214d60f943770e33f7d5f070e1a5f91e3822). Every template action is
+%% expanded by Go text/template; the only functions available to an action are
+%% the encoders of internal/documents/tex, so content is always literal.
+%%
+%% A list sits outside \lettercontent: that macro ends with a line break,
+%% which fails on \end{itemize}. The list is set in the body font so its
+%% bullets match the text. \closing adds its own line break, so none is written
+%% inside it. The date ends its line without the blank line the paragraphs have,
+%% so one is added; the list drops its own top space because the paragraph
+%% before it already ends in a blank line. Setting \topsep does not do that,
+%% because the list resets it when it begins: the space is taken back before
+%% the list instead (measured: 21 pt above the list against 13 pt between
+%% paragraphs, now 13 pt above and below). A contact separator stays on the
+%% line of the item before it.
+
+\documentclass[<% paper .Paper %>]{cover}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\rfoot{Page \thepage \hspace{0pt}}
+\thispagestyle{empty}
+\renewcommand{\headrulewidth}{0pt}
+\begin{document}
+
+\namesection{}{\Huge{<% tex .Name %>}}{<% range $i, $l := .Contact %><% if $i %>~| <% end %><% if $l.URL %>\href{<% url $l.URL %>}{<% tex $l.Label %>}<% else %><% tex $l.Label %><% end %><% end %>
+}
+
+\currentdate{<% tex .Date %>}\mbox{}\\
+\lettercontent{<% tex .Salutation %>}
+<% range .Blocks %>
+\lettercontent{<% rich .Text %>}
+<% if .Bullets %>
+{\raggedright\fontspec[Path = fonts/raleway/]{Raleway-Medium}\fontsize{11pt}{13pt}\selectfont
+\vspace{-\parskip}\vspace{-\topsep}\vspace{-\partopsep}\begin{itemize}
+<% range .Bullets %>    \item <% rich . %>
+<% end %>\end{itemize}\par}
+\vspace{3pt}
+<% end %><% end %>
+\begin{flushright}
+\closing{<% tex .Closing %>}
+
+\signature{<% tex .Name %>}
+\end{flushright}
+\end{document}

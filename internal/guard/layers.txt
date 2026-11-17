@@ -1,0 +1,112 @@
+# Package layer order. A package may import only internal packages whose layer
+# number is strictly lower than its own. Every package under internal/ must be
+# listed; entries for packages that do not exist yet are allowed so that new
+# packages slot into a decided position. Gaps between numbers are deliberate.
+# "pure" marks a package that must stay free of I/O, clock and randomness and
+# that pure packages may import.
+#
+# Format: <package path> <layer number> [pure]
+
+internal/guard 0
+internal/release 1
+internal/lazyregexp 2 pure
+internal/flight 2
+internal/engine/stamp 3 pure
+internal/usstates 3 pure
+internal/engine/bundler 5
+internal/extension/builder 6
+internal/extension 7
+
+internal/gates 10 pure
+internal/demo 9
+internal/documents/tex 12 pure
+internal/cvparse 12 pure
+internal/identity 10
+internal/prompts 10
+
+internal/answerbank/match 15 pure
+internal/remote/qr 14 pure
+
+internal/gmail/extract 41 pure
+internal/gmail/classify 42
+internal/gmail/lifecycle 43
+internal/gmail/link 43
+internal/gmail/imaptest 40
+
+internal/api/wire 8
+
+internal/workspace 20
+internal/intake 21
+internal/vault 25
+internal/store 30
+
+internal/documents/assets 33
+internal/documents/toolchain 34
+internal/llm 35
+internal/providerusage 35
+internal/tracker 35
+internal/kb 35
+internal/signals 48
+internal/ledger 36
+internal/credentials 36
+internal/remote/tunnel 36
+internal/accounts 37
+internal/computeruse 38
+
+internal/browser 40
+internal/browser/browserimport 40
+internal/answerbank 40
+internal/answerbank/learn 41
+internal/answerbank/assist 42
+internal/captcha 42
+internal/notify 40
+internal/notify/telegram 41
+internal/notify/stream 41
+
+internal/interview 40
+internal/engine 45
+internal/documents 45
+internal/gmail 45
+internal/discovery 45
+internal/answerbank/bind 47
+
+internal/evaluate 50
+internal/messages 52
+internal/research 53
+internal/apply 55
+internal/agent/pageread 56
+internal/agent/sessions 57
+internal/agent/approvals 57
+internal/agent/pirpc 58
+internal/agent/origins 58
+internal/agent/memory 59
+internal/agent/goals 60
+internal/agent/tasks 60
+internal/agent/schedprop 60
+internal/agent/harness 60
+internal/agent/skills 60
+internal/agent/triggers 61
+internal/agent 62
+internal/agent/improve 63
+internal/scheduler 65
+internal/scheduler/jobs 66
+
+internal/mcpserver 80
+internal/remote 80
+internal/api/apikit 70
+internal/api/gmailapi 85
+internal/api/knowledgeapi 85
+internal/api/trackerapi 85
+internal/api/documentsapi 85
+internal/api/agentapi 85
+internal/api/modelsapi 85
+internal/api/providerapi 85
+internal/api/schedulesapi 85
+internal/api/signalsapi 85
+internal/api/learningapi 85
+internal/api/applyapi 85
+internal/api 90
+internal/launch 97
+internal/onboarding 95
+internal/cliinstall 20
+internal/cli 100

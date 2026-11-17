@@ -1,0 +1,60 @@
+# Guard exceptions. At most 50 entries. Each entry names one rule, one exact
+# file, the exact allowed value and a reason of at least 10 characters. The
+# personal-token, retired-name, internal-material, secret and gitleaks rules
+# cannot be listed. An entry that suppresses nothing in a run fails the guard.
+#
+#   - rule: email
+#     file: docs/example.md
+#     value: someone@public.example.org
+#     reason: documentation sample of the reserved-domain exemption
+entries:
+  - rule: email
+    file: third_party/licenses/OFL-1.1-Lato.txt
+    value: dziedzic@typoland.com
+    reason: contact address inside the retained font licence text, which must stay verbatim
+  - rule: email
+    file: third_party/licenses/OFL-1.1-Raleway.txt
+    value: matt@pixelspread.com
+    reason: contact address inside the retained font licence text, which must stay verbatim
+  - rule: email
+    file: third_party/licenses/OFL-1.1-Raleway.txt
+    value: impallari@gmail.com
+    reason: contact address inside the retained font licence text, which must stay verbatim
+  - rule: email
+    file: third_party/licenses/OFL-1.1-Raleway.txt
+    value: hello@rfuenzalida.com
+    reason: contact address inside the retained font licence text, which must stay verbatim
+  - rule: email
+    file: internal/guard/allow.yml
+    value: dziedzic@typoland.com
+    reason: the entry above names the address it allows, so this file needs the same exemption
+  - rule: email
+    file: internal/guard/allow.yml
+    value: matt@pixelspread.com
+    reason: the entry above names the address it allows, so this file needs the same exemption
+  - rule: email
+    file: internal/guard/allow.yml
+    value: impallari@gmail.com
+    reason: the entry above names the address it allows, so this file needs the same exemption
+  - rule: email
+    file: internal/guard/allow.yml
+    value: hello@rfuenzalida.com
+    reason: the entry above names the address it allows, so this file needs the same exemption
+  - rule: similarity
+    file: internal/agent/pirpc/testdata/turn-abort.jsonl
+    reason: a transcript recorded from the pi agent; its event shape is pi's RPC protocol, not code written here
+  - rule: similarity
+    file: internal/agent/pirpc/testdata/turn-died.jsonl
+    reason: a transcript recorded from the pi agent; its event shape is pi's RPC protocol, not code written here
+  - rule: similarity
+    file: internal/agent/pirpc/testdata/turn-provider-error.jsonl
+    reason: a transcript recorded from the pi agent; its event shape is pi's RPC protocol, not code written here
+  - rule: similarity
+    file: internal/agent/pirpc/testdata/turn-repeat.jsonl
+    reason: a transcript recorded from the pi agent; its event shape is pi's RPC protocol, not code written here
+  - rule: similarity
+    file: internal/agent/pirpc/testdata/turn-steer.jsonl
+    reason: a transcript recorded from the pi agent; its event shape is pi's RPC protocol, not code written here
+  - rule: similarity
+    file: internal/agent/pirpc/testdata/turn-tool-then-answer.jsonl
+    reason: a transcript recorded from the pi agent; its event shape is pi's RPC protocol, not code written here

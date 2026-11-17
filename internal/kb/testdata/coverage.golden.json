@@ -1,0 +1,169 @@
+{
+  "principles": [
+    {
+      "id": "ownership",
+      "name": "Ownership",
+      "grade": "green",
+      "stories": [
+        "alerts-ownership"
+      ]
+    },
+    {
+      "id": "customer-focus",
+      "name": "Customer focus",
+      "grade": "red",
+      "stories": [],
+      "suggest": [
+        "customer",
+        "work",
+        "project"
+      ]
+    },
+    {
+      "id": "technical-depth",
+      "name": "Technical depth",
+      "grade": "yellow",
+      "stories": [
+        "parser-rewrite"
+      ],
+      "missing": [
+        "tradeoff"
+      ]
+    },
+    {
+      "id": "delivery",
+      "name": "Delivery",
+      "grade": "green",
+      "stories": [
+        "alerts-ownership"
+      ]
+    },
+    {
+      "id": "collaboration",
+      "name": "Collaboration",
+      "grade": "green",
+      "stories": [
+        "review-mentoring"
+      ]
+    },
+    {
+      "id": "disagreement",
+      "name": "Disagreement",
+      "grade": "red",
+      "stories": [],
+      "suggest": [
+        "team-conflict",
+        "leadership"
+      ]
+    },
+    {
+      "id": "learning-from-failure",
+      "name": "Learning from failure",
+      "grade": "red",
+      "stories": [],
+      "suggest": [
+        "failure-learning",
+        "project"
+      ]
+    },
+    {
+      "id": "mentoring",
+      "name": "Mentoring",
+      "grade": "green",
+      "stories": [
+        "review-mentoring"
+      ]
+    },
+    {
+      "id": "ambiguity",
+      "name": "Handling ambiguity",
+      "grade": "red",
+      "stories": [],
+      "suggest": [
+        "project",
+        "work"
+      ]
+    },
+    {
+      "id": "prioritization",
+      "name": "Prioritization",
+      "grade": "red",
+      "stories": [],
+      "suggest": [
+        "project",
+        "work"
+      ]
+    },
+    {
+      "id": "communication",
+      "name": "Communication",
+      "grade": "red",
+      "stories": [],
+      "suggest": [
+        "leadership",
+        "team-conflict",
+        "customer"
+      ]
+    },
+    {
+      "id": "quality",
+      "name": "Quality",
+      "grade": "red",
+      "stories": [],
+      "suggest": [
+        "project",
+        "work",
+        "failure-learning"
+      ]
+    }
+  ],
+  "shapes": [
+    {
+      "id": "proud-project",
+      "name": "Proud project",
+      "need": 2,
+      "have": 1,
+      "grade": "red",
+      "stories": [
+        "parser-rewrite"
+      ]
+    },
+    {
+      "id": "conflict",
+      "name": "Conflict",
+      "need": 1,
+      "have": 1,
+      "grade": "green",
+      "stories": [
+        "review-mentoring"
+      ]
+    },
+    {
+      "id": "mistake",
+      "name": "Mistake",
+      "need": 1,
+      "have": 0,
+      "grade": "red",
+      "stories": []
+    },
+    {
+      "id": "tight-deadline",
+      "name": "Tight deadline",
+      "need": 1,
+      "have": 2,
+      "grade": "green",
+      "stories": [
+        "alerts-ownership",
+        "parser-rewrite"
+      ]
+    },
+    {
+      "id": "multitasking",
+      "name": "Multitasking",
+      "need": 1,
+      "have": 0,
+      "grade": "red",
+      "stories": []
+    }
+  ]
+}

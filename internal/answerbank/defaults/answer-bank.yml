@@ -1,0 +1,3118 @@
+# Default answer bank.
+#
+# The product never supplies a fact about the user: every entry that could
+# state one ships as a blank placeholder, and the matcher leaves its field for
+# the user until an answer is written. Three groups carry a default:
+#   - self-identification entries prefer the option that declines to answer
+#     (needs_review marks them for the user to confirm or replace);
+#   - auto-acknowledge entries have no answer and act only under the rules for
+#     legal declarations;
+#   - employer-history entries answer Yes or No from the employers list and the
+#     profile's work history, never from anything else.
+# Ids are stable across releases; every load of a bank gives it, in memory,
+# the entries its file lacks and the newer copies of those it has not changed.
+version: 1
+employers: []
+entries:
+  - id: age-minimum-threshold
+    description: "Whether the applicant meets a stated minimum age; answered from the date of birth in the profile"
+    kind: fixed
+    category: identity
+    input_types: [yes_no]
+    examples:
+      - "Are you at least 18 years of age?"
+    placeholder: true
+    answer: ""
+  - id: applicant-full-name
+    description: "Full legal name as it appears on the application"
+    kind: fixed
+    category: identity
+    input_types: [text]
+    examples:
+      - "Full name"
+      - "Legal name"
+    placeholder: true
+    answer: ""
+  - id: application-submitter-identity
+    description: "Who is submitting the application, when a form asks whether it is filed by the applicant or on their behalf"
+    kind: pick-option
+    category: identity
+    input_types: [single_select]
+    examples:
+      - "Are you submitting this application yourself?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: career-goal
+    description: "Short statement of the applicant's career goal"
+    kind: fixed
+    category: employment
+    input_types: [long_text]
+    examples:
+      - "What are your career goals?"
+    placeholder: true
+    answer: ""
+  - id: current-age-bracket
+    description: "Age bracket of the applicant; answered from the date of birth in the profile"
+    kind: pick-option
+    category: identity
+    input_types: [single_select, text, number]
+    examples:
+      - "What is your age range?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: date-of-birth
+    description: "Date of birth"
+    kind: fixed
+    category: identity
+    input_types: [date]
+    examples:
+      - "Date of birth"
+    placeholder: true
+    answer: ""
+  - id: preferred-name
+    description: "Name the applicant goes by, when different from the legal first name"
+    kind: fixed
+    category: identity
+    input_types: [text]
+    examples:
+      - "Preferred first name"
+      - "Preferred name"
+      - "What should we call you?"
+      - "What name do you go by?"
+    placeholder: true
+    answer: ""
+  - id: preferred-full-name
+    description: "Full name the applicant goes by: the preferred first name with the last name, or the full name"
+    kind: fixed
+    category: identity
+    input_types: [text]
+    examples:
+      - "Preferred full name"
+      - "Preferred full name (first and last)"
+    placeholder: true
+    answer: ""
+  - id: salutation
+    description: "Title or form of address"
+    kind: pick-option
+    category: identity
+    input_types: [single_select]
+    examples:
+      - "Salutation"
+      - "Title (Mr., Ms., Mx., Dr.)"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: email-address
+    description: "Primary email address"
+    kind: fixed
+    category: contact
+    input_types: [text]
+    examples:
+      - "Email address"
+      - "Email"
+    placeholder: true
+    answer: ""
+  - id: ok-to-contact
+    description: "Whether the employer may contact the applicant about the application"
+    kind: fixed
+    category: contact
+    input_types: [yes_no]
+    examples:
+      - "May we contact you by email?"
+    placeholder: true
+    answer: ""
+  - id: phone-country-code
+    description: "Dialing code of the phone number's country"
+    kind: pick-option
+    category: contact
+    input_types: [single_select]
+    examples:
+      - "Country code"
+      - "Phone country code"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: phone-device-type
+    description: "Type of the phone number, such as mobile or home"
+    kind: pick-option
+    category: contact
+    input_types: [single_select]
+    examples:
+      - "Phone device type"
+      - "Phone type"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: phone-mobile
+    description: "Mobile phone number"
+    kind: fixed
+    category: contact
+    input_types: [text]
+    examples:
+      - "Mobile phone"
+      - "Phone number"
+    placeholder: true
+    answer: ""
+  - id: preferred-method-of-contact
+    description: "How the applicant prefers to be contacted"
+    kind: fixed
+    category: contact
+    input_types: [text, single_select]
+    examples:
+      - "Preferred method of contact"
+    placeholder: true
+    answer: ""
+  - id: address-city
+    description: "City of residence"
+    kind: fixed
+    category: address
+    input_types: [text]
+    examples:
+      - "City"
+    placeholder: true
+    answer: ""
+  - id: address-country
+    description: "Country of residence"
+    kind: pick-option
+    category: address
+    input_types: [single_select]
+    examples:
+      - "Country"
+      - "Country of residence"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: address-county
+    description: "County or district of residence"
+    kind: fixed
+    category: address
+    input_types: [text, single_select]
+    examples:
+      - "County"
+    placeholder: true
+    answer: ""
+  - id: address-line2
+    description: "Second address line such as an apartment or unit"
+    kind: fixed
+    category: address
+    input_types: [text]
+    examples:
+      - "Address line 2"
+      - "Apartment or unit"
+    placeholder: true
+    answer: ""
+  - id: address-state
+    description: "State, province or region of residence"
+    kind: pick-option
+    category: address
+    input_types: [single_select]
+    examples:
+      - "State"
+      - "State or province"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: address-street
+    description: "Street address, first line"
+    kind: fixed
+    category: address
+    input_types: [text]
+    examples:
+      - "Street address"
+      - "Address line 1"
+    placeholder: true
+    answer: ""
+  - id: address-type
+    description: "Kind of address being entered, such as home or mailing"
+    kind: pick-option
+    category: address
+    input_types: [single_select]
+    examples:
+      - "Address type"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: address-zip
+    description: "Postal or ZIP code"
+    kind: fixed
+    category: address
+    input_types: [text]
+    examples:
+      - "ZIP code"
+      - "Postal code"
+    placeholder: true
+    answer: ""
+  - id: based-in-named-metro
+    description: "Whether the applicant is based in a metropolitan area named by the question"
+    kind: fixed
+    category: address
+    input_types: [yes_no]
+    examples:
+      - "Are you based in the Example City area?"
+    placeholder: true
+    answer: ""
+  - id: based-in-us-or-canada
+    description: "Whether the applicant is based in the United States or Canada"
+    kind: pick-option
+    category: address
+    input_types: [single_select, yes_no]
+    examples:
+      - "Are you based in the US or Canada?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: countries-lived-outside-us
+    description: "Countries other than the United States where the applicant has lived"
+    kind: pick-option
+    category: address
+    input_types: [single_select]
+    examples:
+      - "Have you lived outside the United States?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: current-based-country
+    description: "Country where the applicant is currently based"
+    kind: fixed
+    category: address
+    input_types: [text]
+    examples:
+      - "Which country are you currently based in?"
+    placeholder: true
+    answer: ""
+  - id: currently-living-us-or-canada
+    description: "Whether the applicant currently lives in the United States or Canada"
+    kind: fixed
+    category: address
+    input_types: [yes_no]
+    examples:
+      - "Do you currently live in the US or Canada?"
+    placeholder: true
+    answer: ""
+  - id: currently-located-outside-us
+    description: "Whether the applicant is currently located outside the United States"
+    kind: fixed
+    category: address
+    input_types: [yes_no]
+    examples:
+      - "Are you currently located outside the United States?"
+    placeholder: true
+    answer: ""
+  - id: live-in-listed-states
+    description: "Whether the applicant lives in one of the states listed by the question"
+    kind: pick-option
+    category: address
+    input_types: [single_select]
+    examples:
+      - "Do you live in any of these states?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: lived-outside-us-12-consecutive-months
+    description: "Whether the applicant lived outside the United States for twelve consecutive months"
+    kind: fixed
+    category: address
+    input_types: [yes_no]
+    examples:
+      - "Have you lived outside the US for 12 or more consecutive months?"
+    placeholder: true
+    answer: ""
+  - id: time-zone
+    description: "Time zone of the applicant"
+    kind: pick-option
+    category: address
+    input_types: [single_select]
+    examples:
+      - "Time zone"
+      - "Which time zone are you in?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: work-country
+    description: "Country where the applicant would work"
+    kind: fixed
+    category: address
+    input_types: [text, single_select, multi_select]
+    examples:
+      - "In which country will you work?"
+    placeholder: true
+    answer: ""
+  - id: github-url
+    description: "Link to the applicant's code-hosting profile"
+    kind: fixed
+    category: links
+    input_types: [url]
+    examples:
+      - "Code repository profile URL"
+      - "Link to your open-source work"
+    placeholder: true
+    answer: ""
+  - id: linkedin-url
+    description: "Link to the applicant's professional network profile"
+    kind: fixed
+    category: links
+    input_types: [url]
+    examples:
+      - "Professional network profile URL"
+      - "Link to your career profile"
+    placeholder: true
+    answer: ""
+  - id: other-website-url
+    description: "Link to any other website of the applicant; intentionally left blank unless the user fills it"
+    kind: fixed
+    category: links
+    input_types: [url]
+    examples:
+      - "Other website"
+      - "Personal website"
+    placeholder: true
+    answer: ""
+  - id: portfolio-url
+    description: "Link to the applicant's portfolio or personal site"
+    kind: fixed
+    category: links
+    input_types: [url]
+    examples:
+      - "Portfolio URL"
+      - "Link to your portfolio"
+    placeholder: true
+    answer: ""
+  - id: google-scholar-url
+    description: "Link to the applicant's scholarly citation profile; left blank, a required question about it is answered No"
+    kind: fixed
+    category: links
+    input_types: [url, text, yes_no]
+    examples:
+      - "Scholar profile URL"
+      - "Link to your scholarly citation profile"
+    placeholder: true
+    answer: ""
+  - id: publications
+    description: "The applicant's research publications: title, venue, year and authorship of each; left blank, a required question about them is answered No"
+    kind: fixed
+    category: experience
+    input_types: [long_text, text, yes_no]
+    examples:
+      - "List your publications"
+      - "Do you have any first-author publications?"
+    placeholder: true
+    answer: ""
+  - id: twitter-url
+    description: "Link to the applicant's social media profile; intentionally left blank unless the user fills it"
+    kind: fixed
+    category: links
+    input_types: [url]
+    examples:
+      - "Social media profile"
+      - "Social media link"
+    placeholder: true
+    answer: ""
+  - id: commitments-to-another-employer
+    description: "Whether the applicant has commitments to another employer that could limit this role"
+    kind: fixed
+    category: employment
+    input_types: [yes_no]
+    examples:
+      - "Do you have obligations to a current employer that would limit this role?"
+    placeholder: true
+    answer: ""
+  - id: current-company
+    description: "Name of the applicant's current employer"
+    kind: fixed
+    category: employment
+    input_types: [text]
+    examples:
+      - "Current company"
+      - "Current employer"
+    placeholder: true
+    answer: ""
+  - id: current-job-title
+    description: "Title of the applicant's current or most recent role"
+    kind: fixed
+    category: employment
+    input_types: [text]
+    examples:
+      - "Current job title"
+      - "Most recent job title"
+    placeholder: true
+    answer: ""
+  - id: currently-employed-by-this-company
+    description: "Whether the applicant is employed by the hiring company; answered from the employers list"
+    kind: employer-history
+    category: employment
+    input_types: [yes_no]
+    examples:
+      - "Are you currently employed by this company?"
+    answer_if_match: "Yes"
+    answer_if_no_match: "No"
+  - id: currently-employed
+    description: "Whether the applicant has a job now; a profile position with no end answers Yes"
+    kind: fixed
+    category: employment
+    input_types: [yes_no]
+    examples:
+      - "Are you currently employed?"
+    placeholder: true
+    answer: ""
+  - id: employer-history
+    description: "Whether the applicant has ever worked for the employer the question names; answered from the employers list"
+    kind: employer-history
+    category: employment
+    input_types: [yes_no, single_select, checkbox]
+    examples:
+      - "Have you ever worked for this company before?"
+      - "Were you previously employed by this organization?"
+    answer_if_match: "Yes"
+    answer_if_no_match: "No"
+  - id: desired-career-level
+    description: "Career level the applicant is looking for; the profile target roles fill it when it is left blank"
+    kind: pick-option
+    category: employment
+    input_types: [single_select]
+    examples:
+      - "What career level are you seeking?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: employer-industry
+    description: "Industry of the applicant's current employer"
+    kind: pick-option
+    category: employment
+    input_types: [single_select]
+    examples:
+      - "Current employer industry"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: employer-position-function
+    description: "Job function of the applicant's current role"
+    kind: pick-option
+    category: employment
+    input_types: [single_select]
+    examples:
+      - "Position function"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: employer-relationship-with-company
+    description: "Relationship between the applicant's employer and the hiring company, such as customer or vendor"
+    kind: fixed
+    category: employment
+    input_types: [text, yes_no]
+    examples:
+      - "Is your employer a client or vendor of this company?"
+    placeholder: true
+    answer: ""
+  - id: former-employer
+    description: "Name of a former employer that the question asks about"
+    kind: fixed
+    category: employment
+    input_types: [text]
+    examples:
+      - "Former employer"
+    placeholder: true
+    answer: ""
+  - id: previously-interviewed-company
+    description: "Whether the applicant interviewed with the hiring company before"
+    kind: fixed
+    category: employment
+    input_types: [yes_no]
+    examples:
+      - "Have you interviewed with this company before?"
+    placeholder: true
+    answer: ""
+  - id: current-degree-year
+    description: "Year of study of the degree the applicant is pursuing"
+    kind: pick-option
+    category: education
+    input_types: [single_select]
+    examples:
+      - "What year of your degree are you in?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: current-level-education-pursuing
+    description: "Level of the degree the applicant is currently pursuing"
+    kind: pick-option
+    category: education
+    input_types: [single_select]
+    examples:
+      - "What level of education are you pursuing?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: academic-transcripts-shareable
+    description: "Whether the applicant is willing to share their academic transcripts; blank leaves every such question to the applicant"
+    kind: fixed
+    category: education
+    input_types: [yes_no]
+    examples:
+      - "Are you willing to share your academic transcripts?"
+    placeholder: true
+    answer: ""
+  - id: currently-enrolled-student
+    description: "Whether the applicant is currently enrolled as a student"
+    kind: fixed
+    category: education
+    input_types: [yes_no]
+    examples:
+      - "Are you currently enrolled in a degree program?"
+    placeholder: true
+    answer: ""
+  - id: degree-focus-pursuing
+    description: "Field of the degree the applicant is currently pursuing"
+    kind: fixed
+    category: education
+    input_types: [text]
+    examples:
+      - "What is your major or focus?"
+    placeholder: true
+    answer: ""
+  - id: did-you-graduate
+    description: "Whether the applicant has graduated from their degree"
+    kind: fixed
+    category: education
+    input_types: [yes_no]
+    examples:
+      - "Did you graduate?"
+    placeholder: true
+    answer: ""
+  - id: expected-graduation-date
+    description: "Expected graduation date"
+    kind: fixed
+    category: education
+    input_types: [date]
+    examples:
+      - "Expected graduation date"
+    placeholder: true
+    answer: ""
+  - id: expected-graduation-month
+    description: "Month of the expected graduation"
+    kind: pick-option
+    category: education
+    input_types: [single_select]
+    examples:
+      - "Expected graduation month"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: expected-graduation-term
+    description: "Term of the expected graduation"
+    kind: pick-option
+    category: education
+    input_types: [single_select]
+    examples:
+      - "Expected graduation term"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: expected-graduation-year
+    description: "Year of the expected graduation"
+    kind: pick-option
+    category: education
+    input_types: [single_select]
+    examples:
+      - "Expected graduation year"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: graduation-year-month
+    description: "Year and month of graduation"
+    kind: fixed
+    category: education
+    input_types: [text]
+    examples:
+      - "Graduation date (month and year)"
+    placeholder: true
+    answer: ""
+  - id: has-stem-degree
+    description: "Whether the applicant holds a degree in a science, technology, engineering or mathematics field"
+    kind: pick-option
+    category: education
+    input_types: [single_select, yes_no]
+    examples:
+      - "Do you have a STEM degree?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: highest-level-education
+    description: "Highest level of education completed"
+    kind: pick-option
+    category: education
+    input_types: [single_select]
+    examples:
+      - "Highest level of education"
+      - "Highest degree earned"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: latest-gpa-score
+    description: "Most recent grade point average"
+    kind: fixed
+    category: education
+    input_types: [number]
+    examples:
+      - "GPA"
+      - "Cumulative GPA"
+    placeholder: true
+    answer: ""
+  - id: sat-score
+    description: "The applicant's SAT score; the owner's default is that it was not taken: N/A in a text box, the list's own did-not-take choice"
+    kind: pick-option
+    category: education
+    input_types: [text, number, single_select]
+    examples:
+      - "SAT Score"
+      - "What was your SAT score?"
+    preferred: ["N/A", "Did not take", "Not taken", "Have not taken", "Not applicable"]
+    fallback_text: "N/A"
+  - id: act-score
+    description: "The applicant's ACT score; the owner's default is that it was not taken: N/A in a text box, the list's own did-not-take choice"
+    kind: pick-option
+    category: education
+    input_types: [text, number, single_select]
+    examples:
+      - "ACT Score"
+      - "What was your ACT score?"
+    preferred: ["N/A", "Did not take", "Not taken", "Have not taken", "Not applicable"]
+    fallback_text: "N/A"
+  - id: gre-score
+    description: "The applicant's GRE score; the owner's default is that it was not taken: N/A in a text box, the list's own did-not-take choice"
+    kind: pick-option
+    category: education
+    input_types: [text, number, single_select]
+    examples:
+      - "GRE Score"
+      - "What was your GRE score?"
+    preferred: ["N/A", "Did not take", "Not taken", "Have not taken", "Not applicable"]
+    fallback_text: "N/A"
+  - id: most-recent-school
+    description: "Name of the most recently attended school"
+    kind: fixed
+    category: education
+    input_types: [text, single_select]
+    examples:
+      - "School"
+      - "Most recent school attended"
+    placeholder: true
+    answer: ""
+  - id: undergraduate-major
+    description: "Major of the undergraduate degree"
+    kind: pick-option
+    category: education
+    input_types: [single_select]
+    examples:
+      - "Undergraduate major"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: undergraduate-school
+    description: "Name of the school of the undergraduate degree"
+    kind: fixed
+    category: education
+    input_types: [text]
+    examples:
+      - "Undergraduate institution"
+    placeholder: true
+    answer: ""
+  - id: field-of-study-choice
+    description: "Field of study chosen from a fixed list of fields"
+    kind: pick-option
+    category: education
+    input_types: [single_select]
+    examples:
+      - "Field of study"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: citizen-cuba-iran-north-korea-syria
+    description: "Whether the applicant is a citizen of a country under comprehensive trade restrictions"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Are you a citizen of a country subject to export restrictions?"
+    placeholder: true
+    answer: ""
+  - id: citizenship-in-another-country
+    description: "Whether the applicant holds citizenship in another country"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Do you hold citizenship in another country?"
+    placeholder: true
+    answer: ""
+  - id: clearance-active-status
+    description: "Status of the applicant's security clearance"
+    kind: pick-option
+    category: work-authorization
+    input_types: [single_select]
+    examples:
+      - "What is the status of your security clearance?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: clearance-agency
+    description: "Agency that granted the applicant's security clearance"
+    kind: pick-option
+    category: work-authorization
+    input_types: [single_select]
+    examples:
+      - "Which agency granted your clearance?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: clearance-citizenship-gated
+    description: "Whether the applicant meets the citizenship requirement for a clearance"
+    kind: pick-option
+    category: work-authorization
+    input_types: [single_select, yes_no]
+    examples:
+      - "Are you eligible to hold a security clearance?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: country-of-citizenship
+    description: "Country of citizenship"
+    kind: pick-option
+    category: work-authorization
+    input_types: [single_select, text, long_text]
+    examples:
+      - "Country of citizenship"
+      - "Citizenship"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: us-citizen-status
+    description: "U.S. status: a U.S. citizen, a U.S. national, a lawful permanent resident (green card holder), a refugee or asylee, or neither"
+    kind: pick-option
+    category: work-authorization
+    input_types: [single_select]
+    examples:
+      - "US citizenship status"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: us-citizen-lpr-asylee-refugee
+    description: "Whether the applicant is a citizen, permanent resident, asylee or refugee of the United States"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Are you a US citizen, permanent resident, asylee or refugee?"
+    placeholder: true
+    answer: ""
+  - id: us-person-itar-ear
+    description: "Whether the applicant counts as a United States person under export-control rules"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Are you a US person under export-control rules?"
+    placeholder: true
+    answer: ""
+  - id: cpt-opt-work-authorization
+    description: "Whether the applicant's work authorization is practical training"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Are you authorized to work on practical training?"
+    placeholder: true
+    answer: ""
+  - id: current-immigration-status
+    description: "Current immigration or visa status"
+    kind: pick-option
+    category: work-authorization
+    input_types: [single_select, text, long_text]
+    examples:
+      - "Current immigration status"
+      - "What is your visa status?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: currently-in-opt
+    description: "Whether the applicant is currently on post-study work authorization"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Are you currently on post-completion work authorization?"
+    placeholder: true
+    answer: ""
+  - id: ever-held-j1-status
+    description: "Whether the applicant ever held an exchange-visitor status"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Have you ever held J-1 status?"
+    placeholder: true
+    answer: ""
+  - id: h1b-sponsorship
+    description: "Whether the applicant needs a specialty-occupation work visa sponsored"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Will you require H-1B sponsorship?"
+    placeholder: true
+    answer: ""
+  - id: held-h1b-past-6-years
+    description: "Whether the applicant held a specialty-occupation work visa in the past six years"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Have you held H-1B status in the past six years?"
+    placeholder: true
+    answer: ""
+  - id: permanent-work-authorization
+    description: "Whether the applicant holds permanent authorization to work; answered from the profile visa status and sponsorship need"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Do you have permanent work authorization?"
+    placeholder: true
+    answer: ""
+  - id: pr-another-country-after-citizenship
+    description: "Whether the applicant holds permanent residence in another country after gaining citizenship"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Do you hold permanent residence in another country?"
+    placeholder: true
+    answer: ""
+  - id: return-to-us-before-start
+    description: "Whether the applicant can be in the country before the start date"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Can you be in the country before your start date?"
+    placeholder: true
+    answer: ""
+  - id: security-clearance
+    description: "Level of the applicant's security clearance"
+    kind: pick-option
+    category: work-authorization
+    input_types: [single_select]
+    examples:
+      - "Security clearance level"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: security-clearance-history
+    description: "Whether the applicant has ever held a security clearance"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Have you ever held a security clearance?"
+    placeholder: true
+    answer: ""
+  - id: sponsorship-now-or-future
+    description: "Whether the applicant needs sponsorship now or in the future; answered from the profile work authorization facts"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Will you now or in the future require sponsorship?"
+    placeholder: true
+    answer: ""
+  - id: work-authorization-other-countries
+    description: "The applicant's own answer, Yes or No, to whether they may work without sponsorship in a country the profile does not list as authorized; blank leaves every such question to the applicant"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Are you legally authorized to work in Canada?"
+    placeholder: true
+    answer: ""
+  - id: sponsorship-other-countries
+    description: "The applicant's own answer, Yes or No, to whether they would need visa sponsorship in a country the profile does not list as authorized; blank leaves every such question to the applicant"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Will you require visa sponsorship to work in the United Kingdom?"
+    placeholder: true
+    answer: ""
+  - id: currently-employer-sponsored
+    description: "Whether a company sponsors the applicant's work visa now; answered from the profile visa status"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Are you currently being sponsored by another company?"
+    placeholder: true
+    answer: ""
+  - id: active-immigration-case
+    description: "Whether the applicant has an immigration case in progress now (an H-1B extension or transfer, a green card petition or application); blank leaves every such question to the applicant"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Do you currently have an active immigration case (ex H-1B extension, green card)?"
+    placeholder: true
+    answer: ""
+  - id: sponsorship-type-description
+    description: "Kind of sponsorship the applicant needs"
+    kind: fixed
+    category: work-authorization
+    input_types: [text, long_text]
+    examples:
+      - "Describe the sponsorship you need"
+    placeholder: true
+    answer: ""
+  - id: stem-opt-24-month-extension
+    description: "Whether the applicant holds an extension of post-study work authorization"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Do you have a STEM extension?"
+    placeholder: true
+    answer: ""
+  - id: ai-use-disclosure
+    description: "The applicant's own answer to whether AI tools helped with the application; blank leaves every such question to the applicant"
+    kind: fixed
+    category: other
+    input_types: [long_text, yes_no, text]
+    examples:
+      - "Did you use AI tools to help complete this application?"
+    placeholder: true
+    answer: ""
+  - id: automated-application-disclosure
+    description: "The applicant's own answer to whether the application is submitted by an automated script or tool; blank leaves every such question to the applicant"
+    kind: fixed
+    category: other
+    input_types: [yes_no, long_text, text]
+    examples:
+      - "Are you applying via an automated script or spoofing?"
+    placeholder: true
+    answer: ""
+  - id: ead-category-code
+    description: "Category code on the applicant's Employment Authorization Document; blank derives it from the recorded status"
+    kind: fixed
+    category: work-authorization
+    input_types: [text, long_text]
+    examples:
+      - "What is the category code on your EAD?"
+    placeholder: true
+    answer: ""
+  - id: stem-opt-extension-expiry
+    description: "Expiry date of the extension of post-study work authorization"
+    kind: fixed
+    category: work-authorization
+    input_types: [date]
+    examples:
+      - "When does your extension expire?"
+    placeholder: true
+    answer: ""
+  - id: under-18-work-permit
+    description: "Whether the applicant holds a work permit for minors"
+    kind: pick-option
+    category: work-authorization
+    input_types: [single_select, yes_no]
+    examples:
+      - "Do you have a work permit for applicants under 18?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: unrestricted-right-to-work-us
+    description: "Whether the applicant has an unrestricted right to work in the United States"
+    kind: fixed
+    category: work-authorization
+    answer_key: work_authorized
+    input_types: [yes_no]
+    examples:
+      - "Do you have the unrestricted right to work in the US?"
+    placeholder: true
+    answer: ""
+  - id: us-based-with-work-permit
+    description: "Whether the applicant lives in the United States with a valid work permit"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Are you based in the US with a valid work permit?"
+    placeholder: true
+    answer: ""
+  - id: right-to-work-countries
+    description: "Countries where the applicant has the right to work; answered from the profile's citizenships and work authorization"
+    kind: fixed
+    category: work-authorization
+    input_types: [text, long_text]
+    examples:
+      - "In what countries do you have the unrestricted right to work?"
+    placeholder: true
+    answer: ""
+  - id: us-work-authorization-status
+    description: "Status of the applicant's authorization to work in the United States"
+    kind: pick-option
+    category: work-authorization
+    input_types: [single_select]
+    examples:
+      - "What is your US work authorization status?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: willing-to-obtain-clearance
+    description: "Whether the applicant is willing to obtain a security clearance"
+    kind: pick-option
+    category: work-authorization
+    input_types: [single_select, yes_no]
+    examples:
+      - "Are you willing to obtain a security clearance?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: work-auth-and-future-sponsorship
+    description: "Combined work authorization and future sponsorship question; answered from the profile facts"
+    kind: pick-option
+    category: work-authorization
+    input_types: [single_select, multi_select]
+    examples:
+      - "Are you authorized to work here and will you need sponsorship in the future?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: work-auth-based-on-visa-spouse
+    description: "Whether the applicant's work authorization is based on the visa status of a spouse"
+    kind: fixed
+    category: work-authorization
+    input_types: [yes_no]
+    examples:
+      - "Is your work authorization based on your spouse's visa?"
+    placeholder: true
+    answer: ""
+  - id: work-auth-us
+    description: "Whether the applicant is authorized to work in the United States"
+    kind: fixed
+    category: work-authorization
+    answer_key: work_authorized
+    input_types: [yes_no]
+    examples:
+      - "Are you legally authorized to work in the United States?"
+    placeholder: true
+    answer: ""
+  - id: work-auth-us-any-employer
+    description: "Whether the applicant is authorized to work in the United States for any employer"
+    kind: fixed
+    category: work-authorization
+    answer_key: work_authorized
+    input_types: [yes_no]
+    examples:
+      - "Are you authorized to work in the US for any employer?"
+    placeholder: true
+    answer: ""
+  - id: work-authorization-detail
+    description: "Free-text detail of the applicant's work authorization; answered from the profile"
+    kind: fixed
+    category: work-authorization
+    input_types: [text, long_text]
+    examples:
+      - "Please describe your work authorization"
+    placeholder: true
+    answer: ""
+  - id: work-authorization-expiry
+    description: "Date the applicant's work authorization expires"
+    kind: fixed
+    category: work-authorization
+    input_types: [date]
+    examples:
+      - "When does your work authorization expire?"
+    placeholder: true
+    answer: ""
+  - id: ai-coding-tools-daily-driver
+    description: "Whether the applicant uses AI coding tools every day"
+    kind: fixed
+    category: experience
+    input_types: [yes_no]
+    examples:
+      - "Do you use AI coding tools daily?"
+    placeholder: true
+    answer: ""
+  - id: ai-tasks-performed
+    description: "Tasks the applicant performed with AI tools"
+    kind: fixed
+    category: experience
+    input_types: [long_text]
+    examples:
+      - "What tasks have you performed with AI tools?"
+    placeholder: true
+    answer: ""
+  - id: ai-technologies-comfort
+    description: "Which AI technologies the applicant is comfortable with"
+    kind: fixed
+    category: experience
+    input_types: [long_text]
+    examples:
+      - "Which AI technologies are you comfortable with?"
+    placeholder: true
+    answer: ""
+  - id: ai-tools-familiarity
+    description: "Which AI tools the applicant knows"
+    kind: pick-option
+    category: experience
+    input_types: [multi_select, single_select]
+    examples:
+      - "Which AI tools are you familiar with?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: apis-frameworks-experience
+    description: "Experience with APIs and frameworks"
+    kind: fixed
+    category: experience
+    input_types: [long_text]
+    examples:
+      - "Describe your experience with APIs and frameworks"
+    placeholder: true
+    answer: ""
+  - id: built-ai-ml-project
+    description: "Whether the applicant built a machine learning project"
+    kind: fixed
+    category: experience
+    input_types: [yes_no]
+    examples:
+      - "Have you built a machine learning project?"
+    placeholder: true
+    answer: ""
+  - id: capability-self-assessment
+    description: "Self-assessment of a capability the question names"
+    kind: fixed
+    category: experience
+    input_types: [long_text]
+    examples:
+      - "How would you rate your ability in this area?"
+    placeholder: true
+    answer: ""
+  - id: coding-skill-rating
+    description: "The applicant's own rating of their coding skill on a ten-point scale, as a number"
+    kind: fixed
+    category: experience
+    input_types: [number, text]
+    examples:
+      - "How do you rate your coding skills out of 10?"
+    placeholder: true
+    answer: ""
+  - id: cloud-experience
+    description: "Experience with cloud platforms"
+    kind: fixed
+    category: experience
+    input_types: [long_text]
+    examples:
+      - "Describe your cloud experience"
+    placeholder: true
+    answer: ""
+  - id: docker-kubernetes-experience
+    description: "Experience with containers and orchestration"
+    kind: fixed
+    category: experience
+    input_types: [long_text]
+    examples:
+      - "Describe your container experience"
+    placeholder: true
+    answer: ""
+  - id: language-proficiency
+    description: "Proficiency in one spoken language"
+    kind: language-proficiency
+    category: experience
+    input_types: [single_select, yes_no]
+    examples:
+      - "English language proficiency"
+      - "Rate your English"
+    placeholder: true
+    language: ""
+    speaking: ""
+    listening: ""
+    reading: ""
+    writing: ""
+  - id: preferred-coding-language
+    description: "The programming language the applicant prefers"
+    kind: pick-option
+    category: experience
+    input_types: [single_select]
+    examples:
+      - "Preferred programming language"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: preferred-tech-stack
+    description: "The technologies the applicant prefers to work with"
+    kind: fixed
+    category: experience
+    input_types: [long_text]
+    examples:
+      - "Preferred tech stack"
+    placeholder: true
+    answer: ""
+  - id: primary-cloud-platform
+    description: "The cloud platform the applicant uses most"
+    kind: pick-option
+    category: experience
+    input_types: [single_select]
+    examples:
+      - "Primary cloud platform"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: production-data-pipeline-tech
+    description: "Technologies used in production data pipelines"
+    kind: multi-select
+    category: experience
+    input_types: [multi_select]
+    examples:
+      - "Which pipeline technologies have you used in production?"
+    placeholder: true
+  - id: production-data-platforms
+    description: "Data platforms used in production"
+    kind: multi-select
+    category: experience
+    input_types: [multi_select]
+    examples:
+      - "Which data platforms have you used in production?"
+    placeholder: true
+  - id: programming-languages-used
+    description: "Programming languages the applicant has used"
+    kind: fixed
+    category: experience
+    input_types: [long_text]
+    examples:
+      - "Which programming languages have you used?"
+    placeholder: true
+    answer: ""
+  - id: python-frameworks-experience
+    description: "Experience with frameworks of one language"
+    kind: fixed
+    category: experience
+    input_types: [long_text]
+    examples:
+      - "Describe your framework experience"
+    placeholder: true
+    answer: ""
+  - id: skill-experience-knowledge-gate
+    description: "Whether the applicant has the experience or knowledge a screening question names"
+    kind: fixed
+    category: experience
+    input_types: [yes_no]
+    skill_mode: profile_skill
+    examples:
+      - "Do you have experience with Python?"
+    answer: "Yes"
+  - id: skill-checklist
+    description: "Proficiency checklist ticked from the profile skills"
+    kind: fixed
+    category: experience
+    input_types: [multi_select, checkbox]
+    examples:
+      - "Which of the following programming languages are you proficient in?"
+    placeholder: true
+    answer: ""
+  - id: speaks-non-english-language
+    description: "Whether the applicant speaks a language other than English"
+    kind: fixed
+    category: experience
+    input_types: [yes_no]
+    examples:
+      - "Do you speak another language?"
+    placeholder: true
+    answer: ""
+  - id: languages-spoken
+    description: "The spoken languages the applicant is fluent in, native language included; blank leaves every such question to the applicant"
+    kind: multi-select
+    category: experience
+    input_types: [multi_select, checkbox, text]
+    examples:
+      - "Which languages do you speak?"
+    placeholder: true
+  - id: startup-experience
+    description: "Whether the applicant has worked at an early-stage company"
+    kind: fixed
+    category: experience
+    input_types: [yes_no]
+    examples:
+      - "Have you worked at a startup?"
+    placeholder: true
+    answer: ""
+  - id: company-types-worked-at
+    description: "Kinds of companies the applicant has worked at, by stage and size"
+    kind: multi-select
+    category: experience
+    input_types: [multi_select, checkbox]
+    examples:
+      - "What type of companies have you worked at?"
+    placeholder: true
+  - id: product-types-worked-on
+    description: "Kinds of products the applicant has worked on"
+    kind: multi-select
+    category: experience
+    input_types: [multi_select, checkbox]
+    examples:
+      - "What type of products have you worked on previously?"
+    placeholder: true
+  - id: content-types-created
+    description: "Kinds of content the applicant has created"
+    kind: multi-select
+    category: experience
+    input_types: [multi_select, checkbox]
+    examples:
+      - "What type of content do you have experience creating?"
+    placeholder: true
+  - id: years-full-time-work-experience-number
+    description: "Years of full-time work experience, as a number or the range that holds it"
+    kind: fixed
+    category: experience
+    input_types: [number, single_select]
+    examples:
+      - "Years of full-time work experience"
+    placeholder: true
+    answer: ""
+  - id: years-relevant-experience
+    description: "Years of experience relevant to the role, chosen from ranges"
+    kind: pick-option
+    category: experience
+    input_types: [single_select]
+    examples:
+      - "Years of relevant experience"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: comfortable-with-posted-range
+    description: "Whether the applicant is comfortable with the posted pay range"
+    kind: fixed
+    category: compensation
+    input_types: [yes_no]
+    examples:
+      - "Are you comfortable with the posted salary range?"
+    placeholder: true
+    answer: ""
+  - id: hourly-pay-rate
+    description: "Expected hourly pay rate"
+    kind: fixed
+    category: compensation
+    input_types: [number]
+    examples:
+      - "Desired hourly rate"
+    placeholder: true
+    answer: ""
+  - id: salary-aligns
+    description: "Whether the applicant's expectations align with the offered pay"
+    kind: fixed
+    category: compensation
+    input_types: [yes_no]
+    examples:
+      - "Does the compensation align with your expectations?"
+    placeholder: true
+    answer: ""
+  - id: salary-currency
+    description: "Currency of the applicant's pay expectation"
+    kind: fixed
+    category: compensation
+    input_types: [text]
+    examples:
+      - "Salary currency"
+    placeholder: true
+    answer: ""
+  - id: salary-expectation
+    description: "Expected annual pay as a range"
+    kind: compensation-range
+    category: compensation
+    input_types: [text, number, single_select]
+    examples:
+      - "Desired salary"
+      - "Salary expectations"
+    placeholder: true
+    minimum: ""
+    maximum: ""
+    default_answer: ""
+    currency: ""
+  - id: salary-range-basis
+    description: "Whether the salary range the applicant gives is base pay or on-target earnings"
+    kind: pick-option
+    category: compensation
+    input_types: [single_select, text]
+    examples:
+      - "Does your range reflect Base Pay or On-Target Earnings?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: total-cash-compensation
+    description: "Total cash compensation the applicant expects"
+    kind: compensation-range
+    category: compensation
+    input_types: [text, number]
+    examples:
+      - "Expected total cash compensation"
+    placeholder: true
+    minimum: ""
+    maximum: ""
+    default_answer: ""
+    currency: ""
+  - id: current-salary
+    description: "The applicant's current annual base salary, as a figure; blank leaves every such question to the applicant"
+    kind: fixed
+    category: compensation
+    input_types: [number, text]
+    examples:
+      - "What is your current salary?"
+    placeholder: true
+    answer: ""
+  - id: bonus-expectation
+    description: "Bonus the applicant expects, as an amount or a share of base pay, with its currency"
+    kind: fixed
+    category: compensation
+    input_types: [text, long_text, number]
+    examples:
+      - "What is your desired bonus expectation?"
+    placeholder: true
+    answer: ""
+  - id: professional-references
+    description: "Contact details of professional references"
+    kind: fixed
+    category: references
+    input_types: [long_text]
+    examples:
+      - "Please list your professional references"
+    placeholder: true
+    answer: ""
+  - id: references-on-request
+    description: "Whether the applicant will provide professional references when asked, such as with an offer"
+    kind: fixed
+    category: references
+    input_types: [yes_no]
+    examples:
+      - "If extended an offer of employment, would you be willing to provide professional references?"
+    placeholder: true
+    answer: ""
+  - id: referred-by-current-employee
+    description: "Whether a current employee of the hiring company referred the applicant"
+    kind: fixed
+    category: source
+    input_types: [yes_no]
+    examples:
+      - "Were you referred by a current employee?"
+    placeholder: true
+    answer: ""
+  - id: referrer-name
+    description: "Name of the person who referred the applicant"
+    kind: fixed
+    category: source
+    input_types: [text, long_text]
+    examples:
+      - "Name of your referrer"
+    placeholder: true
+    answer: ""
+  - id: relatives-at-employer
+    description: "Whether the applicant has relatives employed by the hiring company"
+    kind: fixed
+    category: references
+    input_types: [yes_no]
+    examples:
+      - "Do you have relatives who work at this company?"
+    placeholder: true
+    answer: ""
+  - id: relatives-employed-list
+    description: "Names of relatives employed by the hiring company"
+    kind: fixed
+    category: references
+    input_types: [long_text]
+    examples:
+      - "List your relatives who work at this company"
+    placeholder: true
+    answer: ""
+  - id: contact-current-employer
+    description: "Whether the hiring company may contact the applicant's current employer"
+    kind: fixed
+    category: references
+    input_types: [yes_no]
+    examples:
+      - "May we contact your current employer?"
+    placeholder: true
+    answer: ""
+  - id: drivers-license-held
+    description: "Whether the applicant holds a driver's license"
+    kind: fixed
+    category: licenses
+    input_types: [yes_no]
+    examples:
+      - "Do you hold a valid driver's license?"
+    placeholder: true
+    answer: ""
+  - id: finra-registered
+    description: "Whether the applicant holds a securities registration"
+    kind: fixed
+    category: licenses
+    input_types: [yes_no]
+    examples:
+      - "Are you registered with a securities regulator?"
+    placeholder: true
+    answer: ""
+  - id: healthcare-professional-license
+    description: "Whether the applicant holds a healthcare professional license"
+    kind: fixed
+    category: licenses
+    input_types: [yes_no]
+    examples:
+      - "Do you hold a healthcare professional license?"
+    placeholder: true
+    answer: ""
+  - id: professional-licenses
+    description: "Professional licenses the applicant holds"
+    kind: fixed
+    category: licenses
+    input_types: [long_text]
+    examples:
+      - "List your professional licenses"
+    placeholder: true
+    answer: ""
+  - id: certifications-held
+    description: "Every certification, certificate and license the applicant holds, one per line. A question whether one is held is answered Yes when the list names it and No when the list names no word of it, unless the credential's own entry is answered; a line that names part of it, and a question about a class of credentials, leave the question to the applicant; blank leaves every such question to the applicant"
+    kind: fixed
+    category: licenses
+    input_types: [long_text, text, yes_no]
+    examples:
+      - "Which certifications do you hold?"
+    placeholder: true
+    answer: ""
+  - id: bar-admission
+    description: "Whether the applicant is admitted to practice law, a member of a bar; blank leaves every such question to the applicant"
+    kind: fixed
+    category: licenses
+    input_types: [yes_no, text]
+    examples:
+      - "Are you admitted to practice law in any U.S. jurisdiction?"
+    placeholder: true
+    answer: ""
+  - id: faa-part-107
+    description: "Whether the applicant holds an FAA Part 107 remote pilot certificate (drones). Blank, the certifications list answers; with the list blank too, blank leaves every such question to the applicant"
+    kind: fixed
+    category: licenses
+    input_types: [yes_no]
+    examples:
+      - "Do you currently have your FAA Part 107?"
+    placeholder: true
+    answer: ""
+  - id: security-plus-certification
+    description: "Whether the applicant holds an active CompTIA Security+ certification. Blank, the certifications list answers"
+    kind: fixed
+    category: licenses
+    input_types: [yes_no]
+    examples:
+      - "Do you have an active Security+ certification?"
+    placeholder: true
+    answer: ""
+  - id: us-licensed-physician
+    description: "Whether the applicant is a licensed physician in the United States"
+    kind: fixed
+    category: licenses
+    input_types: [yes_no]
+    examples:
+      - "Are you a licensed physician in the US?"
+    placeholder: true
+    answer: ""
+  - id: criminal-conviction-history
+    description: "Whether the applicant has a criminal conviction to disclose"
+    kind: fixed
+    category: criminal-history
+    input_types: [yes_no]
+    examples:
+      - "Have you ever been convicted of a crime?"
+      - "Do you have a criminal background?"
+    placeholder: true
+    answer: ""
+  - id: wotc-felony-year-before-hire
+    description: "Whether the applicant was convicted of a felony in the year before hire, for a tax-credit screening"
+    kind: fixed
+    category: criminal-history
+    input_types: [yes_no, single_select]
+    examples:
+      - "Were you convicted of a felony in the past year?"
+    placeholder: true
+    answer: ""
+  - id: eeo-disability
+    description: "Voluntary disability self-identification"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select]
+    examples:
+      - "Disability status"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: eeo-ethnicity
+    description: "Voluntary ethnicity self-identification"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select, checkbox]
+    examples:
+      - "Ethnicity"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: eeo-gender
+    description: "Voluntary gender self-identification"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select]
+    examples:
+      - "Gender"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: eeo-lgbtq-identification
+    description: "Voluntary identification with a sexual or gender minority"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select]
+    examples:
+      - "Do you identify as LGBTQ+?"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: eeo-orientation
+    description: "Voluntary sexual orientation self-identification"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select]
+    examples:
+      - "Sexual orientation"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: eeo-race
+    description: "Voluntary race self-identification"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select, checkbox]
+    examples:
+      - "Race"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: eeo-transgender
+    description: "Voluntary transgender self-identification"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select]
+    examples:
+      - "Do you identify as transgender?"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: eeo-veteran
+    description: "Voluntary protected-veteran self-identification"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select]
+    examples:
+      - "Veteran status"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: first-generation-college
+    description: "Voluntary first-generation college self-identification"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select]
+    examples:
+      - "Are you a first-generation college student?"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: low-income-background
+    description: "Voluntary self-identification of a low-income background"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select]
+    examples:
+      - "Did you grow up in a low-income household?"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: military-branch
+    description: "Branch of military service, asked as a voluntary self-identification"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select]
+    examples:
+      - "Branch of service"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: military-service-status
+    description: "Military service status, asked as a voluntary self-identification"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select]
+    examples:
+      - "Military status"
+      - "Have you ever served in the military?"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: pronouns
+    description: "Voluntary pronouns"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select, text]
+    examples:
+      - "Pronouns"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: wotc-long-term-unemployed
+    description: "Voluntary tax-credit screening: long-term unemployment"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select, yes_no]
+    examples:
+      - "Have you been unemployed for 27 weeks or more?"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: wotc-snap-recipient
+    description: "Voluntary tax-credit screening: food assistance recipient"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select, yes_no]
+    examples:
+      - "Have you received food assistance benefits?"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: wotc-ssi-recipient
+    description: "Voluntary tax-credit screening: supplemental income recipient"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select, yes_no]
+    examples:
+      - "Have you received supplemental security income?"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: wotc-tanf-family
+    description: "Voluntary tax-credit screening: family assistance recipient"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select, yes_no]
+    examples:
+      - "Has your family received family assistance benefits?"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: wotc-vocational-rehab-referral
+    description: "Voluntary tax-credit screening: vocational rehabilitation referral"
+    kind: pick-option
+    category: self-identification
+    input_types: [single_select, yes_no]
+    examples:
+      - "Were you referred by a vocational rehabilitation agency?"
+    needs_review: true
+    preferred:
+      - "Decline to self-identify"
+      - "Decline to answer"
+      - "I prefer not to answer"
+      - "I prefer not to say"
+      - "I do not wish to answer"
+      - "I do not wish to self-identify"
+      - "Prefer not to answer"
+      - "Prefer not to say"
+    fallback_text: ""
+  - id: availability-notice-period
+    description: "Notice period before the applicant can start"
+    kind: pick-option
+    category: availability
+    input_types: [single_select, text, number]
+    examples:
+      - "What is your notice period?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: available-full-time
+    description: "Whether the applicant is available to work full time"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Are you available to work full time?"
+    placeholder: true
+    answer: ""
+  - id: c2c-preference
+    description: "Whether the applicant accepts corporation-to-corporation contracting"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Are you open to corp-to-corp contracting?"
+    placeholder: true
+    answer: ""
+  - id: competing-offers
+    description: "Whether the applicant holds other job offers or offer deadlines now, and which"
+    kind: fixed
+    category: availability
+    input_types: [yes_no, single_select, text, long_text]
+    examples:
+      - "Do you have any competing offer deadlines?"
+      - "Do you have any pending offers or deadlines we should know about?"
+    placeholder: true
+    answer: ""
+  - id: competing-offer-deadline
+    description: "The deadline of a job offer the applicant holds, asked only when competing-offers says Yes"
+    kind: fixed
+    category: availability
+    input_types: [date, text]
+    examples:
+      - "When is your offer deadline?"
+      - "What is the deadline for your other offer?"
+    placeholder: true
+    answer: ""
+  - id: job-search-timeline
+    description: "The applicant's job search timeline: when they hope to decide, and other interview processes or deadlines in flight"
+    kind: fixed
+    category: availability
+    input_types: [text, long_text]
+    examples:
+      - "What is your current job search timeline?"
+    placeholder: true
+    answer: ""
+  - id: days-per-week-onsite
+    description: "Number of days per week the applicant will work on site"
+    kind: pick-option
+    category: availability
+    input_types: [single_select]
+    examples:
+      - "How many days per week can you work on site?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: desired-employment-type
+    description: "Employment type the applicant is looking for"
+    kind: pick-option
+    category: availability
+    input_types: [single_select]
+    examples:
+      - "Desired employment type"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: dog-friendly-office-ok
+    description: "Whether the applicant is comfortable in an office with animals"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Are you comfortable in a dog-friendly office?"
+    placeholder: true
+    answer: ""
+  - id: earliest-start-date
+    description: "Earliest date the applicant can start"
+    kind: fixed
+    category: availability
+    input_types: [date]
+    examples:
+      - "Earliest start date"
+      - "When can you start?"
+      - "When are you available to start?"
+    placeholder: true
+    answer: ""
+  - id: full-time-start-availability
+    description: "When the applicant can start full time; answered from the profile"
+    kind: pick-option
+    category: availability
+    input_types: [single_select, text, date]
+    examples:
+      - "When can you start full time?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: intend-to-work-in-posted-state
+    description: "Whether the applicant intends to work in the state of the posting"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Do you intend to work in the state of this posting?"
+    placeholder: true
+    answer: ""
+  - id: interview-travel-onsite
+    description: "Whether the applicant can travel for an on-site interview"
+    kind: pick-option
+    category: availability
+    input_types: [single_select, yes_no, text]
+    examples:
+      - "Can you travel for an on-site interview?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: multi-year-commitment
+    description: "Whether the applicant can commit for more than one year"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Can you commit to at least two years?"
+    placeholder: true
+    answer: ""
+  - id: offer-start-availability
+    description: "How soon after an offer the applicant can start"
+    kind: pick-option
+    category: availability
+    input_types: [single_select, text, long_text]
+    examples:
+      - "How soon after an offer can you start?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: remote-eligible-location
+    description: "Whether the applicant lives in, or is open to relocating to, one of the places the employer hires remote staff in"
+    kind: fixed
+    category: availability
+    input_types: [yes_no, single_select]
+    examples:
+      - "Are you currently located in, or open to relocating to, one of our remote-eligible states?"
+    placeholder: true
+    answer: ""
+  - id: interview-identity-verification
+    description: "Whether the applicant consents to an identity check the employer requires during the interviews: an in-person interview, a facial ID check, or a check of a government ID and the applicant's location"
+    kind: fixed
+    category: consent
+    input_types: [yes_no]
+    examples:
+      - "I consent to participate in an in-person interview or facial ID verification if required for this role."
+    placeholder: true
+    answer: ""
+  - id: interview-coding-system-design
+    description: "Whether the applicant can take part in coding and system design interviews"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Are you able to conduct a coding and system design interview?"
+    placeholder: true
+    answer: ""
+  - id: interview-camera-on
+    description: "Whether the applicant keeps their camera on for the whole of a video interview"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Can you keep your camera on for the entire duration of the interview?"
+    placeholder: true
+    answer: ""
+  - id: office-attendance-ok
+    description: "Whether the applicant accepts the stated days in the office; the profile maximum decides above-limit questions"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Are you able to work from the office three days a week?"
+    numeric_threshold:
+      extractor: days_per_week_onsite
+      max_value_profile_key: preferences.max_days_in_office
+      above_answer: "No"
+      on_parse_miss: no-op
+    placeholder: true
+    answer: ""
+  - id: open-to-remote
+    description: "Whether the applicant is open to remote work"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Are you open to remote work?"
+    placeholder: true
+    answer: ""
+  - id: overtime-able
+    description: "Whether the applicant is able to work overtime"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Are you able to work overtime when needed?"
+    placeholder: true
+    answer: ""
+  - id: preferred-work-location
+    description: "The office or location the applicant prefers; ranked by the relocation preference"
+    kind: pick-option
+    category: availability
+    input_types: [single_select, multi_select, checkbox]
+    examples:
+      - "Preferred work location"
+      - "Which office do you prefer?"
+    location_policy:
+      predicate: willing_to_work_at
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: relocation-or-local
+    description: "Whether the applicant is local to the work location or would relocate"
+    kind: pick-option
+    category: availability
+    input_types: [single_select]
+    examples:
+      - "Are you local or willing to relocate?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: relocation-assistance-needed
+    description: "Whether the applicant would need relocation assistance when the role means relocating (the owner's default is Yes); No when the applicant is local or the role is remote"
+    kind: fixed
+    category: availability
+    input_types: [yes_no, single_select]
+    examples:
+      - "If hired, would you require relocation assistance?"
+      - "Will you need relocation assistance?"
+      - "Do you require relocation support for this role?"
+    location_policy:
+      predicate: requires_relocation
+      if_false: "No"
+    answer: "Yes"
+  - id: requires-relocation
+    description: "Whether the applicant would need to relocate for the role"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Will you require relocation?"
+    location_policy:
+      predicate: requires_relocation
+      if_true: "Yes"
+      if_false: "No"
+    placeholder: true
+    answer: ""
+  - id: shift-availability
+    description: "Shifts the applicant can work"
+    kind: multi-select
+    category: availability
+    input_types: [multi_select]
+    examples:
+      - "Which shifts can you work?"
+    placeholder: true
+  - id: occasional-night-shifts
+    description: "Whether the applicant will work night shifts when the role needs them"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Are you willing and able to work night shifts as required?"
+    placeholder: true
+    answer: ""
+  - id: comfortable-with-role-duties
+    description: "Whether the applicant is comfortable with a duty the role describes, such as supporting executives or handling urgent requests"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Are you comfortable supporting executives and handling urgent IT requests?"
+    placeholder: true
+    answer: ""
+  - id: on-call-ok
+    description: "Whether the applicant will take part in an on-call rotation"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Are you willing to participate in an on-call rotation?"
+    placeholder: true
+    answer: ""
+  - id: w2-only-acceptable
+    description: "Whether the applicant accepts employment as a W-2 employee only"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Are you open to W-2 employment?"
+    placeholder: true
+    answer: ""
+  - id: working-hours
+    description: "The hours the applicant prefers and is willing to work, with their time zone"
+    kind: fixed
+    category: availability
+    input_types: [text, long_text]
+    examples:
+      - "What are your preferred working hours? Please include your time zone."
+    placeholder: true
+    answer: ""
+  - id: willing-to-relocate
+    description: "Whether the applicant is willing to relocate"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Are you willing to relocate?"
+    location_policy:
+      predicate: willing_to_work_at
+      if_true: "Yes"
+      if_false: "No"
+    placeholder: true
+    answer: ""
+  - id: willing-to-travel
+    description: "How much travel the applicant accepts; the profile travel ceiling fills it"
+    kind: pick-option
+    category: availability
+    input_types: [single_select, yes_no]
+    examples:
+      - "Are you willing to travel?"
+      - "What percentage of travel are you comfortable with?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: travel-above-ceiling-limited-period
+    description: "Whether the applicant accepts travel above their usual ceiling for a limited period, such as the first months in the role"
+    kind: fixed
+    category: availability
+    input_types: [yes_no]
+    examples:
+      - "Would you travel more than usual for a limited period, such as the first months in the role?"
+    placeholder: true
+    answer: ""
+  - id: job-source
+    description: "Where the applicant found the posting"
+    kind: pick-option
+    category: source
+    input_types: [single_select, text, checkbox]
+    examples:
+      - "How did you hear about us?"
+      - "Source"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: company-research-sources
+    description: "Sources the applicant used to research the hiring company"
+    kind: multi-select
+    category: source
+    input_types: [multi_select, checkbox]
+    examples:
+      - "Which sources have you used to research our company?"
+    placeholder: true
+  - id: previously-applied-to-company
+    description: "Whether the applicant applied to the hiring company before"
+    kind: fixed
+    category: source
+    input_types: [yes_no]
+    examples:
+      - "Have you applied here before?"
+    placeholder: true
+    answer: ""
+  - id: prior-company-interaction
+    description: "Whether the applicant interacted with the hiring company before, for example as a contractor"
+    kind: fixed
+    category: source
+    input_types: [yes_no]
+    examples:
+      - "Have you worked with or for this company before?"
+    placeholder: true
+    answer: ""
+  - id: referral-source
+    description: "Channel through which the applicant was referred"
+    kind: pick-option
+    category: source
+    input_types: [single_select, text, checkbox]
+    examples:
+      - "Referral source"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: referral-source-specify
+    description: "Details for a referral or other source choice"
+    kind: pick-option
+    category: source
+    input_types: [text, single_select]
+    examples:
+      - "Please specify how you heard about us"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: aedt-consent
+    description: "Consent to the use of an automated employment decision tool"
+    kind: pick-option
+    category: consent
+    input_types: [single_select, yes_no]
+    examples:
+      - "Do you consent to the use of an automated employment decision tool?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: ai-future-jobs-consent
+    description: "Consent to keep the application for future roles with AI screening"
+    kind: fixed
+    category: consent
+    input_types: [yes_no]
+    examples:
+      - "May we use AI to consider you for future roles?"
+    placeholder: true
+    answer: ""
+  - id: ai-screening-opt-out
+    description: "Choice to opt out of AI-assisted screening"
+    kind: pick-option
+    category: consent
+    input_types: [single_select, yes_no]
+    examples:
+      - "Would you like to opt out of AI-assisted screening?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: consider-other-roles-consent
+    description: "Consent to be considered for other roles"
+    kind: fixed
+    category: consent
+    input_types: [yes_no]
+    examples:
+      - "May we consider you for other roles?"
+    placeholder: true
+    answer: ""
+  - id: data-retention-preference
+    description: "How long the employer may keep the applicant's data"
+    kind: pick-option
+    category: consent
+    input_types: [single_select]
+    examples:
+      - "How long may we keep your data?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: future-communications-consent
+    description: "Consent to receive future communications"
+    kind: pick-option
+    category: consent
+    input_types: [single_select, yes_no]
+    examples:
+      - "May we contact you about future opportunities?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: human-verification-choice
+    description: "Answer to a form's instruction to prove the applicant is a person by choosing a named option"
+    kind: fixed
+    category: other
+    input_types: [text]
+    examples:
+      - "To confirm you are a person, select the option named in this instruction"
+    placeholder: true
+    answer: ""
+  - id: interview-recording-consent
+    description: "Consent to record interviews"
+    kind: pick-option
+    category: consent
+    input_types: [single_select, yes_no]
+    examples:
+      - "Do you consent to the interview being recorded?"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: mandatory-acknowledge
+    description: "Required acknowledgement that the form asks the applicant to tick"
+    kind: auto-acknowledge
+    category: consent
+    input_types: [checkbox]
+    examples:
+      - "I acknowledge"
+      - "I have read and agree"
+  - id: marketing-email-optin
+    description: "Opt-in to marketing email"
+    kind: fixed
+    category: consent
+    input_types: [yes_no]
+    examples:
+      - "Send me job alerts by email"
+    placeholder: true
+    answer: ""
+  - id: marketing-text-consent
+    description: "Opt-in to marketing text messages"
+    kind: fixed
+    category: consent
+    input_types: [yes_no]
+    examples:
+      - "I agree to receive text messages"
+    placeholder: true
+    answer: ""
+  - id: nda-acknowledgment
+    description: "Acknowledgement of a non-disclosure agreement"
+    kind: fixed
+    category: consent
+    input_types: [yes_no]
+    examples:
+      - "I acknowledge the non-disclosure agreement"
+    placeholder: true
+    answer: ""
+  - id: privacy-policy-consent
+    description: "Acknowledgement of the privacy policy"
+    kind: auto-acknowledge
+    category: consent
+    input_types: [checkbox]
+    examples:
+      - "I have read the privacy policy"
+  - id: sign-onboarding-documents
+    description: "Agreement to sign onboarding documents electronically"
+    kind: fixed
+    category: consent
+    input_types: [yes_no]
+    examples:
+      - "I agree to sign onboarding documents electronically"
+    placeholder: true
+    answer: ""
+  - id: truth-certification
+    description: "Certification that the information given is true"
+    kind: auto-acknowledge
+    category: consent
+    input_types: [checkbox, yes_no]
+    examples:
+      - "I certify that the information I provided is true"
+  - id: vaccination-policy-acknowledge
+    description: "Acknowledgement of a vaccination policy"
+    kind: pick-option
+    category: consent
+    input_types: [single_select, yes_no]
+    examples:
+      - "I acknowledge the vaccination policy"
+    placeholder: true
+    preferred: []
+    fallback_text: ""
+  - id: federal-healthcare-exclusion
+    description: "Whether the applicant is excluded from federal healthcare programs"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Are you excluded from participation in federal healthcare programs?"
+    linked_explain_id: federal-healthcare-exclusion-reason
+    placeholder: true
+    answer: ""
+  - id: federal-healthcare-exclusion-reason
+    description: "Explanation to give when the answer to the related question is yes"
+    kind: fixed
+    category: compliance
+    input_types: [long_text]
+    examples:
+      - "Please explain"
+    placeholder: true
+    answer: ""
+  - id: fda-hhs-investigational-drug-restriction
+    description: "Whether a health regulator restricted the applicant from working on investigational drugs"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Have you been restricted from working on investigational drug studies?"
+    linked_explain_id: fda-hhs-investigational-drug-restriction-reason
+    placeholder: true
+    answer: ""
+  - id: fda-hhs-investigational-drug-restriction-reason
+    description: "Explanation to give when the answer to the related question is yes"
+    kind: fixed
+    category: compliance
+    input_types: [long_text]
+    examples:
+      - "Please explain"
+    placeholder: true
+    answer: ""
+  - id: generic-drug-enforcement-debarment
+    description: "Whether the applicant was debarred under a generic drug enforcement law"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Have you been debarred under generic drug enforcement law?"
+    linked_explain_id: generic-drug-enforcement-debarment-reason
+    placeholder: true
+    answer: ""
+  - id: generic-drug-enforcement-debarment-reason
+    description: "Explanation to give when the answer to the related question is yes"
+    kind: fixed
+    category: compliance
+    input_types: [long_text]
+    examples:
+      - "Please explain"
+    placeholder: true
+    answer: ""
+  - id: governmental-inquiry-pending
+    description: "Whether a governmental inquiry about the applicant is pending"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Is any governmental inquiry pending about you?"
+    linked_explain_id: governmental-inquiry-pending-reason
+    placeholder: true
+    answer: ""
+  - id: governmental-inquiry-pending-reason
+    description: "Explanation to give when the answer to the related question is yes"
+    kind: fixed
+    category: compliance
+    input_types: [long_text]
+    examples:
+      - "Please explain"
+    placeholder: true
+    answer: ""
+  - id: gsa-federal-program-exclusion
+    description: "Whether the applicant is excluded from federal procurement programs"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Are you excluded from federal procurement programs?"
+    linked_explain_id: gsa-federal-program-exclusion-reason
+    placeholder: true
+    answer: ""
+  - id: gsa-federal-program-exclusion-reason
+    description: "Explanation to give when the answer to the related question is yes"
+    kind: fixed
+    category: compliance
+    input_types: [long_text]
+    examples:
+      - "Please explain"
+    placeholder: true
+    answer: ""
+  - id: healthcare-fraud-sanction
+    description: "Whether the applicant was sanctioned for healthcare fraud"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Have you been sanctioned for healthcare fraud?"
+    linked_explain_id: healthcare-fraud-sanction-reason
+    placeholder: true
+    answer: ""
+  - id: healthcare-fraud-sanction-reason
+    description: "Explanation to give when the answer to the related question is yes"
+    kind: fixed
+    category: compliance
+    input_types: [long_text]
+    examples:
+      - "Please explain"
+    placeholder: true
+    answer: ""
+  - id: non-compete-or-non-solicitation
+    description: "Whether the applicant is bound by a non-compete or non-solicitation agreement"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Are you bound by a non-compete or non-solicitation agreement?"
+    linked_explain_id: non-compete-or-non-solicitation-reason
+    placeholder: true
+    answer: ""
+  - id: non-compete-or-non-solicitation-reason
+    description: "Explanation to give when the answer to the related question is yes"
+    kind: fixed
+    category: compliance
+    input_types: [long_text]
+    examples:
+      - "Please explain"
+    placeholder: true
+    answer: ""
+  - id: terminated-suspended
+    description: "Whether the applicant was ever terminated or suspended from a job"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Have you ever been terminated or suspended from a position?"
+      - "Have you ever been fired from a job?"
+      - "Have you ever been terminated or asked to resign?"
+    linked_explain_id: terminated-suspended-reason
+    placeholder: true
+    answer: ""
+  - id: terminated-suspended-reason
+    description: "Explanation to give when the answer to the related question is yes"
+    kind: fixed
+    category: compliance
+    input_types: [long_text]
+    examples:
+      - "Please explain"
+    placeholder: true
+    answer: ""
+  - id: accommodation-needed
+    description: "Whether the applicant needs a workplace accommodation"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you need an accommodation to perform the job?"
+    placeholder: true
+    answer: ""
+  - id: accommodations-none
+    description: "Whether the applicant confirms that no accommodation is needed"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "I can perform the essential functions without accommodation"
+    placeholder: true
+    answer: ""
+  - id: admin-agency-discipline
+    description: "Whether the applicant was disciplined by an administrative agency"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Have you been disciplined by a regulatory agency?"
+    placeholder: true
+    answer: ""
+  - id: audit-firms-worked-at
+    description: "Audit firms the applicant has worked at"
+    kind: multi-select
+    category: compliance
+    input_types: [multi_select]
+    examples:
+      - "Which audit firms have you worked at?"
+    placeholder: true
+  - id: audit-firm-employment
+    description: "Whether the applicant has been employed by the audit firm the question names"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Have you been employed by this audit firm?"
+    placeholder: true
+    answer: ""
+  - id: board-position
+    description: "Whether the applicant holds a board position"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you hold a board position?"
+    placeholder: true
+    answer: ""
+  - id: business-ownership-25pct
+    description: "Whether the applicant owns a quarter or more of a business"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you own 25% or more of a business?"
+    placeholder: true
+    answer: ""
+  - id: client-affiliation-conflict
+    description: "Whether the applicant has an affiliation with a client that creates a conflict"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you have an affiliation with a client of the company?"
+    placeholder: true
+    answer: ""
+  - id: competitive-outside-activities
+    description: "Whether the applicant has outside activities that compete with the employer"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you engage in activities that compete with the company?"
+    placeholder: true
+    answer: ""
+  - id: competitor-or-related-investment
+    description: "Whether the applicant holds an investment in a competitor or related company"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you hold an investment in a competitor?"
+    placeholder: true
+    answer: ""
+  - id: director-officer-investor-5pct
+    description: "Whether the applicant is a director, officer or five percent investor of a company"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Are you a director, officer or 5% investor of any company?"
+    placeholder: true
+    answer: ""
+  - id: disqualified-in-writing
+    description: "Whether the applicant was disqualified in writing from a regulated activity"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Have you been disqualified in writing?"
+    placeholder: true
+    answer: ""
+  - id: driving-requirements-attestation
+    description: "Attestation that the applicant meets the driving requirements of the role"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you meet the driving requirements of this role?"
+    placeholder: true
+    answer: ""
+  - id: drug-bg-check
+    description: "Agreement to a drug screen or background check"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you agree to a background check?"
+    placeholder: true
+    answer: ""
+  - id: essential-functions-able
+    description: "Whether the applicant can perform the essential functions of the role"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Can you perform the essential functions of this job?"
+    placeholder: true
+    answer: ""
+  - id: external-auditor-employer
+    description: "Whether the applicant's employer is the company's external auditor"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Is your employer the external auditor of this company?"
+    placeholder: true
+    answer: ""
+  - id: external-auditor-family
+    description: "Whether a family member works for the company's external auditor"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Does a family member work for the external auditor?"
+    placeholder: true
+    answer: ""
+  - id: federal-procurement-involvement
+    description: "Whether the applicant was involved in federal procurement decisions"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Were you involved in federal procurement decisions?"
+    placeholder: true
+    answer: ""
+  - id: fiduciary-appointments
+    description: "Whether the applicant holds fiduciary appointments"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you hold any fiduciary appointments?"
+    placeholder: true
+    answer: ""
+  - id: financial-interests-conflict
+    description: "Whether the applicant has a financial interest that creates a conflict"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you have a financial interest that conflicts with this role?"
+    placeholder: true
+    answer: ""
+  - id: conflict-of-interest-situations
+    description: "Whether the applicant would engage in any of a listed set of conflict-of-interest situations"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Please advise if you would be engaging in any of the above listed situations or activities during your employment."
+    placeholder: true
+    answer: ""
+  - id: government-employee-history
+    description: "Whether the applicant worked for a government"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Have you ever been a government employee?"
+    placeholder: true
+    answer: ""
+  - id: government-official-disclosure
+    description: "Whether the applicant is or was a government official"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Are you or were you a government official?"
+    placeholder: true
+    answer: ""
+  - id: government-position
+    description: "Whether the applicant holds a government position"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you hold a government position?"
+    placeholder: true
+    answer: ""
+  - id: government-position-family
+    description: "Whether a family member holds a government position"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Does a family member hold a government position?"
+    placeholder: true
+    answer: ""
+  - id: family-public-employment
+    description: "Whether a member of the applicant's family or household, or a person with a similarly close relationship, works for a government, a political party, a member of a royal family or a candidate for political office"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Is a family member employed by a government, a political party, a royal family or a candidate for political office?"
+    placeholder: true
+    answer: ""
+  - id: party-royal-candidate-employment
+    description: "Whether the applicant is or was employed by a political party, a member of a royal family or a candidate for political office"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Have you been employed by a political party, a royal family or a candidate for political office?"
+    placeholder: true
+    answer: ""
+  - id: influence-decisions-employer
+    description: "Whether the applicant can influence purchasing decisions at the employer"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Can you influence decisions of your employer that affect this company?"
+    placeholder: true
+    answer: ""
+  - id: ip-ownership-to-retain
+    description: "Whether the applicant wants to retain ownership of prior intellectual property"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you own intellectual property you want to retain?"
+    placeholder: true
+    answer: ""
+  - id: military-spouse
+    description: "Whether the applicant is the spouse of a service member"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Are you a military spouse?"
+    placeholder: true
+    answer: ""
+  - id: nda-government-seta
+    description: "Whether the applicant is bound by a non-disclosure agreement with a government agency or its support contractors"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Are you bound by a government non-disclosure agreement?"
+    placeholder: true
+    answer: ""
+  - id: outside-business-activities
+    description: "Whether the applicant has outside business activities"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you have outside business activities?"
+    placeholder: true
+    answer: ""
+  - id: outside-employment
+    description: "Whether the applicant has outside employment"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you have outside employment?"
+    placeholder: true
+    answer: ""
+  - id: political-campaign
+    description: "Whether the applicant is involved in a political campaign"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Are you involved in a political campaign?"
+    placeholder: true
+    answer: ""
+  - id: position-of-control
+    description: "Whether the applicant holds a position of control in another company"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you hold a position of control in another company?"
+    placeholder: true
+    answer: ""
+  - id: senior-executive-family
+    description: "Whether a family member is a senior executive"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Is a family member a senior executive of a company?"
+    placeholder: true
+    answer: ""
+  - id: senior-executive-referral
+    description: "Whether a senior executive referred the applicant"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Were you referred by a senior executive?"
+    placeholder: true
+    answer: ""
+  - id: senior-government-official
+    description: "Whether the applicant is a senior government official"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Are you a senior government official?"
+    placeholder: true
+    answer: ""
+  - id: senior-government-official-family
+    description: "Whether a family member is a senior government official"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Is a family member a senior government official?"
+    placeholder: true
+    answer: ""
+  - id: senior-government-official-referral
+    description: "Whether a senior government official referred the applicant"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Were you referred by a senior government official?"
+    placeholder: true
+    answer: ""
+  - id: tobacco-user
+    description: "Whether the applicant uses tobacco"
+    kind: fixed
+    category: compliance
+    input_types: [yes_no]
+    examples:
+      - "Do you use tobacco products?"
+    placeholder: true
+    answer: ""
+  - id: age-18
+    description: "Statement that the applicant is at least 18 years old"
+    kind: fixed
+    category: application-statement
+    input_types: [yes_no]
+    examples:
+      - "I am at least 18 years of age"
+    placeholder: true
+    answer: ""
+  - id: identity-verification
+    description: "Whether the applicant can provide verification of their identity upon hire"
+    kind: fixed
+    category: application-statement
+    input_types: [yes_no]
+    examples:
+      - "Can you provide verification of your identity upon hire?"
+    placeholder: true
+    answer: ""
+  - id: age-21
+    description: "Statement that the applicant is at least 21 years old"
+    kind: fixed
+    category: application-statement
+    input_types: [yes_no]
+    examples:
+      - "I am at least 21 years of age"
+    placeholder: true
+    answer: ""
+  - id: ai-usage-ok
+    description: "Whether the applicant agrees to the stated rules about using AI during the process"
+    kind: fixed
+    category: application-statement
+    input_types: [yes_no]
+    examples:
+      - "Do you agree to the rules on using AI tools?"
+    placeholder: true
+    answer: ""
+  - id: edu-experience-gate
+    description: "Whether the applicant meets the stated education and experience minimums"
+    kind: fixed
+    category: application-statement
+    input_types: [yes_no]
+    examples:
+      - "Do you meet the minimum education and experience?"
+    placeholder: true
+    answer: ""
+  - id: meets-role-requirements
+    description: "Whether the applicant meets the requirements of the role"
+    kind: fixed
+    category: application-statement
+    input_types: [yes_no]
+    examples:
+      - "Do you meet the requirements of this role?"
+    placeholder: true
+    answer: ""
+  - id: no-ai-during-assessment-attestation
+    description: "Attestation that the applicant will not use AI during an assessment"
+    kind: fixed
+    category: application-statement
+    input_types: [yes_no]
+    examples:
+      - "I will not use AI tools during the assessment"
+    placeholder: true
+    answer: ""
+  - id: practical-technical-assessment
+    description: "Whether the applicant agrees to complete a practical assessment"
+    kind: fixed
+    category: application-statement
+    input_types: [yes_no]
+    examples:
+      - "Are you willing to complete a technical assessment?"
+    placeholder: true
+    answer: ""
+  - id: additional-information
+    description: "Anything else the applicant wants to add"
+    kind: fixed
+    category: other
+    input_types: [long_text]
+    examples:
+      - "Additional information"
+      - "Is there anything else you would like us to know?"
+    placeholder: true
+    answer: ""
