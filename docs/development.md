@@ -452,8 +452,9 @@ clean checkout of `main`:
     APPLYSMITH_RETIRED_NAMES=~/.config/applysmith/retired-names.txt \
     APPLYSMITH_SIMILARITY_REFERENCES=<reference checkouts> make publish-tree OUT=<new dir>
 
-then commit the export in a clone of the public repository as
-`Applysmith <noreply@applysmith.example>` and push its `main`. The first
+then commit the export in a clone of the public repository
+(`https://github.com/Jaydccq/Applysmith`) as the owner, the GitHub account
+`Jaydccq` with its GitHub no-reply address, and push its `main`. The first
 publication (2026-11-16) is one root commit; a later one replaces the clone's
 tracked files with a fresh export and adds one commit. The owner chose the MIT
 licence (`LICENSE`) for the public repository on 2026-11-16.
@@ -485,12 +486,14 @@ instead. Generic items such as a large university stay out of the list.
 
 On 2026-11-15 the owner had the history cleaned with `git filter-repo`, and on
 2026-11-16, after the rename to Applysmith, rewritten once more: every
-commit is authored and committed by `Applysmith <noreply@applysmith.example>` (the
-repository's local `user.name` and `user.email` are set to it, so new commits
-keep it), and every listed item was replaced in every file version and commit
-message by the fictional values the tests use. Commit hashes cited in documents
+commit is authored and committed by `Applysmith <noreply@applysmith.example>`, and every listed item was
+replaced in every file version and commit message by the fictional values the tests use. Commit hashes cited in documents
 from before that day no longer resolve; the rules and the old-to-new commit map
 live beside the token list (`~/.config/applysmith/`), not in the repository.
+From 2026-11-17 the owner is the author of new commits, as the GitHub account
+`Jaydccq` with its GitHub no-reply address (the repository's local `user.name`
+and `user.email`), and the GitHub account name left the token list, because the
+public repository and the website link to it.
 
 ## Agent execution model
 

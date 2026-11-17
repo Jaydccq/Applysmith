@@ -12,6 +12,8 @@ Your data stays in one folder you own. The only network traffic is to the
 services you connect: a language-model provider, Gmail, Telegram, job boards
 and the sites you apply to. Secrets go to the macOS keychain, never into a file.
 
+Website: [www.ovreni.org](https://www.ovreni.org/)
+
 ![An evaluation report in the dashboard](docs/user-guide/images/tutorial-05-report.webp)
 
 ## What it does
@@ -66,6 +68,8 @@ yourself opens on the Mac that built it.
 You need Go (`GOTOOLCHAIN=auto` fetches the pinned 1.27.1), Bun 1.3.5 and
 Google Chrome.
 
+    git clone https://github.com/Jaydccq/Applysmith.git
+    cd Applysmith
     make build        # generated assets, then the binaries in bin/
     make app          # the signed desktop app in app/build/
     make package      # the app plus a disk image

@@ -19,7 +19,8 @@ stack is sealed.
 
 Every claim about Applysmith comes from `README.md`, `docs/setup` and
 `docs/user-guide`; check a claim there before changing the words. The page
-links to no download, because no public one exists yet.
+links to the source at `https://github.com/Jaydccq/Applysmith` and to no download, because
+no public one exists yet.
 
 ## The comparison table
 

@@ -29,7 +29,12 @@
   "image": "https://www.ovreni.org/og.jpg",
   "applicationCategory": "BusinessApplication",
   "operatingSystem": "macOS 13 or later",
-  "description": "A local-first job-search workshop for the Mac: it finds postings, scores each one against you, tailors your résumé and cover letter and fills the application. It never submits without you."
+  "description": "A local-first job-search workshop for the Mac: it finds postings, scores each one against you, tailors your résumé and cover letter and fills the application. It never submits without you.",
+  "softwareVersion": "0.0.1",
+  "license": "https://opensource.org/license/mit",
+  "isAccessibleForFree": true,
+  "author": { "@type": "Person", "name": "Jaydccq", "url": "https://github.com/Jaydccq" },
+  "sameAs": ["https://github.com/Jaydccq/Applysmith"]
 }
 </script>
 <script type="module" src="/src/main.js"></script>
@@ -45,6 +50,7 @@
     <a href="#private">Private by design</a>
     <a href="#rules">The rules</a>
     <a href="#compare">Compare</a>
+    <a href="https://github.com/Jaydccq/Applysmith">GitHub</a>
     <a class="nav-cta" href="#demo">Try the demo</a>
   </nav>
 </header>
@@ -57,7 +63,7 @@
       <a class="button" href="#how">See how it works</a>
       <a class="quiet" href="#demo">Try the demo first</a>
     </p>
-    <p class="fine">For macOS 13 or later, with Google Chrome.</p>
+    <p class="fine">For macOS 13 or later, with Google Chrome. Open source under the MIT licence.</p>
   </section>
 
   <div id="how" class="steps">
@@ -124,7 +130,7 @@
             <tr><th scope="col">Tool</th><th scope="col">Runs as</th><th scope="col">Finds postings</th><th scope="col">Scores the fit</th><th scope="col">Tailors the résumé</th><th scope="col">Fills forms</th><th scope="col">Submits without you</th></tr>
           </thead>
           <tbody>
-            <tr class="ours"><th scope="row">Applysmith</th><td>An app on your Mac</td><td>Yes</td><td>Score and report</td><td>Yes, and a letter</td><td>Yes</td><td>Never</td></tr>
+            <tr class="ours"><th scope="row">Applysmith</th><td>Open source, an app on your Mac</td><td>Yes</td><td>Score and report</td><td>Yes, and a letter</td><td>Yes</td><td>Never</td></tr>
             <tr><th scope="row">career-ops</th><td>Open source, in your own AI command line</td><td>Yes</td><td>Score and report</td><td>Yes, and a letter</td><td>Yes, stops before Submit</td><td>Never</td></tr>
             <tr><th scope="row">Simplify</th><td>Extension and web account</td><td>Yes</td><td>—</td><td>Paid plan</td><td>Yes</td><td>Paid Autopilot, no review step</td></tr>
             <tr><th scope="row">Jobright</th><td>Web account</td><td>Yes</td><td>Job matching</td><td>Yes</td><td>Yes</td><td>Says it applies to hundreds a day</td></tr>
@@ -144,13 +150,16 @@
   <section id="demo" class="closing" data-scene="6">
     <h2>Start with the demo.</h2>
     <p class="lede">A separate folder with a fictional job seeker, Alex Example, and three sample postings. Nothing of yours is touched, and nothing is ever submitted.</p>
-    <p class="command"><code id="demo-command">applysmith demo init</code><button type="button" id="copy" aria-live="polite">Copy</button></p>
+    <p class="lede">Version 0.0.1 has no download yet. Clone the source from GitHub, build it with <code>make build</code>, then run:</p>
+    <p class="command"><code id="demo-command">bin/applysmith demo init</code><button type="button" id="copy" aria-live="polite">Copy</button></p>
+    <p class="actions"><a class="button" href="https://github.com/Jaydccq/Applysmith">Get the source on GitHub</a></p>
   </section>
 </main>
 
 <footer>
   <span>Applysmith</span>
   <span>Local-first job search for macOS</span>
+  <span>Version 0.0.1 · <a href="https://github.com/Jaydccq/Applysmith/blob/main/LICENSE">MIT licence</a> · <a href="https://github.com/Jaydccq/Applysmith">Source on GitHub</a></span>
 </footer>
 </body>
 </html>
