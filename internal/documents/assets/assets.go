@@ -22,9 +22,9 @@ import (
 //go:embed resume.tex cover.tex cover.cls verify_pdf.py verify_layout.py requirements.txt fonts/lato/*.gz fonts/raleway/*.gz
 var files embed.FS
 
-// TemplateVersion is the upstream revision the shipped templates adapt, as
-// recorded for them in third_party/document-sources.json.
-const TemplateVersion = "ai-job-search@a011214d60f943770e33f7d5f070e1a5f91e3822"
+// TemplateVersion names the revision of the shipped templates. A published
+// version records it with the hash of each template file.
+const TemplateVersion = "applysmith-templates-2"
 
 // served is the embedded tree with each ".gz" file replaced by its
 // decompressed content, built on first use.

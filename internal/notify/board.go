@@ -72,6 +72,10 @@ type BoardOptions struct {
 	// for registry), from the side that knows the sources; nil, or "" for a
 	// source, titles the scan by the source's id.
 	ScanTitle func(source string) string
+	// Idle says a scheduled job that succeeded did nothing, from its run kind
+	// and the summary it returned; its entry is acknowledged as it ends, so it
+	// is neither a finished run to see nor announced. nil marks none idle.
+	Idle func(kind, summary string) bool
 }
 
 // Board is the runs board over the workspace database.

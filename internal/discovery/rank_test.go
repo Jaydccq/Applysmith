@@ -69,8 +69,8 @@ func TestRank_Seniority_FollowsTheTargetRoles(t *testing.T) {
 	if got := score("Software Engineer 1", early); got != 7 {
 		t.Errorf("early seeker, entry title: %d, want 4+3", got)
 	}
-	if got := score("Senior Software Engineer", early); got != 0 {
-		t.Errorf("early seeker, senior title: %d, want 4-4", got)
+	if got := score("Senior Software Engineer", early); got != -4 {
+		t.Errorf("early seeker, senior title: %d, want -4 and no target-role match to cancel it", got)
 	}
 	if got := score("Member of Technical Staff, Software Engineer", early); got != 4 {
 		t.Errorf("early seeker, Member of Technical Staff names no level: %d, want 4", got)

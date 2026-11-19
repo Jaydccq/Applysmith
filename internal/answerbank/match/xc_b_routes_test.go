@@ -100,6 +100,11 @@ func TestXC_RoutesImmigration(t *testing.T) {
 		{name: "XC-047 verification of legal right to work if offered employment", sets: auth, facts: xcBFacts(),
 			q:       xcBYesNo("If offered employment, can you submit verification of legal right to work in the United States?"),
 			posting: match.Posting{Location: "Remote - US"}, entry: "work-auth-us", label: "Yes"},
+		// Adobe (Workday, live): the offer names the employer and the
+		// documentation "establishes" the right to work.
+		{name: "XC-047 documentation establishing identity and right to work if offered employment by the employer", sets: auth, facts: xcBFacts(),
+			q:       xcBYesNo("If you are offered employment by Adobe, can you provide documentation establishing your identity and right to work in the country where this position will be based?"),
+			posting: match.Posting{Company: "Adobe", Location: "San Jose, CA"}, entry: "work-auth-us", label: "Yes"},
 		{name: "XC-047 verification for the countries applied to outside the recorded country", sets: auth, facts: xcBFacts(),
 			q:        xcBYesNo("Can you, upon employment, submit verification of your legal right to work in the countries to which you have applied?"),
 			posting:  match.Posting{Location: "Toronto, Ontario, Canada"},

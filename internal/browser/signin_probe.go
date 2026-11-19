@@ -143,6 +143,34 @@ func stateOf(last map[string]SignInRecord, site SignInSite) SignInState {
 
 // cookieNames lists the names of the site's cookies in the running profile,
 // for a site whose rule names proof cookies; no other rule reads them.
+// SignedOut reports the listed site host belongs to when the profile holds
+// none of the cookies that prove its sign-in, unexpired: a page of the site
+// opens signed out. It starts the browser when it is not running, as the list
+// that asks is about to drive it, and loads no page. A site that names no such
+// cookie, a browser that cannot open and a store that cannot be read report
+// nothing.
+func (s *Sessions) SignedOut(ctx context.Context, host string) (SignInSite, bool) {
+	site, ok := SiteOf(host)
+	if !ok || len(site.Cookies) == 0 || s.cfg.Open == nil {
+		return SignInSite{}, false
+	}
+	jar, err := s.cfg.Open(ctx)
+	if err != nil {
+		return SignInSite{}, false
+	}
+	cookies, err := jar.Cookies(ctx)
+	if err != nil {
+		return SignInSite{}, false
+	}
+	now := float64(s.now().Unix())
+	for _, c := range cookies {
+		if scoped(c.host(), site.Domain) && slices.Contains(site.Cookies, c.Name) && c.Value != "" && (c.Expires == 0 || c.Expires > now) {
+			return SignInSite{}, false
+		}
+	}
+	return site, true
+}
+
 func (s *Sessions) cookieNames(ctx context.Context, site SignInSite) []string {
 	if len(site.Cookies) == 0 || s.cfg.Running == nil {
 		return nil

@@ -267,6 +267,24 @@ const ReasonNeedsKey = "needs-key"
 // one Gmail sign-in item for it.
 const ReasonNeedsGmailSignIn = "needs-gmail-sign-in"
 
+// gmailSyncSummary is what a Gmail sync that ran returns.
+func gmailSyncSummary(c gmail.Counts) string {
+	return fmt.Sprintf("%d listed, %d stored, %d for review, %d linked", c.Listed, c.Stored, c.Review, c.Linked)
+}
+
+// The summaries of a Gmail sync that did nothing: it read no mail, or another
+// sync was reading it.
+var gmailSyncNone = gmailSyncSummary(gmail.Counts{})
+
+const gmailSyncBusy = "a sync was already running"
+
+// Idle reports whether a scheduled job that succeeded did nothing, from its
+// kind and the summary it returned. The runs board acknowledges such a run as
+// it ends: the ten-minute Gmail sync would otherwise fill the finished runs.
+func Idle(kind, summary string) bool {
+	return kind == "gmail.sync" && (summary == gmailSyncNone || summary == gmailSyncBusy)
+}
+
 func gmailSync(d Deps) scheduler.Kind {
 	return scheduler.Kind{
 		Name:     "gmail.sync",
@@ -280,14 +298,13 @@ func gmailSync(d Deps) scheduler.Kind {
 			switch {
 			case errors.Is(err, gmail.ErrAlreadyRunning):
 				// The watcher's sync, or a manual one, reads the same mail.
-				return "a sync was already running", nil
+				return gmailSyncBusy, nil
 			case gmail.IsAuthFailure(err):
 				return "", scheduler.NeedsYou(ReasonNeedsGmailSignIn, err)
 			case err != nil:
 				return "", err
 			}
-			c := rec.Counts
-			summary := fmt.Sprintf("%d listed, %d stored, %d for review, %d linked", c.Listed, c.Stored, c.Review, c.Linked)
+			summary := gmailSyncSummary(rec.Counts)
 			if rec.Status == "failed" {
 				// Run records staged failures and returns nil error. Preserve the
 				// sign-in class for scheduler retries and needs-you notices.

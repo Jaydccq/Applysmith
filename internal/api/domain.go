@@ -401,6 +401,7 @@ func (s *Server) startScheduler(ctx context.Context, st *store.Store, d *domain)
 	sc.AddRetention("hiring-signal deferral lines", func(ctx context.Context) error { _, err := d.signals.Repo().PruneDeferrals(ctx); return err })
 	sc.AddRetention("gmail message bodies", func(ctx context.Context) error { _, err := d.gmail.Repo.Sweep(ctx, gmail.BodyMaxBytes); return err })
 	sc.AddRetention("answer-bank candidates and events", func(ctx context.Context) error { _, err := d.learn.Maintain(ctx); return err })
+	sc.AddRetention("stale inbox rows", func(ctx context.Context) error { _, err := d.repo.ExpireStale(ctx); return err })
 	d.sched = sc
 	return sc.Start(ctx)
 }

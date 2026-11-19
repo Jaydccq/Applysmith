@@ -157,6 +157,9 @@ func (s *Server) sessionCheck(c *apikit.Call) (apikit.Reply, error) {
 	out := wire.SignInChecks{Checks: make([]wire.SignInCheck, 0, len(checks))}
 	for _, ch := range checks {
 		row := wire.SignInCheck{Domain: ch.Site.Domain, Label: ch.Site.Label, State: string(ch.State), Next: browser.NextAction(ch.State), Cached: ch.Cached}
+		if ch.Err == nil && ch.State == browser.StateSignedIn {
+			s.siteSignedIn(c.R.Context(), ch.Site.Domain)
+		}
 		if !ch.CheckedAt.IsZero() {
 			at := wire.Time{Time: ch.CheckedAt.UTC()}
 			row.CheckedAt = &at

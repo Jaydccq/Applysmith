@@ -1,57 +1,27 @@
-%% Cover letter template for XeLaTeX with the cover class.
-%%
-%% Adapted from cover_letters/cover_example.tex of ai-job-search (MIT, commit
-%% a011214d60f943770e33f7d5f070e1a5f91e3822). Every template action is
-%% expanded by Go text/template; the only functions available to an action are
-%% the encoders of internal/documents/tex, so content is always literal.
-%%
-%% A list sits outside \lettercontent: that macro ends with a line break,
-%% which fails on \end{itemize}. The list is set in the body font so its
-%% bullets match the text. \closing adds its own line break, so none is written
-%% inside it. The date ends its line without the blank line the paragraphs have,
-%% so one is added; the list drops its own top space because the paragraph
-%% before it already ends in a blank line. Setting \topsep does not do that,
-%% because the list resets it when it begins: the space is taken back before
-%% the list instead (measured: 21 pt above the list against 13 pt between
-%% paragraphs, now 13 pt above and below). A contact separator stays on the
-%% line of the item before it, and the profile links take a line of their own,
-%% so the first line never ends in a separator. The recipient lines (the
-%% company, then the role as the subject) stand between the date and the
-%% salutation, where a reader and a screening program look for them. The PDF
-%% title and author are the applicant's, not the class defaults. A line break
-%% before data is written \\{}, so data that begins with [ or * is not read as
-%% the break's argument.
-
+% Cover-letter template for XeLaTeX, expanded by assets.RenderCover.
+%
+% The layout and fonts live in cover.cls beside this file; this source only
+% places the content, in page order. Every printed value goes through one of
+% the encoders tex, rich, url or paper, and an empty optional field emits no
+% command. A block with no text prints its list alone: an empty paragraph
+% command would stop XeLaTeX.
 \documentclass[<% paper .Paper %>]{cover}
-\usepackage{fancyhdr}
+\hypersetup{pdftitle={<% tex .Title %>}}
 
-\pagestyle{fancy}
-\fancyhf{}
-
-\rfoot{Page \thepage \hspace{0pt}}
-\thispagestyle{empty}
-\renewcommand{\headrulewidth}{0pt}
-\hypersetup{pdftitle={<% tex .Title %>}, pdfauthor={<% tex .Name %>}}
 \begin{document}
-
-\namesection{}{\Huge{<% tex .Name %>}}{<% range $i, $l := .Contact %><% if $i %>~| <% end %><% if $l.URL %>\href{<% url $l.URL %>}{<% tex $l.Label %>}<% else %><% tex $l.Label %><% end %><% end %><% if .Links %>\\{}<% range $i, $l := .Links %><% if $i %>~| <% end %>\href{<% url $l.URL %>}{<% tex $l.Label %>}<% end %><% end %>
-}
-
-\currentdate{<% tex .Date %>}\mbox{}\\
-<% if .Recipient %>\lettercontent{<% range $i, $l := .Recipient %><% if $i %>\\{}<% end %><% tex $l %><% end %>}
-<% end %>\lettercontent{<% tex .Salutation %>}
-<% range .Blocks %>
-\lettercontent{<% rich .Text %>}
-<% if .Bullets %>
-{\raggedright\fontspec[Path = fonts/raleway/, Kerning=Off, Numbers=Lining]{Raleway-Medium}\fontsize{11pt}{13pt}\selectfont
-\vspace{-\parskip}\vspace{-\topsep}\vspace{-\partopsep}\begin{itemize}
-<% range .Bullets %>    \item <% rich . %>
-<% end %>\end{itemize}\par}
-\vspace{3pt}
-<% end %><% end %>
-\begin{flushright}
-\closing{<% tex .Closing %>}
-
-\signature{<% tex .Name %>}
-\end{flushright}
-\end{document}
+<% if .Name %>\lettername{<% tex .Name %>}
+<% end %><% range .Contact %><% if .URL %>\contactlink{<% url .URL %>}{<% tex .Label %>}
+<% else %>\contactitem{<% tex .Label %>}
+<% end %><% end %>\contactbreak
+<% range .Links %>\linkitem{<% url .URL %>}{<% tex .Label %>}
+<% end %>\headerclose
+<% if .Date %>\letterdate{<% tex .Date %>}
+<% end %><% range .Recipient %>\recipientline{<% tex . %>}
+<% end %><% if .Salutation %>\salutation{<% tex .Salutation %>}
+<% end %><% range .Blocks %><% if .Text %>\bodyparagraph{<% rich .Text %>}
+<% end %><% if .Bullets %>\begin{bodylist}
+<% range .Bullets %>\item <% rich . %>
+<% end %>\end{bodylist}
+<% end %><% end %><% if .Closing %>\closing{<% tex .Closing %>}
+<% end %><% if .Name %>\signature{<% tex .Name %>}
+<% end %>\end{document}

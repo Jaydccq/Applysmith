@@ -57,12 +57,18 @@ the role is no longer available"); that mail is a rejection.
 
 ## Classifier version
 
-The rules are versioned as `gmail-classifier-go-5`. A normal versioned sync or
+The rules are versioned as `gmail-classifier-go-6`. A normal versioned sync or
 an explicitly confirmed local reclassification can create a new decision from
 retained mail; the previous decision remains audit history. Readers select the
 newest decision by decision time and then insertion order, so a same-millisecond
 reclassification also replaces the old signal and timeline evidence. No schema
 migration or automatic personal-mail reclassification runs as part of this source change.
+
+The role is read from the subject, then the body. A body capture must hold a
+title noun (`associate` included) and starts at a capital letter, so "the next
+round for our Platform Reliability Engineer role" reads "Platform Reliability
+Engineer"; a mail whose role is not read links on company, subject and sender
+alone, and the role conflict below cannot stop it.
 
 ## Linking and outcomes
 
@@ -70,8 +76,13 @@ migration or automatic personal-mail reclassification runs as part of this sourc
 
 - `link.Decide` scores a signal against every tracker row, archived ones
   included (company 0.5, role overlap up to 0.4, subject 0.2, sender 0.15, a
-  distinctive role conflict minus 0.3). `auto` needs 0.5 and a lead of 0.25;
-  `review` needs 0.2. A thread already linked to one candidacy inherits it; to
+  role conflict minus 0.3). `auto` needs 0.5 and a lead of 0.25;
+  `review` needs 0.2. Two named roles conflict when, without generic nouns
+  (engineer, senior, ...), neither covers 60 percent of the other, or they
+  share no title-noun family (engineer with developer, analyst, manager,
+  associate, ...) and no word but a level (graduate, entry, early career,
+  ...): "Entry Level Backend Engineer" against "Entry Level Analyst". A conflict holds an auto score for
+  `review` (`role_qualifier_mismatch`). Decisions record `link-2`. A thread already linked to one candidacy inherits it; to
   two, it is `review`. A signal whose review reasons include
   `sender_unverified` or `signup_window_unknown` is `review` whatever its
   score. A failed load of the rows fails the stage: an empty list would be
@@ -125,6 +136,23 @@ migration or automatic personal-mail reclassification runs as part of this sourc
   which under load passed the timer's 60 s limit, failed, and left the pass to
   run again on the next tick (207 `gmail-alerts` failures in one log); 1.7 s
   with the pool, every decision unchanged.
+
+### Repairing links made before the role rule
+
+`Resolve` never decides an auto link again, so a link an older rule made
+(`linker_version` `link-1`) to a row of another role stays, and so does the
+status it moved. To list the candidates, read the auto, unconfirmed `link-1`
+rows of `gmail_links` with the row's role and the mail's subject, snippet and
+newest decision's role; the snippet often names the role the classifier did
+not read. The owner corrects each from the product. The status first: "Put it back"
+while the move is still the row's latest, or else `PATCH /api/candidacies/{id}`
+or `applysmith tracker set-status <id> <status>`; a step back by the user is
+recorded as `status_corrected`. Then the link: confirm the thread to the row
+the mail is about (`POST /api/gmail/links/{signalId}/confirm`, after
+`applysmith tracker add` when there is none), which is final for the thread.
+A message that already moved a row is not applied again, so the right row's
+status is set by hand. Reject (`.../reject`) is for mail that is not about
+an application at all.
 
 ## Thread lifecycle and the inbox
 

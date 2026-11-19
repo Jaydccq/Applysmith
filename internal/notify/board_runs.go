@@ -257,6 +257,11 @@ func (b *Board) mirror(ctx context.Context, r runRow) (bool, error) {
 			return changed, err
 		}
 		changed = true
+		if r.scheduled && mv.Outcome == OutcomeOK && b.o.Idle != nil && b.o.Idle(r.kind, r.summary) {
+			if _, err := b.Ack(ctx, r.id); err != nil {
+				return changed, err
+			}
+		}
 	case state == Working && cur.State == Working:
 		if err := b.Touch(ctx, r.id); err != nil {
 			return changed, err

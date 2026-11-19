@@ -588,14 +588,19 @@ func (r *Repo) SourceFunnel(ctx context.Context, since, until time.Time) ([]Funn
 // Stages counts the postings that reached each stage in a period, each once:
 // found (into the inbox), evaluated (a report or a screening), and applied to
 // offer (a tracker row not archived moved there, corrections included).
+// Responded counts any reply: a row moved to Responded, Interview, Offer or
+// Rejected, as employers often answer with the later status directly.
 type Stages struct{ Found, Evaluated, Applied, Responded, Interview, Offer int }
+
+// RepliedStatuses are the statuses whose reach the Responded stage counts.
+var RepliedStatuses = []string{"responded", "interview", "offer", "rejected"}
 
 // StageCounts reads the stages reached in [since, until).
 func (r *Repo) StageCounts(ctx context.Context, since, until time.Time) (c Stages, err error) {
 	q := `SELECT (SELECT count(*) FROM inbox WHERE first_seen_at >= ?1 AND first_seen_at < ?2), (SELECT count(DISTINCT identity_key)
 		FROM evaluation_jobs WHERE outcome IN ('reported', 'screened') AND finished_at >= ?1 AND finished_at < ?2)`
-	for _, s := range []string{"applied", "responded", "interview", "offer"} {
-		q += `, (SELECT count(DISTINCT entry_id) FROM tracker_events WHERE kind IN ('created', 'status_changed', 'status_corrected') AND new_status = '` + s + `' AND at >= ?1 AND at < ?2
+	for _, s := range []string{"'applied'", "'" + strings.Join(RepliedStatuses, "', '") + "'", "'interview'", "'offer'"} {
+		q += `, (SELECT count(DISTINCT entry_id) FROM tracker_events WHERE kind IN ('created', 'status_changed', 'status_corrected') AND new_status IN (` + s + `) AND at >= ?1 AND at < ?2
 			AND entry_id IN (SELECT id FROM tracker_entries WHERE archived_at IS NULL))`
 	}
 	err = r.s.Read().QueryRowContext(ctx, q, since.UTC().Format(timeLayout), until.UTC().Format(timeLayout)).Scan(&c.Found, &c.Evaluated, &c.Applied, &c.Responded, &c.Interview, &c.Offer)

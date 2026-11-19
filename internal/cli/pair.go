@@ -21,7 +21,8 @@ const tokenUsage = `usage:
   applysmith token rotate [--workspace <dir>]   replace the API token and print the new one
 `
 
-const liveCallTimeout = 10 * time.Second
+// liveCallTimeout bounds one request to the running server.
+var liveCallTimeout = 10 * time.Second
 
 // pair prints the bearer token for the CLI user. It reads the vault and never
 // creates a token: the server makes it at its first start.
@@ -217,7 +218,13 @@ func (e *env) liveCall(ctx context.Context, srv *liveServer, method, path string
 
 // liveSend is liveCall with a JSON body.
 func (e *env) liveSend(ctx context.Context, srv *liveServer, method, path string, body, out any, headers ...string) error {
-	ctx, cancel := context.WithTimeout(ctx, liveCallTimeout)
+	return e.liveSendWithin(ctx, liveCallTimeout, srv, method, path, body, out, headers...)
+}
+
+// liveSendWithin is liveSend for a request the server answers only after work
+// of its own, given wait instead of liveCallTimeout.
+func (e *env) liveSendWithin(ctx context.Context, wait time.Duration, srv *liveServer, method, path string, body, out any, headers ...string) error {
+	ctx, cancel := context.WithTimeout(ctx, wait)
 	defer cancel()
 	var raw []byte
 	if body != nil {

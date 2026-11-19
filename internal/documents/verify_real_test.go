@@ -227,10 +227,10 @@ func TestDocuments_RealVerify_ClippedContent(t *testing.T) {
 
 // A 40pt gap between entries is far under the 100pt hole limit; only the
 // template's own entry-gap limit sees it.
-func TestDocuments_RealVerify_ModerncvEntryGap(t *testing.T) {
+func TestDocuments_RealVerify_ResumeEntryGap(t *testing.T) {
 	open := realToolchain(t)
 	r := fixtureResume()
-	tex := mutate(t, renderResume(t, r), "\\vspace{3pt}\n", "\\vspace{40pt}\n", 2)
+	tex := mutate(t, renderResume(t, r), "\\end{entry}\n\\begin{entry}", "\\end{entry}\n\\vspace{40pt}\n\\begin{entry}", 1)
 	o := compileFixture(t, open, KindResume, tex, expectResume(r), assets.PaperA4)
 	onlyFailing(t, o, "verify_layout/entry-gap")
 	if o.status("verify_layout/internal-hole") != toolchain.Pass {
@@ -242,12 +242,13 @@ func TestDocuments_RealVerify_FooterSignatureCollision(t *testing.T) {
 	open := realToolchain(t)
 	c := fixtureCover()
 	t.Run("signature printed over the footer line", func(t *testing.T) {
-		body := `\raggedright\fontspec[Path = fonts/raleway/]{Raleway-Medium}\fontsize{11pt}{13pt}\selectfont Page 1\par`
-		tex := mutate(t, renderCover(t, c), `\end{flushright}`, `\vspace*{-13pt}`+body+`\end{flushright}`, 1)
+		tex := mutate(t, renderCover(t, c), `\end{document}`, `\vspace*{-13pt}Page 1\par\end{document}`, 1)
 		onlyFailing(t, compileFixture(t, open, KindCover, tex, expectCover(c), assets.PaperA4), "verify_layout/text-overlap")
 	})
 	t.Run("signature pushed into the footer band", func(t *testing.T) {
-		tex := mutate(t, mutate(t, renderCover(t, c), `\thispagestyle{empty}`, `\thispagestyle{fancy}`, 1), `\begin{flushright}`, `\vspace*{372pt}\begin{flushright}`, 1)
+		// The class keeps body text above the band; a page number and an
+		// enlarged page put the closing and the signature into it.
+		tex := mutate(t, mutate(t, renderCover(t, c), `\begin{document}`, `\begin{document}\pagestyle{plain}\enlargethispage{80pt}`, 1), `\closing{`, `\vspace*{450pt}\closing{`, 1)
 		o := compileFixture(t, open, KindCover, tex, expectCover(c), assets.PaperA4)
 		if o.status("verify_layout/footer-collision") != toolchain.Fail || o.state != PDFFailed {
 			t.Fatalf("state %s, footer %+v", o.state, o.checks["verify_layout/footer-collision"])
@@ -255,23 +256,18 @@ func TestDocuments_RealVerify_FooterSignatureCollision(t *testing.T) {
 	})
 }
 
-// The list sits outside the class's paragraph macro, so it must carry the
-// body font itself; without it the items fall back to the class's main font.
-func TestDocuments_RealVerify_CoverListFont(t *testing.T) {
+// Letters set in a font outside the letter's list fail the fonts check.
+func TestDocuments_RealVerify_CoverForeignFont(t *testing.T) {
 	open := realToolchain(t)
 	c := fixtureCover()
 	tex := renderCover(t, c)
 	if o := compileFixture(t, open, KindCover, tex, expectCover(c), assets.PaperA4); o.state != PDFReady {
 		t.Fatalf("the template's own list must pass: %s %v", o.state, o.failing())
 	}
-	broken := mutate(t, tex, "\\fontspec[Path = fonts/raleway/, Kerning=Off, Numbers=Lining]{Raleway-Medium}\\fontsize{11pt}{13pt}\\selectfont\n", "\n", 1)
+	broken := mutate(t, tex, "\\begin{bodylist}", "\\fontspec{lmroman10-regular.otf}\\begin{bodylist}", 1)
 	o := compileFixture(t, open, KindCover, broken, expectCover(c), assets.PaperA4)
 	if o.status("final/fonts") != toolchain.Fail || o.state != PDFFailed {
 		t.Fatalf("state %s, fonts %+v", o.state, o.checks["final/fonts"])
-	}
-	// The list font also changes the hyphen glyph, so the date in the first item breaks.
-	if o.status("final/dates") != toolchain.Fail {
-		t.Errorf("dates = %+v", o.checks["final/dates"])
 	}
 }
 
@@ -283,11 +279,13 @@ func TestDocuments_RealVerify_PercentAndDateEncoding(t *testing.T) {
 		o := compileFixture(t, open, KindResume, mutate(t, tex, `40\%`, `40`, 1), expectResume(r), assets.PaperA4)
 		onlyFailing(t, o, "final/percent")
 	})
-	// An unescaped percent comments out the rest of its line, including the
-	// closing brace, so the engine stops and no PDF can reach a check at all.
+	// An unescaped percent comments out the rest of its line. A bullet sits
+	// on a line of its own, so the engine goes on and the bullet loses its
+	// sign and its end; the final checks see both, and the PDF never passes.
 	t.Run("percent sign comments out the line", func(t *testing.T) {
-		if o, err := tryFixture(t, open, KindResume, mutate(t, tex, `99.9\%`, `99.9%`, 1), expectResume(r), assets.PaperA4); err == nil {
-			t.Errorf("a PDF was produced: state %s", o.state)
+		o, err := tryFixture(t, open, KindResume, mutate(t, tex, `99.9\%`, `99.9%`, 1), expectResume(r), assets.PaperA4)
+		if err == nil && (o.state != PDFFailed || o.status("final/percent") != toolchain.Fail) {
+			t.Errorf("state %s, failing %v", o.state, o.failing())
 		}
 	})
 	t.Run("double hyphen becomes an en dash", func(t *testing.T) {

@@ -323,6 +323,9 @@ func uniformSponsorship(s *Step, e *Entry, named []string) (string, bool) {
 			codes, ok = northAmerica(loc)
 		}
 		if !ok {
+			codes, ok = codeCountries(loc)
+		}
+		if !ok {
 			region := regionRE.MatchString(foldPlace(loc))
 			if !known || !need || !namesNoPlace(loc) && !region || len(recordedCountries(s.Req.Facts.AuthorizedCountries)) == 0 {
 				return "", false
@@ -351,6 +354,29 @@ func uniformSponsorship(s *Step, e *Entry, named []string) (string, bool) {
 		return "", false
 	}
 	return where + strings.Join(codes, ", ") + " and the sponsorship need is " + boolWord(need) + " in each: answered for review", true
+}
+
+// codeCountries reads a location of one town the table does not know and a
+// two-letter code after it ("Marina del Rey, CA", Zefr) as the countries the
+// code can mean: a US state's, a province's elsewhere, an ISO country's. The
+// town is in one of them.
+func codeCountries(loc string) ([]string, bool) {
+	var parts []string
+	for _, p := range locSplitRE.Split(foldPlace(loc), -1) {
+		if p = strings.TrimSpace(p); p != "" {
+			parts = append(parts, p)
+		}
+	}
+	if len(parts) != 2 || len(parts[1]) != 2 {
+		return nil, false
+	}
+	var codes []string
+	for _, c := range placeEvidence(parts[1], true, true, cityNone) {
+		if countryByCode[c] != "" {
+			codes = appendUnique(codes, c)
+		}
+	}
+	return codes, len(codes) > 0
 }
 
 var anyPlaceRE = lazyregexp.New(`^(?:any|all|multiple|various)\s+`)

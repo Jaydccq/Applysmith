@@ -16,7 +16,7 @@ import (
 )
 
 // The final checks read the text layer of the compiled PDF against what the
-// product itself rendered. They sit beside the two adapted verifier scripts,
+// product itself rendered. They sit beside the two verifier scripts,
 // which own page counts, geometry and the text layer, and add the rules that
 // need the source: contact values, word preservation, reading order, dates,
 // percentages and fonts. Each is mandatory, and each is unverified rather than

@@ -297,3 +297,30 @@ func (r *Repo) waitingLeft(ctx context.Context, res WaitingResult) WaitingResult
 	}
 	return res
 }
+
+// InboxStaleAge is how long a row the pre-filter scored below zero waits
+// before ExpireStale expires it.
+const InboxStaleAge = 14 * day
+
+// ExpireStale expires the pending rows scored below zero that were first seen
+// more than InboxStaleAge ago. The drain takes the best rows first and never
+// reaches them, so they would otherwise count as waiting to be evaluated
+// forever. It returns how many it expired.
+func (r *Repo) ExpireStale(ctx context.Context) (int, error) {
+	// A row's score is read under the current target roles, as every listing
+	// by score reads it.
+	if err := r.retarget(ctx); err != nil {
+		return 0, err
+	}
+	var n int64
+	err := r.s.Write(ctx, func(tx *sql.Tx) error {
+		res, err := tx.ExecContext(ctx, `UPDATE inbox SET status = ?, updated_at = ? WHERE status = ? AND score < 0 AND first_seen_at < ?`,
+			InboxExpired, r.stamp(), InboxPending, r.now().Add(-InboxStaleAge).UTC().Format(timeLayout))
+		if err != nil {
+			return err
+		}
+		n, err = res.RowsAffected()
+		return err
+	})
+	return int(n), err
+}

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { fail, fakeApi, ok } from "../testing/api";
-import { button, byLabel, byText, click, mount, openMore, press, q, qa, text, waitFor } from "../testing/dom";
+import { button, byLabel, byText, click, mount, openMore, press, q, qa, text, type, waitFor } from "../testing/dom";
 import { applyList, applyListWithSkips, candidacy } from "../testing/fixtures";
 import ApplyNext from "./ApplyNext";
 
@@ -27,6 +27,36 @@ describe("Apply Next", () => {
     await mount(<ApplyNext />);
     await waitFor(() => text().includes("Northwind Example"));
     expect(text().toLowerCase()).not.toContain("withdraw");
+  });
+
+  it("reads an idle row whose last run filled the form as filled earlier, not as not started", async () => {
+    const filled = { ...applyList.lanes[0].items[0], runId: "run_f", attempt: { runId: "run_f", at: stamp, mode: "dry-run", outcome: { kind: "filled" } } };
+    server({ "GET /api/apply/list": () => ok({ ...applyList, lanes: applyList.lanes.map((l) => (l.lane === "apply-now" ? { ...l, items: [filled] } : l)) }) });
+    await mount(<ApplyNext />);
+    const state = await waitFor(() => q("#lane-apply-now-section td.state-col .chip"));
+    expect(state.textContent).toBe("Filled earlier");
+  });
+
+  it("pages each lane on its own, and a new order starts every lane on its first page", async () => {
+    const row = (lane: string, id: number) => ({ ...applyList.lanes[0].items[0], id, company: `Company ${id}`, lane });
+    const lanes = [
+      { lane: "apply-now", total: 12, items: [row("apply-now", 1)] },
+      { lane: "selective", total: 12, items: [row("selective", 2)] },
+      { lane: "marked-applied", total: 0, items: [] },
+      { lane: "awaiting", total: 0, items: [] },
+    ];
+    window.history.replaceState(null, "", "/apply-next?page.apply-now=2");
+    const api = server({ "GET /api/apply/list": () => ok({ ...applyList, lanes }) });
+    const last = () => api.callsTo("GET /api/apply/list").at(-1)!.query;
+    const pager = (lane: string) => q(`#lane-${lane}-section nav[aria-label="Pages"]`);
+    await mount(<ApplyNext />);
+    await click(await waitFor(() => [...(pager("selective")?.querySelectorAll("button") ?? [])].find((b) => b.textContent === "Next")));
+    await waitFor(() => last().get("page.selective") === "2");
+    expect(last().get("page.apply-now")).toBe("2");
+    expect(pager("apply-now")?.textContent).toContain("Page 2 of 2");
+    await type(q<HTMLSelectElement>(".page-actions select"), "newest");
+    await waitFor(() => last().get("sort") === "newest");
+    expect([...last().keys()].filter((k) => k.startsWith("page"))).toEqual([]);
   });
 
 });

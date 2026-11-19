@@ -9,7 +9,8 @@ posting known to be closed or already applied to is in no lane, and Awaiting
 receipt holds what Applysmith submitted until the employer's receipt arrives. A
 row shows the company, role, score, age, the latest attempt, a badge when the
 employer is on your batch skip list, and "Left out: <reason>" when a list
-started now would not run it.
+started now would not run it. Order puts the best score first (the default)
+or the newest reports first; each lane has its own pages.
 
 For a row you can:
 
@@ -25,7 +26,14 @@ For a row you can:
   was skipped, and a submission moves the tracker row to applied.
 - Apply all in a lane, confirmed the same way. The rows a list leaves out are
   named with the reason. Tick "Retry today's stops" to run again the rows that
-  stopped today on Applysmith's own judgement.
+  stopped today on Applysmith's own judgement. An Autofill-only list also
+  leaves out a row this version filled today, until you save your data or the
+  row's documents; tick the box, or tick the row itself, to fill it again.
+  A list also leaves out the rows on a job site the app browser is signed out
+  of, LinkedIn for example, and says so at once in the inbox: sign in on the
+  Browser page, then run the list again. With the Chrome extension paired (see
+  [Sign-ins from your Chrome](#sign-ins-from-your-chrome)) the sign-in is
+  copied from your Chrome first, and the item says when no extension is paired.
 - Tick rows in Apply now and Selective, then Autofill selected, or Submit
   selected after a confirmation that names each role, company and host.
 - Mark applied, if you applied yourself. The row shows who applied, you or the
@@ -158,7 +166,8 @@ form asks for one", and a stopped run that needed one offers "Allow a tailored
 cover letter and retry". A run uploads your tailored résumé when one passed its checks, else the
 roster résumé that best matches the posting, and says which and why. A form
 that asks for a transcript gets the PDF you put on Answer Bank, Transcript;
-without one, that upload is left for you. The
+without one, that upload is left for you and the stop says so. Add the PDF
+there and the row runs again in the next list. The
 Documents drawer shows the checks of each version; a PDF you have not looked at
 reads as unreviewed:
 
@@ -167,3 +176,20 @@ applysmith documents review <id> --performed --sha256 <pdf-hash>
 ```
 
 Next: [Track outcomes](track.md).
+
+## Sign-ins from your Chrome
+
+The Applysmith extension in your everyday Chrome copies a job site's sign-in
+into the app browser when a run meets that site signed out, so you sign in
+once, in your own Chrome. Chrome loads it only by your own hand:
+
+1. Open Settings, Browser extension. It names the extension folder
+   (`~/Library/Application Support/Applysmith/extension`, kept up to date by
+   the app) and shows a pairing code.
+2. In Chrome, open `chrome://extensions`, switch on Developer mode, press
+   Load unpacked and pick that folder.
+3. Click the extension's icon and type the code. Settings, Browser extension
+   then shows it as Paired, last seen within a minute.
+
+Without it a run that meets a signed-out site stops there and says that no
+extension answered; sign in on the Browser page instead.

@@ -143,10 +143,13 @@ func proofCV(proof string, chars int) string {
 }
 
 // Age is not relevance: when the limit forces cuts, the oldest job's only proof
-// of a requirement stays in the PDF while newer filler goes.
+// of a requirement stays in the PDF while newer filler goes. Each newer job is
+// down to its last bullet, so the cut is between the oldest job's filler and
+// its proof; the filler's figures ("rota 1 of year 2012") make it the job's
+// only quantified result, which must not outrank a requirement's proof.
 func TestDocuments_RealOlderRelevantProofSurvivesTheRepair(t *testing.T) {
 	const proof = "Modelled SQL data in PostgreSQL for the reporting group"
-	f, docs := realRun(t, fixtureOpts{profile: leanProfile, cv: proofCV(proof, 430)}, Request{Action: ActionPair, Options: Options{Pages: 1}})
+	f, docs := realRun(t, fixtureOpts{profile: leanProfile, cv: proofCV(proof, 800)}, Request{Action: ActionPair, Options: Options{Pages: 1}})
 	d := docs[KindResume]
 	rec := repairOf(t, f, d)
 	var m Manifest
@@ -173,7 +176,7 @@ func TestDocuments_RealOlderRelevantProofSurvivesTheRepair(t *testing.T) {
 // TestDocuments_RealThinLastPageCutsOnlyWhatItNeeds.
 func TestDocuments_RealFilledFinalPageIsReadyAndSetsTheTrackerFlag(t *testing.T) {
 	open := realToolchain(t)
-	f := newFixture(t, fixtureOpts{toolchn: open, cv: longCV(longFiller[:len(longFiller)-3]), profile: longProfile()})
+	f := newFixture(t, fixtureOpts{toolchn: open, cv: longCV(fillerOf(25)), profile: longProfile()})
 	r := f.run(Request{Action: ActionResume, Mode: ModeTailored, CandidacyID: f.cand, Posting: testPosting, PDF: true, Options: Options{Pages: 2}})
 	if !r.Published {
 		t.Fatalf("result = %+v", r)
@@ -190,18 +193,17 @@ func TestDocuments_RealFilledFinalPageIsReadyAndSetsTheTrackerFlag(t *testing.T)
 
 // A thin last page is repaired in one round by the smallest run of
 // lowest-ranked lines: putting the last cut line back makes two pages again.
-// Before the sizing read the verifier's pages and text layer, the 180 case cut
-// 15 lines where 11 do, and the 165 case (113-character bullets that print on
-// one line) needed a second round.
+// Both cases stay on two pages at the tight spacing: 121 is the shortest
+// filler that does, 129 the longest that two cuts still bring back.
 func TestDocuments_RealThinLastPageCutsOnlyWhatItNeeds(t *testing.T) {
 	open := realToolchain(t)
-	for _, short := range []int{165, 180} {
-		t.Run(itoa(short), func(t *testing.T) { thinLastPageCutsOnlyWhatItNeeds(t, open, short) })
+	for _, n := range []int{121, 129} {
+		t.Run(itoa(n), func(t *testing.T) { thinLastPageCutsOnlyWhatItNeeds(t, open, n) })
 	}
 }
 
-func thinLastPageCutsOnlyWhatItNeeds(t *testing.T, open func(context.Context) (*toolchain.Toolchain, error), short int) {
-	f := newFixture(t, fixtureOpts{toolchn: open, cv: longCV(longFiller[:len(longFiller)-short]), profile: longProfile()})
+func thinLastPageCutsOnlyWhatItNeeds(t *testing.T, open func(context.Context) (*toolchain.Toolchain, error), n int) {
+	f := newFixture(t, fixtureOpts{toolchn: open, cv: longCV(fillerOf(n)), profile: longProfile()})
 	r := f.run(Request{Action: ActionResume, Mode: ModeTailored, CandidacyID: f.cand, Posting: testPosting, PDF: true, Options: Options{Pages: 2}})
 	d, err := f.svc.Get(t.Context(), r.Documents[0])
 	must(t, err)

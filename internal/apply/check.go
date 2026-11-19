@@ -56,6 +56,8 @@ type Leftover struct {
 	WrongPolarity bool `json:"wrongPolarity,omitempty"`
 	// Draft is the answer-bank entry that would answer the row.
 	Draft *EntryDraft `json:"draft,omitempty"`
+	// Why says what the user adds so the row can be answered.
+	Why string `json:"why,omitempty"`
 }
 
 // pageState is the check's working record of one page.
@@ -648,6 +650,7 @@ func (s *session) leftovers(ctx context.Context, res *engine.PageResult, ps *pag
 			c.row = i
 		}
 		l := Leftover{Selector: ps.rows[c.row].Selector, Label: r.Label, Reason: kind, Detail: detail}
+		noteTranscript(&l, r, s.docs.noTranscript())
 		if kind != ReasonCodeBox && r.Outcome != "failed" {
 			l.Draft = s.draftOf(res.RunID, i, r)
 		}
@@ -679,6 +682,25 @@ func (ps *pageState) recordLeftovers() {
 // reasonOf is why the engine left a required row: an abstain keeps the
 // matcher's own reason, anything else the match route's verdict, followed by
 // the site's own message when it refused the value.
+// transcriptWhy says where a transcript is added, for an upload the page names
+// a transcript and the run had none to give: the stop alone read "required and
+// not answered".
+func transcriptWhy(r engine.Row, noneStored bool) string {
+	if !noneStored || r.Kind != "file" || !strings.Contains(strings.ToLower(r.Label), "transcript") {
+		return ""
+	}
+	return "no transcript is stored: add your transcript PDF on the Answer Bank's Transcript tab"
+}
+
+// noteTranscript marks a transcript upload left with none stored as the user's
+// missing data, said with where one is added, so a list runs the row again
+// once a transcript is saved (userDataStop).
+func noteTranscript(l *Leftover, r engine.Row, noneStored bool) {
+	if why := transcriptWhy(r, noneStored); why != "" {
+		l.Why, l.Detail = why, reasonMissingData
+	}
+}
+
 func reasonOf(r engine.Row) string {
 	why := reasonCode(r)
 	if r.Detail != "" {
@@ -955,7 +977,7 @@ func (ps *pageState) gatesReport(n int) gates.PageReport {
 		pr.IdentityMismatches = append(pr.IdentityMismatches, gates.Item{Page: n, Label: m.Label, SitePrefilled: prefilled})
 	}
 	for _, l := range ps.leftovers {
-		it := gates.Item{Page: n, Label: l.Label, UserStatement: l.Reason == ReasonStatementBlank}
+		it := gates.Item{Page: n, Label: l.Label, UserStatement: l.Reason == ReasonStatementBlank, Why: l.Why}
 		// A value the page's own bound refused is said with the bound.
 		if i := slices.IndexFunc(ps.rows, func(r engine.Row) bool { return r.Selector == l.Selector }); i >= 0 && ps.rows[i].Reason == "out-of-range" {
 			it.Refusal = ps.rows[i].Detail

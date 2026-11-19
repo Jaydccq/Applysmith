@@ -371,9 +371,18 @@ func (s *Handlers) letterFloor(ctx context.Context) bool {
 	return err != nil || p.CoverWhenAsked != documents.CoverAlways
 }
 
+// SortNewest orders each lane by report date, newest first, instead of best
+// score first: postings close quickly, so a fresh one should not wait pages
+// behind older ones.
+const SortNewest = "newest"
+
 func (s *Handlers) List(c *apikit.Call) (apikit.Reply, error) {
 	q := apikit.QueryOf(c)
 	page, size := q.Paging(10)
+	sort := q.Str("sort")
+	if sort != "" && sort != SortNewest {
+		q.Fail(apikit.InvalidField("sort", "sort must be %s", SortNewest))
+	}
 	lanes := applyLanes
 	if raw := c.R.URL.Query()["lane"]; len(raw) > 0 {
 		lanes = nil
@@ -389,6 +398,14 @@ func (s *Handlers) List(c *apikit.Call) (apikit.Reply, error) {
 			}
 		}
 	}
+	// page.<lane> pages that lane on its own, so one table's pager leaves the
+	// others where they are.
+	pages := map[string]int{}
+	for _, l := range lanes {
+		if pages[l] = q.Integer("page."+l, page); pages[l] < 1 {
+			q.Fail(apikit.InvalidField("page."+l, "page.%s must be 1 or more", l))
+		}
+	}
 	if q.Err != nil {
 		return apikit.Reply{}, q.Err
 	}
@@ -401,8 +418,11 @@ func (s *Handlers) List(c *apikit.Call) (apikit.Reply, error) {
 	floor := s.letterFloor(c.R.Context())
 	for _, lane := range lanes {
 		rows := all[lane]
+		if sort == SortNewest {
+			slices.SortStableFunc(rows, func(a, b LaneRow) int { return strings.Compare(b.e.Date, a.e.Date) })
+		}
 		item := wire.ApplyLane{Lane: lane, Items: []wire.ApplyItem{}, Total: apikit.Safe(len(rows))}
-		from := min((page-1)*size, len(rows))
+		from := min((pages[lane]-1)*size, len(rows))
 		for _, r := range rows[from:min(from+size, len(rows))] {
 			e := r.e
 			row := wire.ApplyItem{ID: apikit.Safe64(e.ID), Company: e.Company, Role: e.Role, Score: e.Score, Lane: lane, Date: e.Date, Version: apikit.Safe(e.Version),

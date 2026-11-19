@@ -65,16 +65,18 @@ var workAuthShapes = func() []*lazyregexp.Regexp {
 // The owner's rule: being able to prove work authorization is the
 // authorization itself, so a request for proof reads as the plain question.
 var (
-	proofLead = `^(?:if (?:you are )?(?:hired|selected|offered (?:(?:a|the) (?:position|role|job)(?: (?:with|within|at) [^,?]{1,60})?|employment)),?\s+)?(?:can|could|will|would) you,?\s+(?:(?:upon|on|after) (?:employment|hire|hiring),?\s+)?(?:be able to )?(?:provide|show|present|produce|furnish|submit|offer) (?:proof|documentation|documents|evidence|verification) `
+	proofLead = `^(?:if (?:you are )?(?:hired|selected|offered (?:(?:a|the) (?:position|role|job)|employment)(?: (?:with|within|at|by) [^,?]{1,60})?),?\s+)?(?:can|could|will|would) you,?\s+(?:(?:upon|on|after) (?:employment|hire|hiring),?\s+)?(?:be able to )?(?:provide|show|present|produce|furnish|submit|offer) (?:proof|documentation|documents|evidence|verification) `
 	// The offer lead may name the employment itself (Metropolis: "If offered
-	// employment, can you submit verification of legal right to work ...").
+	// employment, can you submit verification of legal right to work ..."),
+	// and the employer (Adobe: "If you are offered employment by Adobe, can you
+	// provide documentation establishing your identity and right to work ...").
 	// proofThatRE is "If hired, can you provide proof that you are ...", or
 	// documentation "showing you are eligible" (Huntington Ingalls).
 	proofThatRE = lazyregexp.New(`(?i)` + proofLead + `(?:(?:showing|proving) )?(?:that )?you are\b`)
 	// proofOfRE is "Can you show proof of your right to work ...", and the I-9
 	// request for "verification of both your identity and authorization to
 	// work" (Axon): proof of identity goes with the authorization.
-	proofOfRE = lazyregexp.New(`(?i)` + proofLead + `(?:of|proving|showing) (?:(?:both )?your identity and )?(?:your )?`)
+	proofOfRE = lazyregexp.New(`(?i)` + proofLead + `(?:of|proving|showing|establishing) (?:(?:both )?your identity and )?(?:your )?`)
 	// proofDeadlineRE is the time the proof is due ("within 3 days of hire"),
 	// or the law it is due under ("to the extent required by law").
 	proofDeadlineRE = lazyregexp.New(`(?i)\s+(?:within|in) \d+ (?:business |working )?days (?:of|after|from) (?:hire|hiring|starting|your (?:start|hire) date)\b|,?\s+(?:to the extent|as) required by (?:applicable |federal )?law\b`)

@@ -94,33 +94,6 @@ func TestManifestRecordsTheTemplateVersionAndHashes(t *testing.T) {
 	}
 }
 
-// The version in the manifest names the upstream revision that the
-// exact-file provenance manifest records for the templates.
-func TestTemplateVersionMatchesTheProvenanceManifest(t *testing.T) {
-	raw, err := os.ReadFile("../../third_party/document-sources.json")
-	must(t, err)
-	var src struct {
-		Entries []struct {
-			Destination string
-			Source      struct{ Revision string }
-		}
-	}
-	must(t, json.Unmarshal(raw, &src))
-	seen := 0
-	for _, e := range src.Entries {
-		switch strings.TrimPrefix(e.Destination, "internal/documents/assets/") {
-		case "resume.tex", "cover.tex", "cover.cls":
-			seen++
-			if assets.TemplateVersion != "ai-job-search@"+e.Source.Revision {
-				t.Errorf("%s: provenance revision %s, TemplateVersion %s", e.Destination, e.Source.Revision, assets.TemplateVersion)
-			}
-		}
-	}
-	if seen != 3 {
-		t.Errorf("the provenance manifest lists %d of the 3 templates", seen)
-	}
-}
-
 // A router with no provider configured fails the call with a no-route error;
 // the run must take the same documented no-provider path as a service that was
 // given no model.

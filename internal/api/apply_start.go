@@ -130,7 +130,7 @@ func (s *Server) startApplyBatch(c *apikit.Call) (apikit.Reply, error) {
 		return apikit.Reply{}, err
 	}
 	if len(rows) == 0 {
-		return apikit.Reply{}, apikit.WithReason(apikit.InvalidField("lanes", "no row in these lanes can be run"), "nothing-to-run")
+		return apikit.Reply{}, apikit.WithReason(apikit.InvalidField("lanes", "no row in these lanes can be run%s", leftWords(skipped)), "nothing-to-run")
 	}
 	d, err := s.dom()
 	if err != nil {
@@ -201,7 +201,7 @@ func (s *Server) batchRows(ctx context.Context, req wire.ApplyBatchRequest, lane
 			cands = append(cands, apply.Candidate{URL: e.PostingURL, Company: e.Company, Role: e.Role, TrackerID: e.ID, ReportNumber: e.ReportNumber})
 		}
 	}
-	sel, err := s.selector().Select(ctx, cands, apply.SelectOptions{Submit: req.Submit, RetryToday: req.RetryToday, Named: len(req.Companies) > 0,
+	sel, err := s.selector().Select(ctx, cands, apply.SelectOptions{Submit: req.Submit, RetryToday: req.RetryToday, Named: len(req.Companies) > 0, Chosen: len(req.Candidacies) > 0,
 		NamedCompanies: req.Companies, Now: s.now(), Build: s.cfg.BuildID, SkipList: skip, Limit: limit})
 	if errors.Is(err, apply.ErrEvidenceUnreadable) {
 		return nil, nil, apikit.NewErr(wire.CodeUnavailable, "the duplicate evidence cannot be read, so a list that submits does not start")
@@ -216,7 +216,25 @@ func (s *Server) batchRows(ctx context.Context, req wire.ApplyBatchRequest, lane
 	for _, k := range sel.Skipped {
 		skipped = append(skipped, wire.ApplySkippedRow{Company: k.Company, Role: k.Role, Reason: k.Reason})
 	}
+	rows, skipped = s.leaveSignedOut(ctx, rows, skipped)
 	return slices.Clip(rows), skipped, nil
+}
+
+// leftWords names why the rows of a list that runs none were left out, the
+// first three: the refusal alone left a list of LinkedIn rows the app browser
+// was signed out of unexplained.
+func leftWords(skipped []wire.ApplySkippedRow) string {
+	var parts []string
+	for _, k := range skipped[:min(len(skipped), 3)] {
+		parts = append(parts, k.Company+": "+k.Reason)
+	}
+	if len(parts) == 0 {
+		return ""
+	}
+	if more := len(skipped) - len(parts); more > 0 {
+		parts = append(parts, fmt.Sprintf("%d more", more))
+	}
+	return ": " + strings.Join(parts, "; ")
 }
 
 // heldPostings are the posting addresses a queued start or an open batch
@@ -241,12 +259,13 @@ func (s *Server) heldPostings(ctx context.Context) map[string]bool {
 }
 
 // listEvidence is the duplicate and stop evidence of this workspace. The
-// user's answer bank, profile and CV are the data a stop on missing data waits
-// for.
+// user's answer bank, profile, CV and transcript are the data a stop on
+// missing data waits for; the transcript folder's time moves when its PDF is
+// added, replaced or removed.
 func (s *Server) listEvidence() apply.SQLEvidence {
 	ws := s.cfg.Workspace
 	return apply.SQLEvidence{Store: s.store.Load(),
-		DataSavedAt: apply.NewestModTime(ws.Path(workspace.FileAnswerBank), ws.Path(workspace.FileProfile), ws.Path(workspace.FileCV))}
+		DataSavedAt: apply.NewestModTime(ws.Path(workspace.FileAnswerBank), ws.Path(workspace.FileProfile), ws.Path(workspace.FileCV), ws.Path(workspace.TranscriptDir))}
 }
 
 // selector is the list selection over this workspace's evidence. Mirror rows

@@ -238,10 +238,8 @@ func (l listFlags) toQuery() (tracker.ListQuery, error) {
 	}
 	q := tracker.ListQuery{Statuses: statuses, Company: *l.company, Source: *l.source, AppliedWithinDays: *l.appliedWithin, Archived: *l.archived,
 		MovedBy: tracker.Actor(*l.movedBy), ReachedSince: *l.since}
-	if *l.reached != "" {
-		if q.Reached, err = tracker.ParseStatus(strings.ToLower(*l.reached)); err != nil {
-			return tracker.ListQuery{}, errors.New(failureText("tracker", err))
-		}
+	if q.Reached, err = statusesArg(*l.reached); err != nil {
+		return tracker.ListQuery{}, err
 	}
 	if *l.minScore >= 0 {
 		q.MinScore = l.minScore

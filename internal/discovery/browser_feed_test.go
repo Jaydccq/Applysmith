@@ -190,6 +190,9 @@ func TestLinkedInFeed_Classifier_TaxonomyAndParseFailure(t *testing.T) {
 	if c, ok := parseClassification("```json\n{\"is_hiring\":true,\"confidence\":0.7}\n```"); !ok || c.Confidence != 0.7 {
 		t.Fatal("a fenced answer does not parse")
 	}
+	if c, ok := parseClassification(`{"is_hiring":true,"confidence":0.8,"contact_method":"link|email","sponsorship":"Yes"}`); !ok || c.ContactMethod != "" || c.Sponsorship != "yes" {
+		t.Fatalf("an answer outside the closed sets reaches the store: %+v", c)
+	}
 }
 
 func TestLinkedInFeed_CommentHintGateSelectsThreads(t *testing.T) {

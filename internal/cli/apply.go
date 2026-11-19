@@ -38,6 +38,11 @@ type applyAPI interface {
 	entry(ctx context.Context, id string) (wire.RunView, error)
 }
 
+// batchStartWait bounds a list start. The server answers only after it has
+// opened each chosen posting in the apply window to check it is still live,
+// some seconds a row, so a start of twelve rows outlasts liveCallTimeout.
+var batchStartWait = 5 * time.Minute
+
 type liveApply struct {
 	e   *env
 	srv *liveServer
@@ -51,7 +56,7 @@ func (l liveApply) runOne(ctx context.Context, req wire.ApplyRunRequest) (wire.R
 
 func (l liveApply) runList(ctx context.Context, req wire.ApplyBatchRequest) (wire.ApplyBatchAccepted, error) {
 	var acc wire.ApplyBatchAccepted
-	err := l.e.liveSend(ctx, l.srv, http.MethodPost, "/api/apply/batches", req, &acc)
+	err := l.e.liveSendWithin(ctx, batchStartWait, l.srv, http.MethodPost, "/api/apply/batches", req, &acc)
 	return acc, err
 }
 

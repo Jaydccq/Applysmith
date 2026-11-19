@@ -14,7 +14,7 @@ func rr(p string) *lazyregexp.Regexp {
 	return lazyregexp.New("(?i)" + p)
 }
 
-var roleNounRE2 = lazyregexp.New(`(?i)(engineer|scientist|developer|builder|manager|analyst|researcher|intern|architect|consultant|designer|specialist|operations|\bstaff\b|\bsde\b)`)
+var roleNounRE2 = lazyregexp.New(`(?i)(engineer|scientist|developer|builder|manager|analyst|researcher|intern|architect|consultant|designer|specialist|operations|\bassociate\b|\bstaff\b|\bsde\b)`)
 
 // Prose that precedes the title in a subject or body capture.
 var prosePrefixes = []*lazyregexp.Regexp{
@@ -88,7 +88,9 @@ var bodyRolePatterns = []*lazyregexp.Regexp{
 	rr(`\bapply\s+(?:to|for)\s+(?:the\s+|our\s+)?([A-Z]RC{3,80}?)\s+(?:position|role|job|opening)\b`),
 	rr(`\byour application was sent to\s+[A-Za-z0-9.&'-]+\s+([A-Z]RC{3,80}?(?:engineer|scientist|developer|manager|analyst|researcher|intern|architect|consultant|designer|specialist)RC{0,40}?)\s+[A-Za-z0-9.&'-]+\s+\x{00b7}`),
 	rr(`\bapplication\s+for\s+(?:our\s+|the\s+)?([A-Z]RC{3,80}?)\s+(?:at|with)\s+[A-Z]`),
-	rr(`\b(?:our|the)\s+([A-Z]RC{3,80}?)\s+(?:position|role|job|opening)`),
+	// The title starts at a capital even under (?i): otherwise the capture
+	// starts at the sentence's first "the" and is refused as prose.
+	rr(`\b(?:our|the)\s+(?:(?:role|position)\s+of\s+)?((?-i:[A-Z])RC{3,80}?)\s+(?:position|role|job|opening)`),
 	rr(`\bapplying\s+(?:to|for)\s+(?:the\s+|our\s+)?([A-Z]RC{3,80}?)\s+(?:at|with|role|position|job|opening)`),
 	rr(`\bposition\s+of\s+([A-Z]RC{3,80}?)(?:\.|,|\n|\s+(?:at|with|here|in)\b|$)`),
 	rr(`\bapplication\s+for\s+(?:our\s+|the\s+)?([A-Z]RC{3,80})`),

@@ -299,6 +299,10 @@ func TestDiscoveryAPI_FunnelWeek_CountsEachStageOncePerWeek(t *testing.T) {
 	row := h.addCandidacy("Acme Labs", "Platform Engineer", "https://jobs.example.com/acme/1")
 	h.patchRow("/api/candidacies/"+idOf(row), map[string]any{"status": "applied"})
 	h.patchRow("/api/candidacies/"+idOf(row), map[string]any{"status": "responded"})
+	// A rejection is a reply too, though the row never passed through Responded.
+	other := h.addCandidacy("Contoso", "Data Engineer", "https://jobs.example.com/contoso/2")
+	h.patchRow("/api/candidacies/"+idOf(other), map[string]any{"status": "applied"})
+	h.patchRow("/api/candidacies/"+idOf(other), map[string]any{"status": "rejected"})
 	day := func(n int) string { return now.AddDate(0, 0, -n).UTC().Format(time.RFC3339) }
 	inbox := "INSERT INTO inbox (url, original_url, identity_key, source, first_seen_at, updated_at) VALUES (?1, ?1, ?1, 's', ?2, ?2)"
 	job := "INSERT INTO runs (id, kind, status, created_at, updated_at) VALUES (?1, 'evaluate', 'succeeded', ?2, ?2); " +
@@ -321,8 +325,14 @@ func TestDiscoveryAPI_FunnelWeek_CountsEachStageOncePerWeek(t *testing.T) {
 	var got wire.Success[wire.FunnelWeek]
 	strictInto(t, h.get("/api/discovery/funnel/week").body, &got)
 	// The week is today and the six local days before it.
-	want := wire.FunnelWeek{Since: now.Local().AddDate(0, 0, -6).Format(time.DateOnly), Current: wire.FunnelStages{Found: 2, Evaluated: 1, Applied: 1, Responded: 1}, Previous: wire.FunnelStages{Found: 1, Evaluated: 1, Applied: 1}}
+	want := wire.FunnelWeek{Since: now.Local().AddDate(0, 0, -6).Format(time.DateOnly), Current: wire.FunnelStages{Found: 2, Evaluated: 1, Applied: 2, Responded: 2}, Previous: wire.FunnelStages{Found: 1, Evaluated: 1, Applied: 1}}
 	if got.Data != want {
 		t.Fatalf("got %+v, want %+v", got.Data, want)
+	}
+	// The stage's link lists the rows it counts.
+	var page wire.Success[wire.CandidacyPage]
+	strictInto(t, h.get("/api/candidacies?reached=responded,interview,offer,rejected&since="+want.Since).body, &page)
+	if page.Data.Total != 2 {
+		t.Fatalf("the Responded link lists %d rows, want 2", page.Data.Total)
 	}
 }

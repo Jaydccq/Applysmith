@@ -15,17 +15,18 @@ const (
 	groupLetterSentence = "letter-sentence"
 )
 
-// Rank is the ascending tuple removable content is ordered by: whether the
-// line is the only quantified result its entry still has, distinct explicit
-// requirements its evidence supports, evidence only it carries, letter
+// Rank is the ascending tuple removable content is ordered by: distinct
+// explicit requirements its evidence supports, whether the line is the only
+// quantified result its entry still has, evidence only it carries, letter
 // dependency (false first) and strength. Strength decides among lines the
 // requirement coverage cannot tell apart, so a nearly empty coverage no longer
 // falls back to the printed tail. Age plays no part, except that the printed
 // order (the manifest's, newest first) is the last tie-breaker.
 type Rank struct {
 	// OnlyQuantified marks a bullet that carries the only quantified result its
-	// entry has left while the entry still has unquantified bullets: those go
-	// first.
+	// entry has left while the entry still has unquantified bullets: among lines
+	// that back as many requirements, those go first. A requirement's proof
+	// still outranks a figure that backs none.
 	OnlyQuantified bool `json:"onlyQuantified"`
 	Requirements   int  `json:"requirements"`
 	Unique         int  `json:"uniqueEvidence"`
@@ -38,10 +39,10 @@ type Rank struct {
 
 func (a Rank) less(b Rank) bool {
 	switch {
-	case a.OnlyQuantified != b.OnlyQuantified:
-		return !a.OnlyQuantified
 	case a.Requirements != b.Requirements:
 		return a.Requirements < b.Requirements
+	case a.OnlyQuantified != b.OnlyQuantified:
+		return !a.OnlyQuantified
 	case a.Unique != b.Unique:
 		return a.Unique < b.Unique
 	case a.Dependent != b.Dependent:
@@ -257,7 +258,8 @@ func resumeCandidates(m Manifest, d ResumeDoc, l *LetterDoc) []candidate {
 				}
 				for i, b := range e.Bullets {
 					// The only quantified result of an entry that also has
-					// unquantified bullets is the last to go.
+					// unquantified bullets is the last to go among lines that
+					// back as many requirements.
 					only := nq == 1 && len(e.Bullets) > 1 && quantified(b.Text)
 					add(group, key, i, b.Text, b.Evidence, len(e.Bullets) == 1, only)
 				}

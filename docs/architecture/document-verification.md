@@ -1,18 +1,18 @@
 # Final PDF verification
 
 Task 3.7a ([application-documents spec](../../openspec/changes/migrate-to-go-mygo/specs/application-documents/spec.md),
-"Verification of the final PDF artifact"). It extends the two adapted upstream
-verifier scripts and the build path of the [document toolchain](document-toolchain.md);
+"Verification of the final PDF artifact"). It extends the two verifier
+scripts and the build path of the [document toolchain](document-toolchain.md);
 it adds no second verifier. The model review that precedes it is described in
-[document-review.md](document-review.md). The rules come from the attributed upstream method
-(design D18, D19), not from earlier product incidents.
+[document-review.md](document-review.md). The scripts' contract is
+[document-assets.md](document-assets.md).
 
 ## Where each check runs
 
 | Where | Code | What it needs |
 |---|---|---|
-| Text layer, page counts, dates, fonts | `assets/verify_pdf.py` (pypdf), script version 2 | the PDF |
-| Geometry | `assets/verify_layout.py` (Poppler word boxes), script version 2 | the PDF and a threshold profile |
+| Text layer, page counts, dates, fonts | `assets/verify_pdf.py` (pypdf), script version 3 | the PDF |
+| Geometry | `assets/verify_layout.py` (Poppler word boxes), script version 3 | the PDF and a threshold profile |
 | Content against the source | `internal/documents/finalcheck.go`, rules version 1 | the text layer and what the template printed (`finalexpect.go`) |
 | Verdict and its binding | `internal/documents/verification.go` | the checks of all three |
 
@@ -31,8 +31,8 @@ Every check is `pass`, `fail` or `unverified`; all are mandatory.
 | | `page-size` | a page is not the profile's paper size (A4 595.28 x 841.89 pt, Letter 612 x 792 pt, 1.5 pt tolerance) |
 | | `clipping` | a word box leaves the page, or reaches more than 14 pt past the template's measured left or right text edge, or stands in the top or bottom 18 pt |
 | | `text-overlap` | the cores (middle 60 percent of the height) of two word boxes share more than 30 percent of the smaller one: text printed over text, such as a signature over a footer line |
-| | `internal-hole`, `early-page-end`, `footer-collision`, `final-page-thin`, `orphaned-entry` | the upstream rules and values, unchanged: a 100 pt hole, 25 percent bottom space with pages following, two lines in the bottom 90 pt band, a final page more than 35 percent empty (only with more than one page), a heading or entry header split from its content |
-| | `entry-gap` (résumé profile only) | the gap between a line and the next, after the document's first section heading, is over 24 pt. moderncv leaves at most 10 pt between entries and sections; the 100 pt hole limit does not see a 40 pt gap |
+| | `internal-hole`, `early-page-end`, `footer-collision`, `final-page-thin`, `orphaned-entry` | a 100 pt hole, 25 percent bottom space with pages following, two lines in the bottom 90 pt band, a final page more than 35 percent empty (only with more than one page), a heading or entry header split from its content |
+| | `entry-gap` (résumé profile only) | the gap between a line and the next, after the document's first section heading, is over 24 pt. The template leaves at most about 11 pt between entries and sections; the 100 pt hole limit does not see a 40 pt gap |
 | final | `contact` | the name, the email as a whole token, the phone number, the address or a link label the template printed is not in the text layer. The moderncv icon names ("Envelope", "MOBILE-ALT") are ignored; an address glued to its neighbour does not count; the name is looked for with addresses set aside |
 | | `word-coverage` | under 90 percent of the distinct source words (two characters or more) are in the text layer; a long word split across lines counts when its letters are there. A word the layer holds only with a space inside it on one line ("T eam") fails whatever the coverage: a program searching the text does not find it |
 | | `text-order` | the name, the section headings (résumé) or the date, salutation, paragraphs, list items, closing and signature (letter) are not in reading order. Matching ignores spacing and punctuation; a kerning split ("T eam") is `word-coverage`'s to report |
@@ -46,11 +46,11 @@ A short, truthful one-page résumé is not a failure for its white space:
 page. The profile thresholds live in `PROFILES` in `verify_layout.py`, one per
 template and paper size, and the result echoes the profile id.
 
-Measured on the synthetic documents (A4): the résumé's right text edge is
-48.6 pt from the paper (Letter 50.3) because moderncv sets its date column about
-11 pt past the margin its geometry names, left edges 59.0 and 60.7 pt, the
-letter's 65.2 pt on both sides. The largest gap between lines after the first
-heading was 10 pt in the short and 9 pt in the two-page résumé.
+Measured on the compiled templates: the résumé's text runs from 59.5 pt from
+the paper's left and right edges on A4 (Letter 61.2), the edges of the text
+area; the letter's from 79.4 pt on both sides (its 2.8 cm margins). The
+largest gap between lines after the first heading is about 10.5 pt, above a
+section heading.
 
 ## Entry dates
 
@@ -134,33 +134,28 @@ product's build and checks. `make verify-documents` runs them
 | email missing, words preserved | résumé printed without its email | `contact` only | `RealVerify_EmailMissingDespiteWordCoverage` |
 | orphan heading | `\newpage` after `\section{Education}` | `orphaned-entry` | `RealVerify_OrphanHeading` |
 | clipping | an unbreakable 125-character word in a bullet and in the letter | `clipping` only | `RealVerify_ClippedContent` |
-| large moderncv entry gap | `\vspace{40pt}` between entries | `entry-gap` only (`internal-hole` passes) | `RealVerify_ModerncvEntryGap` |
+| large entry gap | `\vspace{40pt}` between two entries | `entry-gap` only (`internal-hole` passes) | `RealVerify_ResumeEntryGap` |
 | signature over the footer line | a second line printed 13 pt up | `text-overlap` only | `RealVerify_FooterSignatureCollision` |
-| signature in the footer band | 372 pt of space before the closing, page footer on | `footer-collision` | same |
-| cover list in the wrong font | the list's font wrapper removed | `fonts` (and `dates`, because the main font maps its hyphen to U+2010) | `RealVerify_CoverListFont` |
+| signature in the footer band | page numbers on, the page enlarged by 80 pt and 450 pt of space before the closing | `footer-collision` | same |
+| letter text in a foreign font | Latin Modern Roman selected before the list | `fonts` | `RealVerify_CoverForeignFont` |
 | percent sign lost | `40\%` written `40` | `percent` only | `RealVerify_PercentAndDateEncoding` |
 | double hyphen date | `2018--2021` | `dates`, `ascii-dates` | same |
-| unescaped percent | `99.9%` | no PDF: the engine stops | same |
+| unescaped percent | `99.9%` in a bullet | the rest of the bullet is lost: `percent` fails and the PDF is not ready | same |
 | tool missing | `pdftotext` or Python replaced by a missing path | the tool's checks are `unverified`, the PDF is kept and not ready | `RealVerify_MissingToolLeavesThePDFUnverified` |
 | stale verdict | PDF bytes or source hash changed | the record reads as stale | `RealVerify_RecordBindsTheArtifact`, `TestVerify_StoredVerdictBindsPDFAndSource` |
 
 The glyph rule has no PDF fixture: no template can be made to emit U+FFFD,
 `(cid:` or a private-use code point, so it is tested on text.
 
-## Letter layout, measured on model letters (2026-10-17)
+## Letter layout
 
-Rendered letters were converted to page images and their line boxes read with
-`pdftotext -bbox-layout`:
-
-- The list sat 21 pt below the paragraph before it against 13 pt between
-  paragraphs: `\topsep0pt` written after `\begin{itemize}` came too late, and
-  set before it is reset by the list itself. The template now takes the list's
-  space back before the list and adds 3 pt after it: 13 pt above and below.
-- A wrapped contact line started with its separator ("| github..."); the
-  separator is now tied to the item before it.
-- A model letter with an empty body printed `\lettercontent{}` and XeLaTeX
-  stopped ("There's no line here to end"), so the letter had no PDF; the
-  bullets now follow the opening (`buildCover`).
+- Paragraphs are 9 pt apart, and a list has the same 9 pt above and below it.
+- The contact separator disappears where a contact line wraps, so no line
+  starts or ends with "|".
+- The header ends with its rule whether or not the letter has a date.
+- A block with no text prints its list alone: an empty paragraph stops XeLaTeX
+  ("There's no line here to end"). With no body the bullets also follow the
+  opening (`buildCover`).
 
 Each template change gives a new smoke key: run `applysmith documents toolchain
 smoke` once after installing a build with it, or PDFs report

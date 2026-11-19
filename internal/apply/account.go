@@ -945,7 +945,7 @@ func (a *acct) syncNote() string {
 	case "not available: no-cookies":
 		return "; your Chrome holds no sign-in for " + a.host
 	case "not available: extension-silent":
-		return "; the extension in your Chrome is not answering, so no sign-in for " + a.host + " was synced"
+		return "; no Applysmith extension in your Chrome answered (pair it under Settings, Browser extension), so no sign-in for " + a.host + " was synced"
 	case "not available: timeout":
 		return "; your Chrome did not answer the sign-in sync for " + a.host + " in time"
 	}

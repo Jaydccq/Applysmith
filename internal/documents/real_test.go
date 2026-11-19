@@ -169,6 +169,14 @@ func longCV(filler string) string {
 	return b.String()
 }
 
+// fillerOf is the first n characters of longFiller repeated. Measured on the
+// current templates (A4): 25 fills one page exactly, 121 to 129 run onto a
+// thin second page that tight spacing and two cuts bring back, and 900 fills
+// two pages.
+func fillerOf(n int) string {
+	return strings.Repeat(longFiller, n/len(longFiller)+1)[:n]
+}
+
 const (
 	longFiller  = ", covering design review, rollout planning, data modelling in SQL and PostgreSQL, incident follow-up and a written hand-over for the next team on call, with regular reviews of backend services in Go"
 	shortFiller = " with backend services in Go"
@@ -186,7 +194,7 @@ func longProfile() string {
 
 func TestDocuments_RealTwoPageAndOnePageResume(t *testing.T) {
 	open := realToolchain(t)
-	f := newFixture(t, fixtureOpts{toolchn: open, cv: longCV(longFiller), profile: longProfile()})
+	f := newFixture(t, fixtureOpts{toolchn: open, cv: longCV(fillerOf(900)), profile: longProfile()})
 	two := f.run(Request{Action: ActionResume, Mode: ModeTailored, CandidacyID: f.cand, Posting: testPosting, PDF: true, Options: Options{Pages: 2}})
 	short := newFixture(t, fixtureOpts{toolchn: open, cv: longCV(shortFiller), profile: longProfile()})
 	one := short.run(Request{Action: ActionResume, Mode: ModeTailored, CandidacyID: short.cand, Posting: testPosting, PDF: true, Options: Options{Pages: 1}})

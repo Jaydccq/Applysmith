@@ -87,6 +87,11 @@ func (r *Runner) trackerEffect(e *Exec) string {
 		if run.Report != nil {
 			company, role = run.Report.Company, run.Report.Role
 		}
+		// A run given only an address names the row as the posting page's
+		// JobPosting data does, so a confirmed submission is still tracked.
+		if company == "" || role == "" {
+			company, role = firstNonEmpty(company, run.Stated.Company), firstNonEmpty(role, run.Stated.Role)
+		}
 		if company == "" || role == "" {
 			return "submission recorded; no tracker row was created because the company and role are not known"
 		}

@@ -36,6 +36,15 @@ type fakeBrowser struct {
 	entered  chan struct{}
 	imported []browser.ImportedSite
 	forgot   []string
+	// signedOut names the sign-in sites whose cookies the profile lacks.
+	signedOut map[string]bool
+}
+
+func (f *fakeBrowser) SignedOut(_ context.Context, host string) (browser.SignInSite, bool) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	site, ok := browser.SiteOf(host)
+	return site, ok && f.signedOut[site.Domain]
 }
 
 func (f *fakeBrowser) ImportedSites(context.Context) ([]browser.ImportedSite, error) {

@@ -41,3 +41,23 @@ func TestReplaceRejected(t *testing.T) {
 		t.Errorf("the repaired draft fails the gate: %+v", g.Errors)
 	}
 }
+
+// A rejected summary is replaced by the CV's own summary when there is one;
+// with none, the note says the summary was dropped, not replaced.
+func TestReplaceRejected_SummaryNoteSaysWhatHappened(t *testing.T) {
+	noSummary := strings.Replace(summaryCV, "## Summary\n\nFull-stack engineer working across Go and SQL services.\n\n", "", 1)
+	for _, tc := range []struct {
+		cv, note string
+		kept     bool
+	}{{summaryCV, "was replaced by the summary of your sources", true}, {noSummary, "was dropped", false}} {
+		m := manifestFor(t, tc.cv, testPosting)
+		mig := evID(t, m, "platform migration")
+		ev, _ := m.evidence(mig)
+		d := docWith(m, ev.Entry, ev.Text, mig)
+		d.Profile = "Award-winning engineer who led 40 teams to record revenue."
+		out, notes, _ := replaceRejected(m, d)
+		if !strings.Contains(strings.Join(notes, "|"), tc.note) || (out.Profile != "") != tc.kept {
+			t.Errorf("summary %q, notes %v; want a note with %q", out.Profile, notes, tc.note)
+		}
+	}
+}

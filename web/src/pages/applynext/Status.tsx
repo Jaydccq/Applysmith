@@ -7,11 +7,12 @@ import { STATE_ORDER, outcomeLine, ownerWords, stateWords } from "./words";
 // and, when a run has been tried, what the newest one did, who has the next
 // step, and a link to that run's record.
 // Nothing here is a form value. A row the user marked applied that no run
-// touched, or whose run stopped before, reads as theirs.
+// touched, or whose run stopped before, reads as theirs. An idle row whose
+// last run filled the form was started, so it does not read "Not started".
 export function RowStatus({ item }: { item: ApplyItem }) {
   const mine = item.lane === LaneMarkedApplied && item.state === "idle";
-  const s = mine ? { label: "Applied by you", tone: "good" as const } : stateWords(item.state);
   const o = item.attempt?.outcome;
+  const s = mine ? { label: "Applied by you", tone: "good" as const } : item.state === "idle" && o?.kind === "filled" ? { label: "Filled earlier", tone: "neutral" as const } : stateWords(item.state);
   // A run stopped on questions the user answers in its record.
   const ask = item.state === "needs-user" && o?.class === "answer-gap";
   return (

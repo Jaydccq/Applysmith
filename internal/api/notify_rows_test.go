@@ -554,3 +554,36 @@ func TestNarrator_InterviewRemindersAreSentOnce(t *testing.T) {
 		t.Fatalf("the last two hours, out of quiet hours: %v", got)
 	}
 }
+
+// A scheduled Gmail sync that read no mail, or found a sync already reading
+// it, is acknowledged as it ends: every ten minutes such a run would otherwise
+// add an unseen finished entry. One that read mail, and one that failed, stay.
+func TestNotify_Board_AnIdleGmailSyncIsAcknowledgedAsItEnds(t *testing.T) {
+	r := newNarratorRig(t)
+	r.exec(`INSERT INTO schedules (id, name, job_kind, dtstart, created_at, updated_at) VALUES (901, 'mail check', 'gmail.sync', ?, ?, ?)`, r.stamp(), r.stamp(), r.stamp())
+	runs := []struct {
+		id, status, summary string
+		acked               bool
+	}{
+		{"run_none", "succeeded", "0 listed, 0 stored, 0 for review, 0 linked", true},
+		{"run_busy", "succeeded", "a sync was already running", true},
+		{"run_mail", "succeeded", "1 listed, 1 stored, 0 for review, 0 linked", false},
+		{"run_bad", "failed", "0 listed, 0 stored, 0 for review, 0 linked", false},
+	}
+	for i, c := range runs {
+		at := fmt.Sprintf("2026-11-01T00:%02d:00Z", i)
+		r.exec(`INSERT INTO runs (id, kind, status, schedule_id, scheduled_for, created_at, updated_at, finished_at) VALUES (?, 'gmail.sync', ?, 901, ?, ?, ?, ?)`,
+			c.id, c.status, at, r.stamp(), r.stamp(), r.stamp())
+		r.exec(`INSERT INTO schedule_history (schedule_id, scheduled_for, outcome, run_id, summary, created_at) VALUES (901, ?, 'fired', ?, ?, ?)`, at, c.id, c.summary, r.stamp())
+	}
+	r.h.srv.syncBoard()
+	for _, c := range runs {
+		e, err := r.d.notify.board.Get(r.ctx, c.id)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if e.State != notify.Done || e.Acked() != c.acked {
+			t.Errorf("%s (%q): %s, acknowledged %v, want done, acknowledged %v", c.id, c.summary, e.State, e.Acked(), c.acked)
+		}
+	}
+}

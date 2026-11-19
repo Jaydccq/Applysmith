@@ -24,10 +24,12 @@ func replaceRejected(m Manifest, d ResumeDoc) (out ResumeDoc, notes []string, ke
 		} else {
 			out.Profile, out.ProfileEvidence = det.Profile, det.ProfileEvidence
 			var dg Gate
-			if r.checkSummary(&dg, out.Profile, out.ProfileEvidence); !dg.OK() {
+			if r.checkSummary(&dg, out.Profile, out.ProfileEvidence); !dg.OK() || out.Profile == "" {
 				out.Profile, out.ProfileEvidence = "", nil
+				notes = append(notes, fmt.Sprintf("the model summary was dropped (%s); your sources hold no summary to use instead", codes(g)))
+			} else {
+				notes = append(notes, fmt.Sprintf("the model summary was replaced by the summary of your sources (%s)", codes(g)))
 			}
-			notes = append(notes, fmt.Sprintf("the model summary was replaced by the summary of your sources (%s)", codes(g)))
 		}
 	}
 

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/url"
 	"regexp"
+	"slices"
 	"strings"
 	"time"
 
@@ -242,7 +243,9 @@ type feedClassification struct {
 }
 
 // parseClassification reads the model's answer; anything that is not the
-// object above is a parse failure.
+// object above is a parse failure. A value outside a closed set is dropped
+// rather than failing the post: the leads table refuses it, and one refused
+// insert would end the whole scan.
 func parseClassification(out string) (feedClassification, bool) {
 	out = strings.TrimSpace(out)
 	if i, j := strings.Index(out, "{"), strings.LastIndex(out, "}"); i >= 0 && j > i {
@@ -252,7 +255,19 @@ func parseClassification(out string) (feedClassification, bool) {
 	if json.Unmarshal([]byte(out), &c) != nil || c.IsHiring == nil || c.Confidence < 0 || c.Confidence > 1 {
 		return c, false
 	}
+	c.PosterType = oneOf(c.PosterType, "person", "company")
+	c.ContactMethod = oneOf(c.ContactMethod, "link", "email", "dm", "comment", "tag")
+	c.Sponsorship = oneOf(c.Sponsorship, "yes", "no", "unknown")
 	return c, true
+}
+
+// oneOf is v in lower case when it is one of allowed, else empty.
+func oneOf(v string, allowed ...string) string {
+	v = strings.ToLower(strings.TrimSpace(v))
+	if slices.Contains(allowed, v) {
+		return v
+	}
+	return ""
 }
 
 func feedPrompt(p feedPost) string {

@@ -244,6 +244,35 @@ func seedScored(t *testing.T, h *harness, n int64, company string, score float64
 	}
 }
 
+// Newest orders a lane by report date over its whole length, and page.<lane>
+// pages that lane alone while the others stay on page 1.
+func TestAPI_ApplyList_NewestFirstAndAPagePerLane(t *testing.T) {
+	h := newDomainHarness(t, unavailableWindow)
+	for n, r := range []struct {
+		company, date string
+		score         float64
+	}{{"Old Best", "2026-01-02", 4.9}, {"Fresh Good", "2026-01-05", 4.1}, {"Older Maybe", "2026-01-03", 3.6}, {"Newer Maybe", "2026-01-04", 3.8}} {
+		score := r.score
+		if _, err := h.upsertReport(t.Context(), tracker.Report{Number: int64(n + 1), Date: r.date, Outcome: tracker.OutcomeRecommended, Kind: tracker.ScoreFinal,
+			Score: &score, Posting: postingOf(r.company)}); err != nil {
+			t.Fatal(err)
+		}
+	}
+	got := decode[wire.ApplyList](t, h.get("/api/apply/list?lane=apply-now,selective&pageSize=1&sort=newest&page.selective=2"))
+	var firsts []string
+	for _, l := range got.Lanes {
+		for _, it := range l.Items {
+			firsts = append(firsts, l.Lane+": "+it.Company)
+		}
+	}
+	if want := []string{"apply-now: Fresh Good", "selective: Older Maybe"}; !slices.Equal(firsts, want) {
+		t.Fatalf("rows = %v, want %v", firsts, want)
+	}
+	if r := h.get("/api/apply/list?sort=oldest"); r.StatusCode != 422 {
+		t.Fatalf("unknown sort: %d %s", r.StatusCode, r.body)
+	}
+}
+
 // Every lane rule of the apply-list status route, one row each, seeded through
 // the writers that hold each fact in production.
 func TestAPI_ApplyList_EveryLaneRule(t *testing.T) {

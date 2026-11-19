@@ -231,7 +231,7 @@ func TestLock_PinsAreComplete(t *testing.T) {
 		}
 		seen[p.Name], seen[p.Witness] = true, true
 	}
-	for _, need := range []string{"moderncv", "fontspec", "xltxtra", "xunicode", "textpos", "titlesec", "fancyhdr", "cite", "import", "luatexbase", "pgf", "fontawesome5", "academicons"} {
+	for _, need := range []string{"moderncv", "fontspec", "fancyhdr", "luatexbase", "pgf", "fontawesome5", "academicons", "hyperref", "geometry"} {
 		if !seen[need] {
 			t.Errorf("closure lacks %s", need)
 		}

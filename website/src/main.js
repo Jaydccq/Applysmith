@@ -50,4 +50,14 @@ tabs.forEach((tab, i) => {
 });
 show(tabs[0]);
 
+// The site film is not tracked in git (video/README.md): the page shows it
+// only when the build found the file in video/dist.
+const film = import.meta.glob("../../video/dist/site-film.{mp4,jpg}", { eager: true, query: "?url", import: "default" });
+if (film["../../video/dist/site-film.mp4"]) {
+  const video = document.getElementById("film-video");
+  video.poster = film["../../video/dist/site-film.jpg"] ?? "";
+  video.src = film["../../video/dist/site-film.mp4"];
+  document.getElementById("film").hidden = false;
+}
+
 startScene(document.getElementById("scene"));

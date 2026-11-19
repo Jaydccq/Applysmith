@@ -155,16 +155,21 @@ type rankTerm struct {
 // (boosted false), the seniority wording.
 func targetTerms(title string, boosted bool, t RankTargets) []rankTerm {
 	var out []rankTerm
-	if role, ok := t.targetRole(title); ok {
+	// Seniority wording counts only against the seeker's own targets: a senior
+	// title is penalized for an early-career seeker, an early-career title
+	// rewarded for one and penalized for a senior one.
+	_, seniorWording := anyMatch(seniorTerms, gates.SeniorityText(title))
+	above := !boosted && seniorWording && t.allEarly
+	// A title above every target's seniority is not a target role: its family
+	// match would cancel the senior wording, and a junior seeker's "Senior
+	// Backend Engineer" would rank with the junior ones.
+	if role, ok := t.targetRole(title); ok && !above {
 		out = append(out, rankTerm{targetRoleWeight, "target-role(" + role + ")"})
 	}
 	if boosted {
 		return out
 	}
-	// Seniority wording counts only against the seeker's own targets: a senior
-	// title is penalized for an early-career seeker, an early-career title
-	// rewarded for one and penalized for a senior one.
-	if _, ok := anyMatch(seniorTerms, gates.SeniorityText(title)); ok && t.allEarly {
+	if above {
 		out = append(out, rankTerm{-seniorityWeight, "senior-wording"})
 	}
 	if EarlyCareer(title, "") {

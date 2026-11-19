@@ -178,14 +178,19 @@ func (s *Handlers) narrowByMail(c *apikit.Call, q *apikit.Query, lq *tracker.Lis
 
 // candidacyFilter reads the filters the list and its export share: status (one
 // or a comma-separated list), company, source, query, minScore, appliedWithin
-// (days), reached and movedBy with since (a status and an actor, rows moved to
-// it or by it on or after that local day) and archived.
+// (days), reached and movedBy with since (a status or a comma-separated list,
+// and an actor: rows moved to one of them or by it on or after that local day)
+// and archived.
 func candidacyFilter(q *apikit.Query) (tracker.ListQuery, error) {
 	statuses, err := tracker.ParseStatuses(q.Str("status"))
+	if err != nil {
+		return tracker.ListQuery{}, err
+	}
+	reached, err := tracker.ParseStatuses(q.Str("reached"))
 	return tracker.ListQuery{
 		Statuses: statuses, Company: q.Str("company"), Source: q.Str("source"), Query: q.Str("query"), MinScore: q.Float("minScore"),
 		AppliedWithinDays: q.Integer("appliedWithin", 0), Archived: q.Boolean("archived"),
-		Reached: tracker.Status(q.Str("reached")), MovedBy: tracker.Actor(q.Str("movedBy")), ReachedSince: q.Str("since"),
+		Reached: reached, MovedBy: tracker.Actor(q.Str("movedBy")), ReachedSince: q.Str("since"),
 	}, err
 }
 

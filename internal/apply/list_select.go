@@ -44,6 +44,9 @@ type SelectOptions struct {
 	SkipList []string
 	// Limit bounds the runnable rows; zero reads as 5. A named request ignores it.
 	Limit int
+	// Chosen says the user picked the rows one by one, so a fill-only list
+	// runs a row filled today (filledToday).
+	Chosen bool
 }
 
 // Skipped is a row the selection left out, with the rule that did and who has
@@ -133,6 +136,9 @@ func (s *Selector) Select(ctx context.Context, cands []Candidate, opts SelectOpt
 		}
 		named := NamedCompany(opts.NamedCompanies, g.Primary.Company)
 		sk := sel.decide(g, named)
+		if sk == nil && !opts.Submit && !opts.RetryToday && !opts.Chosen && !named {
+			sk = sel.filledToday(g)
+		}
 		row := ListRow{URL: g.Primary.URL, Company: g.Primary.Company, Role: g.Primary.Role, Named: named, Mirrors: len(g.Mirrors)}
 		if sk == nil && pf != nil {
 			if sk, err = s.prepare(ctx, sel, pf, g, named, &row, &res); err != nil {
@@ -740,6 +746,22 @@ func (s *selection) todaySkip(g MirrorGroup, keys []string, named bool) *Skipped
 		reason += userDataNote
 	}
 	return skip(g.Primary, RuleToday, verdict.owner, "%s", reason)
+}
+
+// filledToday leaves out of a fill-only list a row the running build filled
+// today with none of the user's data or the row's documents saved since. A
+// list closes the tabs it fills, so the same fill again shows nothing new; a
+// submitting list, retry-today, naming the company and choosing the row run it.
+func (s *selection) filledToday(g MirrorGroup) *Skipped {
+	keys := keysOf(g)
+	r, ok := s.today[keys[0]]
+	if !ok || r.Kind != OutcomeFilled || !buildVouches(r.Build, s.opts.Build) {
+		return nil
+	}
+	if s.f.DataSavedAt.After(r.Finished) || s.f.DocumentsAt[s.rowID(g.Primary, keys)].After(r.Finished) {
+		return nil
+	}
+	return skip(g.Primary, RuleToday, "", "filled today by this build (run %s); retry today to fill it again", r.ID)
 }
 
 // rowID is the candidate's tracker row: its own, or the row of its address.

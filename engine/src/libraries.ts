@@ -211,7 +211,8 @@ export function itiRoot(el: Element): HTMLElement | null {
  * it only on submit). A country already selected is not clicked again.
  */
 export async function writeItiCountry(root: HTMLElement, country: string, ctx: WriteCtx, dial = ""): Promise<WriteOutcome> {
-  const flag = root.querySelector<HTMLElement>(".iti__selected-flag");
+  // intl-tel-input 20 and later name the button iti__selected-country.
+  const flag = root.querySelector<HTMLElement>(".iti__selected-flag, .iti__selected-country");
   const hidden = root.querySelector<HTMLInputElement>('input[type="hidden"]');
   if (!flag) return { ok: false, reason: "driver-unavailable" };
   const before = hidden?.value ?? "";

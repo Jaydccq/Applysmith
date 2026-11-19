@@ -72,7 +72,7 @@ type BuildOutput struct {
 }
 
 // Build compiles in.TeX in a private scratch directory, verifies the PDF with
-// the adapted scripts and rasterises previews, then removes the scratch
+// the verifier scripts and rasterises previews, then removes the scratch
 // directory. Failures are typed: ErrTimeout, ErrLogLimit, ErrCancelled,
 // ErrVerdict, or an error naming the exceeded scratch or PDF limit. A verdict
 // of fail or unverified is not an error; the caller decides what it permits.

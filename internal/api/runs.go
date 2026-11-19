@@ -17,6 +17,7 @@ import (
 	"applysmith/internal/api/knowledgeapi"
 	"applysmith/internal/api/wire"
 	"applysmith/internal/apply"
+	"applysmith/internal/browser"
 	"applysmith/internal/discovery"
 	"applysmith/internal/documents"
 	"applysmith/internal/evaluate"
@@ -160,6 +161,9 @@ func (s *Server) fixOf(ctx context.Context, e notify.Entry) *wire.EntryFix {
 	if source, ok := strings.CutPrefix(e.ID, scanSignInID); ok && e.Kind == notify.KindTask {
 		return scanSignInFix(source)
 	}
+	if strings.HasPrefix(e.ID, siteSignInID) && e.Kind == notify.KindTask {
+		return browserSignInFix
+	}
 	if e.Kind != notify.KindApply {
 		return nil
 	}
@@ -175,11 +179,25 @@ func (s *Server) fixOf(ctx context.Context, e notify.Entry) *wire.EntryFix {
 	if json.Unmarshal([]byte(raw), &recs) != nil {
 		return nil
 	}
-	if fix := signinFix(recs); fix != nil || e.Reason != "credential-refused" {
+	if fix := signinFix(recs); fix != nil {
 		return fix
 	}
-	return passwordFix(recs)
+	switch e.Reason {
+	case "sign-in":
+		for _, r := range recs {
+			if _, ok := browser.SiteOf(r.Host); ok {
+				return browserSignInFix
+			}
+		}
+	case "credential-refused":
+		return passwordFix(recs)
+	}
+	return nil
 }
+
+// browserSignInFix points a job site's signed-out stop at the Browser page,
+// whose sign-in list opens the site in the app browser.
+var browserSignInFix = &wire.EntryFix{To: "/browser", Label: "Sign in on the Browser page"}
 
 // passwordFix points a stop for a refused or run-out saved password at the
 // site override of the host that refused it, where a new one is saved.

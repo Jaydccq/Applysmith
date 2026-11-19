@@ -130,6 +130,11 @@ func TestLink_RoleQualifierMismatch(t *testing.T) {
 	if d.Kind != Auto {
 		t.Errorf("generic nouns only: %+v", d)
 	}
+	// Another kind of job that shares only a seniority word conflicts.
+	d = Decide(Signal{Company: "Example Corp", Role: "Entry Level Backend Engineer"}, NewPool([]Candidacy{{ID: 1, Company: "Example Corp", Role: "Entry Level Analyst"}}), nil)
+	if d.Kind != Review || !slices.Contains(d.Reasons, ReasonRoleQualifier) {
+		t.Errorf("title nouns differ: %+v", d)
+	}
 }
 
 func TestLink_ThreadContinuityAndMultiLinkedThread(t *testing.T) {

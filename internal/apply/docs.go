@@ -40,6 +40,8 @@ type docResumes struct {
 	// page report took it (resumeLine).
 	resume string
 	named  bool
+	// lacked is set once a transcript slot asked and none is stored.
+	lacked bool
 }
 
 func newDocResumes(r *Runner, e *Exec) *docResumes { return &docResumes{r: r, e: e} }
@@ -144,15 +146,30 @@ func (d *docResumes) Resume(ctx context.Context, req engine.ResumeRequest) (*eng
 // transcript serves the Answer Bank's transcript PDF to a transcript slot. A
 // slot with none stored is left as the page has it, never given the résumé.
 func (d *docResumes) transcript(ctx context.Context) (*engine.ResumePayload, error) {
-	if d.r.d.Page.Transcript == nil {
-		return nil, nil
+	var pl *engine.ResumePayload
+	if d.r.d.Page.Transcript != nil {
+		var err error
+		if pl, err = d.r.d.Page.Transcript(ctx); err != nil {
+			d.note("transcript unreadable: %v", err)
+			return nil, nil
+		}
 	}
-	pl, err := d.r.d.Page.Transcript(ctx)
-	if err != nil {
-		d.note("transcript unreadable: %v", err)
-		return nil, nil
+	if pl == nil {
+		d.mu.Lock()
+		d.lacked = true
+		d.mu.Unlock()
 	}
 	return pl, nil
+}
+
+// noTranscript reports a transcript slot that asked when none is stored.
+func (d *docResumes) noTranscript() bool {
+	if d == nil {
+		return false
+	}
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	return d.lacked
 }
 
 // pick returns the newest ready version of kind whose verification holds: its

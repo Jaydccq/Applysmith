@@ -831,6 +831,8 @@ type Item struct {
 	// UserStatement marks a required statement about this application that
 	// only the user makes (that no AI helped with it), left blank.
 	UserStatement bool
+	// Why says what the user adds so the control can be answered.
+	Why string
 }
 
 // LabeledFlag is a flag with the label of the control it concerns.
@@ -912,7 +914,7 @@ func SubmitReadiness(in ReadinessInput) ReadinessResult {
 					continue
 				}
 				add(CodeRequiredUnanswered, p.Number, it.Label)
-				fails[len(fails)-1].Refusal = it.Refusal
+				fails[len(fails)-1].Refusal, fails[len(fails)-1].Why = it.Refusal, it.Why
 			}
 		}
 		for _, it := range p.NotHeld {

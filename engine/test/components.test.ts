@@ -285,6 +285,22 @@ describe("intl-tel-input country", () => {
     expect(byId("country").value).toBe("de");
   });
 
+  test("intl-tel-input 20 and later: the country button is iti__selected-country and the list sits in a dropdown that hides as a whole", async () => {
+    const items = TWO.map(([code, name, dial]) => `<li class="iti__country" data-country-code="${code}"><span class="iti__country-name">${name}</span><span class="iti__dial-code">${dial}</span></li>`).join("");
+    mount(`<div class="iti iti--allow-dropdown"><div class="iti__country-container"><button type="button" class="iti__selected-country" aria-haspopup="dialog"></button><div class="iti__dropdown-content iti__hide"><ul class="iti__country-list">${items}</ul></div></div><input type="tel" id="phone" aria-label="Phone"><input type="hidden" id="country"></div>`);
+    const root = document.querySelector(".iti") as HTMLElement;
+    const drop = root.querySelector(".iti__dropdown-content") as HTMLElement;
+    root.querySelector(".iti__selected-country")?.addEventListener("click", () => drop.classList.toggle("iti__hide"));
+    root.querySelectorAll("li").forEach((li) =>
+      li.addEventListener("click", () => {
+        (byId("country") as HTMLInputElement).value = li.getAttribute("data-country-code") ?? "";
+        drop.classList.add("iti__hide");
+      }),
+    );
+    expect((await writeItiCountry(root, "United Kingdom", ctx())).ok).toBe(true);
+    expect(byId("country").value).toBe("gb");
+  });
+
   test("A list whose country takes no click is closed again and the write is not committed", async () => {
     const root = mountIti(TWO, true);
     expect(await writeItiCountry(root, "United States", ctx())).toMatchObject({ ok: false, reason: "write-not-committed" });

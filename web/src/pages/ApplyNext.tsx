@@ -3,7 +3,7 @@ import { ApiError, get, patch, post, withQuery } from "../api/client";
 import { candidacy, statusChangeResult } from "../api/decoders";
 import { applyBatchView, applyList } from "../api/decoders_apply";
 import { applyBatchAccepted, runAccepted, runView } from "../api/decoders_runs";
-import { asApiError, useInterval, usePageInRange, useResource, useTopicsSettled } from "../hooks";
+import { asApiError, useInterval, useResource, useTopicsSettled } from "../hooks";
 import { Link, useSearchParams } from "../router";
 import { Chip, ErrorNote, ExternalLink, Loading, OfflineScoresNote, Pager, ScoreBadge, SelectionBar, Truncate, UndoNote, ageLabel } from "../ui/parts";
 import { BoardStageQueued, SourceCheckFailed, type ApplyBatchView, type ApplyItem, type ApplyLane, type ApplySkippedRow } from "../wire";
@@ -25,13 +25,17 @@ import { EmptyState } from "../ui/EmptyState";
 import { ClearChip } from "../ui/FilterChips";
 
 // Each lane says why its rows are there; an empty lane says so in the same
-// line instead of a box of its own.
+// line instead of a box of its own. The order is the page's Order choice.
 const LANES: Record<string, { title: string; why: string; empty: string }> = {
-  "apply-now": { title: "Apply now", why: "Evaluated postings that score 4.0 or higher, best first.", empty: "No evaluated posting scores 4.0 or higher." },
-  selective: { title: "Selective", why: "Scores from 3.5 to below 4.0, best first. Read the report before you apply.", empty: "No evaluated posting scores from 3.5 to below 4.0." },
+  "apply-now": { title: "Apply now", why: "Evaluated postings that score 4.0 or higher.", empty: "No evaluated posting scores 4.0 or higher." },
+  selective: { title: "Selective", why: "Scores from 3.5 to below 4.0. Read the report before you apply.", empty: "No evaluated posting scores from 3.5 to below 4.0." },
   "marked-applied": { title: "Marked applied", why: "Postings you marked applied yourself. Nothing here is run.", empty: "You have not marked any posting applied." },
   awaiting: { title: "Awaiting receipt", why: "Applysmith submitted these; the employer's receipt has not been seen yet.", empty: "No automated submission is waiting for its receipt." },
 };
+
+// Each lane pages on its own, under the server's page.<lane>, so one table's
+// pager leaves the others where they are.
+const pageKey = (lane: string) => `page.${lane}`;
 
 // Only these lanes hold rows the chain can run.
 const RUNNABLE = new Set(["apply-now", "selective"]);
@@ -63,7 +67,6 @@ interface Actions {
   openReport: (n: number) => void;
   openDocuments: (item: ApplyItem) => void;
   skip: (item: ApplyItem) => void;
-  firstPage: () => void;
 }
 
 // A run that is working on a row owns it; the row is skipped once the run ends.
@@ -143,10 +146,10 @@ function countBy(items: ApplyItem[]): Record<string, number> {
   return out;
 }
 
-// pickNext is the row the page suggests first: the best row of the runnable
-// lanes that a run can start on now (a posting address, not on the skip list,
-// never tried). A row the list would leave out is never idle: the server marks
-// it skipped. The server sends each runnable lane best first.
+// pickNext is the row the page suggests first: the top row, in the page's
+// order, of the runnable lanes that a run can start on now (a posting address,
+// not on the skip list, never tried). A row the list would leave out is never
+// idle: the server marks it skipped.
 function pickNext(lanes: ApplyLane[]): ApplyItem | undefined {
   const ready = lanes.flatMap((l) => (RUNNABLE.has(l.lane) ? l.items.filter((i) => i.postingUrl && !i.skipEntry && i.state === "idle") : []));
   return ready.find((i) => !isSample(i)) ?? ready[0];
@@ -154,7 +157,7 @@ function pickNext(lanes: ApplyLane[]): ApplyItem | undefined {
 
 // NextUp names the row to apply to next, why it leads, and what each of its
 // two buttons does. Submitting goes through the same confirmation as a row.
-function NextUp({ item, act }: { item: ApplyItem; act: Actions }) {
+function NextUp({ item, act, newest }: { item: ApplyItem; act: Actions; newest: boolean }) {
   return (
     <section aria-labelledby="next-up" className="panel next-up">
       <div className="next-up-body">
@@ -167,7 +170,9 @@ function NextUp({ item, act }: { item: ApplyItem; act: Actions }) {
             <Truncate text={item.role} />
           </p>
           <p className="muted next-up-links">
-            <span>Best score in {LANES[item.lane]?.title ?? item.lane}.</span>
+            <span>
+              {newest ? "Newest" : "Best score"} in {LANES[item.lane]?.title ?? item.lane}.
+            </span>
             {item.postingUrl && <ExternalLink href={item.postingUrl}>{item.postingHost ?? "Posting"}</ExternalLink>}
             {item.reportNumber !== undefined && (
               <button type="button" className="small ghost" aria-label={`Read report ${item.reportNumber} for next up: ${item.company}`} onClick={() => act.openReport(item.reportNumber!)}>
@@ -210,14 +215,11 @@ function Starts({ item, act, label, first }: { item: ApplyItem; act: Actions; la
   );
 }
 
-function Lane({ lane, act }: { lane: ApplyLane; act: Actions }) {
+function Lane({ lane, act, page, pageSize, onPage }: { lane: ApplyLane; act: Actions; page: number; pageSize: number; onPage: (page: number) => void }) {
   const def = LANES[lane.lane] ?? { title: lane.lane, why: "", empty: "Nothing here." };
   const headingId = `lane-${lane.lane}`;
   const runnable = RUNNABLE.has(lane.lane) && lane.total > 0 && !lane.items.every(isSample);
   const empty = lane.items.length === 0;
-  // The server pages every lane together, so a lane can hold rows on earlier
-  // pages and none on this one: that is not an empty lane.
-  const earlier = empty && lane.total > 0;
   const picks = RUNNABLE.has(lane.lane);
   return (
     <section aria-labelledby={headingId} className={empty ? "panel lane-empty" : "panel"} id={headingId + "-section"}>
@@ -238,18 +240,7 @@ function Lane({ lane, act }: { lane: ApplyLane; act: Actions }) {
         )}
       </header>
       <p className="lane-why muted">
-        {earlier ? (
-          <>
-            {`Its ${lane.total} ${lane.total === 1 ? "posting is" : "postings are"} on earlier pages.`}{" "}
-            <button type="button" className="small ghost" onClick={act.firstPage}>
-              Go to page 1
-            </button>
-          </>
-        ) : empty ? (
-          def.empty
-        ) : (
-          def.why
-        )}
+        {empty ? def.empty : def.why}
         {RUNNABLE.has(lane.lane) && lane.items.some(isSample) && " Sample postings offer no autofill: their sites do not exist."}
       </p>
       <StateCounts states={countBy(lane.items)} />
@@ -331,6 +322,7 @@ function Lane({ lane, act }: { lane: ApplyLane; act: Actions }) {
           </tbody>
         </table>
       )}
+      {lane.total > pageSize && <Pager page={page} pageSize={pageSize} total={lane.total} onPage={onPage} />}
     </section>
   );
 }
@@ -433,12 +425,15 @@ function StartedNote({ started, onCancel, onDismiss }: { started: Started; onCan
 
 export default function ApplyNext() {
   const [params, setParams] = useSearchParams();
-  const page = Math.max(1, Number(params.get("page")) || 1);
+  const pageOf = (l: string) => Math.max(1, Number(params.get(pageKey(l))) || 1);
+  const pages = Object.fromEntries(Object.keys(LANES).flatMap((l) => (pageOf(l) > 1 ? [[pageKey(l), pageOf(l)]] : [])));
   // lane keeps only these lanes (comma-separated), as a Home count of them opens.
   const lane = (params.get("lane") ?? "").split(",").filter((l) => Object.hasOwn(LANES, l)).join(",");
+  // Best score first unless the user asks for the newest reports first.
+  const sort = params.get("sort") === "newest" ? "newest" : "";
   // A run starting, stopping or ending is a "runs" notice, not a tracker one,
   // and it moves a row's state.
-  const [res, retry] = useResource(() => get("/api/apply/list", applyList, { page, lane }), [page, lane], ["tracker"]);
+  const [res, retry] = useResource(() => get("/api/apply/list", applyList, { ...pages, lane, sort }), [JSON.stringify(pages), lane, sort], ["tracker"]);
   useTopicsSettled(["runs"], RUNS_SETTLE_MS, retry);
   const [pending, setPending] = useState<Pending | null>(null);
   const [busy, setBusy] = useState(false);
@@ -461,9 +456,14 @@ export default function ApplyNext() {
   // A report opened from a runnable row ends on that row's two starts.
   const reportItem = items.find((i) => i.reportNumber === reportOpen && RUNNABLE.has(i.lane) && i.postingUrl);
   const largest = res.data ? Math.max(0, ...res.data.lanes.map((l) => l.total)) : 0;
-  usePageInRange(res.data && { ...res.data, rows: items, total: largest }, (p) => setParams({ page: p > 1 ? String(p) : undefined }, { replace: true }));
-  // The next row is suggested from the top of the list only.
-  const next = res.data && page === 1 ? pickNext(res.data.lanes) : undefined;
+  const goPage = (l: string, p: number, opts?: { replace: boolean }) => setParams({ [pageKey(l)]: p > 1 ? String(p) : undefined }, opts);
+  // A lane left empty on a later page, as when its last rows were skipped,
+  // moves to its last page that still has rows.
+  useEffect(() => {
+    for (const l of res.data?.lanes ?? []) if (l.items.length === 0 && pageOf(l.lane) > 1) goPage(l.lane, Math.ceil(l.total / res.data!.pageSize), { replace: true });
+  }, [res.data]);
+  // The next row is suggested from the top of the runnable lanes only.
+  const next = res.data && [...RUNNABLE].every((l) => pageOf(l) === 1) ? pickNext(res.data.lanes) : undefined;
 
   // A ticked row on the page that can no longer be chosen (it moved to another
   // lane) leaves the selection, so the bar never counts or sends it.
@@ -613,7 +613,6 @@ export default function ApplyNext() {
     openReport: (n) => setParams({ report: String(n) }),
     openDocuments: (i) => setParams({ documents: String(i.id) }),
     skip: (i) => void skipRow(i),
-    firstPage: () => setParams({ page: undefined }),
   };
   const laneIn = (lane: ApplyLane) => res.data?.lanes.find((l) => l.lane === lane.lane) ?? lane;
 
@@ -622,12 +621,21 @@ export default function ApplyNext() {
       <PageHeader
         path="/apply-next"
         actions={
-          <Button icon={ListX} onClick={() => setSkipOpen(true)}>
-            Edit the batch skip list
-          </Button>
+          <>
+            <label>
+              Order
+              <select value={sort} onChange={(e) => setParams({ sort: e.target.value || undefined, ...Object.fromEntries(Object.keys(pages).map((k) => [k, undefined])) }, { replace: true })}>
+                <option value="">Best score</option>
+                <option value="newest">Newest</option>
+              </select>
+            </label>
+            <Button icon={ListX} onClick={() => setSkipOpen(true)}>
+              Edit the batch skip list
+            </Button>
+          </>
         }
       >
-        Evaluated postings, best first. Nothing is submitted until you confirm it.
+        Evaluated postings to apply to. Nothing is submitted until you confirm it.
       </PageHeader>
       <OfflineScoresNote />
       <div ref={feedback}>
@@ -642,8 +650,8 @@ export default function ApplyNext() {
       </div>
       {res.status === "loading" && <Loading label="Loading the apply list" />}
       {res.status === "error" && <ErrorNote error={res.error} onRetry={retry} />}
-      {lane && <ClearChip label={`Only ${lane.split(",").map((l) => LANES[l].title).join(" and ")}`} to={withQuery("/apply-next", Object.fromEntries([...params].filter(([k]) => k !== "lane" && k !== "page")))} />}
-      {next && <NextUp item={next} act={act} />}
+      {lane && <ClearChip label={`Only ${lane.split(",").map((l) => LANES[l].title).join(" and ")}`} to={withQuery("/apply-next", Object.fromEntries([...params].filter(([k]) => k !== "lane" && !k.startsWith("page."))))} />}
+      {next && <NextUp item={next} act={act} newest={sort === "newest"} />}
       <ApplyProgress />
       {res.data && largest === 0 && !lane && (
         <EmptyState icon={Send} title="Nothing is ready to apply to." action={<Link to="/discovery">Find postings in Discovery</Link>}>
@@ -658,10 +666,11 @@ export default function ApplyNext() {
               No posting is ready to apply to. <Link to="/discovery">Find postings in Discovery</Link>
             </p>
           )}
-          <div className="lanes">{res.data.lanes.map((l) => <Lane key={l.lane} lane={l} act={act} />)}</div>
-          {largest > res.data.pageSize && (
-            <Pager page={res.data.page} pageSize={res.data.pageSize} total={largest} onPage={(p) => setParams({ page: p > 1 ? String(p) : undefined })} />
-          )}
+          <div className="lanes">
+            {res.data.lanes.map((l) => (
+              <Lane key={l.lane} lane={l} act={act} page={pageOf(l.lane)} pageSize={res.data!.pageSize} onPage={(p) => goPage(l.lane, p)} />
+            ))}
+          </div>
           <SelectionBar count={chosen.size}>
             <Button size="sm" icon={WandSparkles} disabled={busy} title="Fills each chosen form in turn and stops before Submit." onClick={() => void startChosen(false)}>
               Autofill selected

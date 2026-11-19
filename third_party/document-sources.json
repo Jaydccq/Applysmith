@@ -3,63 +3,40 @@
   "entries": [
     {
       "destination": "internal/documents/assets/cover.cls",
-      "kind": "attributed-source",
+      "kind": "original",
       "source": {
-        "url": "https://raw.githubusercontent.com/MadsLorentzen/ai-job-search/a011214d60f943770e33f7d5f070e1a5f91e3822/cover_letters/cover.cls",
-        "path": "cover_letters/cover.cls",
-        "revision": "a011214d60f943770e33f7d5f070e1a5f91e3822"
+        "url": "",
+        "path": "",
+        "revision": ""
       },
-      "ancestry": [
-        "https://github.com/deedy/Deedy-Resume/blob/6d06ba7d8eee5fb8870bb00cb13a777f2083aa18/OpenFonts/deedy-resume-openfont.cls (sha256 94956ab5c2d016ab718f5efe86ba5b9827a7e8b6849c1d8c8db074bd6a1047d8), Apache-2.0, Copyright 2014 Debarghya Das",
-        "cover.cls keeps that class line for line (name and cover commands added, margins and imports changed); ai-job-search cover_letters/OpenFonts/fonts/lato/Lato-Lig.ttf and raleway/Raleway-Medium.otf have the same git blob ids as the Deedy-Resume OpenFonts files"
-      ],
-      "original_sha256": "db606a00acbec168ce93fdd70b6cc380ccd0a4b8c62fea71b21e503f9e72d39e",
-      "shipped_sha256": "ff42dab01997d03cb526bb8f3557153ee2f42dee264236285635719780629ceb",
+      "original_sha256": "",
+      "shipped_sha256": "70f7512ebeac9b5914c74c8de9273acf7de9818da9b5dc377d814d269e492655",
       "licence": {
-        "spdx": "Apache-2.0 AND MIT",
-        "texts": [
-          "third_party/licenses/Apache-2.0.txt",
-          "third_party/licenses/MIT-ai-job-search.txt"
-        ],
-        "evidence": "The class derives from Deedy-Resume, whose README states \"Copyright 2014 Debarghya Das ... Licensed under the Apache License, Version 2.0\" and whose LICENSE is the Apache 2.0 text; the Apache licence applies to the derived class. ai-job-search adds its changes under MIT. The upstream cover.cls carries no copyright header, so the shipped file adds the attribution and change notice that Apache-2.0 section 4 requires."
+        "spdx": "",
+        "texts": [],
+        "evidence": ""
       },
-      "copyright": "Copyright 2014 Debarghya Das; Copyright (c) 2026 Mads Lorentzen",
-      "modifications": [
-        "Attribution and change notice header added (Apache-2.0 section 4).",
-        "Font directory changed from OpenFonts/fonts/ to fonts/ (the private build directory layout).",
-        "Lato file names changed from Lato 1 names (Lig, Reg, Hai, Bol, LigIta, RegIta) to the Lato 2 file names shipped here (Light, Regular, Hairline, Bold, LightItalic, Italic).",
-        "The body font (Raleway Medium) is loaded with Kerning=Off and Numbers=Lining wherever the class selects it: a text extractor read a kerned pair as a word break, and old-style figures read badly in a measurement."
-      ],
+      "copyright": "",
+      "modifications": [],
       "review": "pending"
     },
     {
       "destination": "internal/documents/assets/cover.tex",
-      "kind": "attributed-source",
+      "kind": "original",
       "source": {
-        "url": "https://raw.githubusercontent.com/MadsLorentzen/ai-job-search/a011214d60f943770e33f7d5f070e1a5f91e3822/cover_letters/cover_example.tex",
-        "path": "cover_letters/cover_example.tex",
-        "revision": "a011214d60f943770e33f7d5f070e1a5f91e3822"
+        "url": "",
+        "path": "",
+        "revision": ""
       },
-      "original_sha256": "b6408a865d110a63ebaf032a7a8bd403b5d1183f6835e0e886c5f2a042960628",
-      "shipped_sha256": "1823f277be3d4c6da17a81a78f42fe9882c6904864ec4fcfe8e7af8aa21963c5",
+      "original_sha256": "",
+      "shipped_sha256": "884e98cfd0cc79ee3ddae427a048ed963cb1084df231e2d737cdd6b344c2d6cb",
       "licence": {
-        "spdx": "MIT",
-        "texts": [
-          "third_party/licenses/MIT-ai-job-search.txt"
-        ],
-        "evidence": "ai-job-search LICENSE at the pinned commit is the MIT licence, Copyright (c) 2026 Mads Lorentzen. The file carries no other copyright or licence statement and its history was not audited for third-party text."
+        "spdx": "",
+        "texts": [],
+        "evidence": ""
       },
-      "copyright": "Copyright (c) 2026 Mads Lorentzen",
-      "modifications": [
-        "Placeholders and the instructional comments are replaced by Go text/template actions (delimiters <% and %>); every action is an encoder call (tex, rich for text that may hold one bold span, url, paper).",
-        "Paper size is an enumerated class option; the date is data instead of \\today.",
-        "Body paragraphs are a range over blocks, each optionally followed by a list set outside \\lettercontent in the body font, as the example prescribes.",
-        "The font path of the list wrapper follows the class (fonts/raleway/).",
-        "A blank line follows the date, and the list's top space is taken back before it begins and 3 pt follow it, so the spacing between date, salutation, paragraphs and list is even.",
-        "A contact separator is tied to the item before it, so a wrapped contact line never starts with one.",
-        "The profile links are set on a line of their own under the email and phone, and the list wrapper loads the body font as the class does (no pair kerning, lining figures).",
-        "Recipient lines (the company, then the role as the subject) are set between the date and the salutation, and the PDF title and author are set from the data."
-      ],
+      "copyright": "",
+      "modifications": [],
       "review": "pending"
     },
     {
@@ -265,92 +242,59 @@
     },
     {
       "destination": "internal/documents/assets/resume.tex",
-      "kind": "attributed-source",
+      "kind": "original",
       "source": {
-        "url": "https://raw.githubusercontent.com/MadsLorentzen/ai-job-search/a011214d60f943770e33f7d5f070e1a5f91e3822/cv/main_example.tex",
-        "path": "cv/main_example.tex",
-        "revision": "a011214d60f943770e33f7d5f070e1a5f91e3822"
+        "url": "",
+        "path": "",
+        "revision": ""
       },
-      "original_sha256": "54645495edc618ef829ed99f752b02cd296f156a590b750440722d8fb031fd80",
-      "shipped_sha256": "0da2b0961b58b875e85c6423b808d1df628abb9c76baf4c499b690cfa2f88f3b",
+      "original_sha256": "",
+      "shipped_sha256": "55254d15f91e9092891692acf2d0b2903904ebb93c19135ace4db4804b3b2cbb",
       "licence": {
-        "spdx": "MIT",
-        "texts": [
-          "third_party/licenses/MIT-ai-job-search.txt"
-        ],
-        "evidence": "ai-job-search LICENSE at the pinned commit is the MIT licence, Copyright (c) 2026 Mads Lorentzen. The file carries no other copyright or licence statement and its history was not audited for third-party text. The template loads moderncv, an installed TeX package whose licence is inventoried separately."
+        "spdx": "",
+        "texts": [],
+        "evidence": ""
       },
-      "copyright": "Copyright (c) 2026 Mads Lorentzen",
-      "modifications": [
-        "Placeholders and the setup comments are replaced by Go text/template actions (delimiters <% and %>); every action is an encoder call (tex, rich for text that may hold one bold span, url, paper).",
-        "The class's Latin Modern fonts are loaded again through fontspec with Kerning=Off, so a PDF reader does not take a kerned pair for a word break (AWS read as A WS).",
-        "Paper size is an enumerated option; the PDF title is the applicant's name and the document's name, from the data.",
-        "Sections are data-driven and omitted when empty; the publications, honors and references sections of the example are removed.",
-        "Section headings come from a per-language label set, a Selected Projects section is added and each experience or project entry is set in a minipage so an entry is never split across pages.",
-        "The list that wrapped each section is removed: entries are set directly under their heading and competencies, the summary and languages as \\cvitem lines, so no stray outer marker appears beside an entry. A Summary section heads the profile paragraph.",
-        "The entry gaps and list spacing have one reviewed tight variant (1pt gaps, no extra bullet spacing) that a layout repair round may select; font size and geometry scale are untouched by it.",
-        "The contact-line symbols (mobile, fixed phone, email, homepage) are set to nothing, because their icon glyphs extract as words in the PDF text an applicant tracking system reads.",
-        "The space between the first and last name is set in the name font and the body font's tie is taken back, because the narrower tie extracted as no space (\"JordanAvery\") in that text.",
-        "The preamble (moderncv banking and blue colour fix, hyperref hook, geometry) is otherwise unchanged."
-      ],
+      "copyright": "",
+      "modifications": [],
       "review": "pending"
     },
     {
       "destination": "internal/documents/assets/verify_layout.py",
-      "kind": "attributed-source",
+      "kind": "original",
       "source": {
-        "url": "https://raw.githubusercontent.com/MadsLorentzen/ai-job-search/a011214d60f943770e33f7d5f070e1a5f91e3822/tools/verify_layout.py",
-        "path": "tools/verify_layout.py",
-        "revision": "a011214d60f943770e33f7d5f070e1a5f91e3822"
+        "url": "",
+        "path": "",
+        "revision": ""
       },
-      "original_sha256": "c876e62bdf36ec3d1d662bb92871265df1eafb4aa8942fda6cf5b11622af4bd3",
-      "shipped_sha256": "99140f1f912d25a3f6cfa13e4f3544e3f9607f3700064bbd2ca75af972582471",
+      "original_sha256": "",
+      "shipped_sha256": "607e2bdffc70df566bacec4acc6650faf23ef76373c2d028b4af96822067b924",
       "licence": {
-        "spdx": "MIT",
-        "texts": [
-          "third_party/licenses/MIT-ai-job-search.txt"
-        ],
-        "evidence": "ai-job-search LICENSE at the pinned commit is the MIT licence, Copyright (c) 2026 Mads Lorentzen. The file carries no other copyright or licence statement and its history was not audited for third-party text."
+        "spdx": "",
+        "texts": [],
+        "evidence": ""
       },
-      "copyright": "Copyright (c) 2026 Mads Lorentzen",
-      "modifications": [
-        "Result is one schema-versioned JSON document on stdout (schema_version 1) instead of console text.",
-        "Each layout property is its own pass, fail or unverified check; a missing or broken extractor makes every check unverified.",
-        "Poppler pdftotext is addressed by a required absolute --pdftotext path; the PATH lookup is removed.",
-        "The PDF is read once; Poppler reads a private copy of the hashed bytes, made beside the PDF in the caller's build directory, and the verdict carries the SHA-256.",
-        "The thresholds become one profile per template and paper size, chosen by required --template and --paper arguments and echoed in the result; their values are unchanged.",
-        "Word boxes are kept (not only lines) and unescaped, and the page width is read, for four added checks: page-size, clipping, text-overlap and, for the résumé profile only, entry-gap.",
-        "The line classes, find_orphans and the hole, early-end, footer, thin-page and orphan rules are unchanged; a document without a single page of text is unverified."
-      ],
+      "copyright": "",
+      "modifications": [],
       "review": "pending"
     },
     {
       "destination": "internal/documents/assets/verify_pdf.py",
-      "kind": "attributed-source",
+      "kind": "original",
       "source": {
-        "url": "https://raw.githubusercontent.com/MadsLorentzen/ai-job-search/a011214d60f943770e33f7d5f070e1a5f91e3822/tools/verify_pdf.py",
-        "path": "tools/verify_pdf.py",
-        "revision": "a011214d60f943770e33f7d5f070e1a5f91e3822"
+        "url": "",
+        "path": "",
+        "revision": ""
       },
-      "original_sha256": "1763f8f37f672a16faba76380fb3f9703a0d4e99512117dd166ebc68af030db9",
-      "shipped_sha256": "ab202d0de8e7e50a973f0791195245aec75c08f331afc56f4f65173544bae466",
+      "original_sha256": "",
+      "shipped_sha256": "b4cf9c2c8834ce5df78b1bd2eb5eb20c232ca77c66b67fb8bc05798bb4ba7662",
       "licence": {
-        "spdx": "MIT",
-        "texts": [
-          "third_party/licenses/MIT-ai-job-search.txt"
-        ],
-        "evidence": "ai-job-search LICENSE at the pinned commit is the MIT licence, Copyright (c) 2026 Mads Lorentzen. The file carries no other copyright or licence statement and its history was not audited for third-party text."
+        "spdx": "",
+        "texts": [],
+        "evidence": ""
       },
-      "copyright": "Copyright (c) 2026 Mads Lorentzen",
-      "modifications": [
-        "Result is one schema-versioned JSON document on stdout (schema_version 1) instead of console text; the process exits 0 once a complete result was written.",
-        "Every check is pass, fail or unverified; a check that could not run is never a pass.",
-        "pypdf is the only extractor: the Poppler fallback, the subprocess helpers and the page-count parser are removed.",
-        "The PDF is read once and the verdict carries the SHA-256 of exactly those bytes.",
-        "Required text is reported by index, not quoted; --max-pages is added; --pages, --min-chars, --contains, --dump-text and --ascii-dates are kept.",
-        "font_usage is added to the result: the letters set in each font and size, from pypdf's text runs, for a caller that holds a template to its fonts.",
-        "normalize_text, find_non_ascii_date_ranges and the date-dash constants are unchanged."
-      ],
+      "copyright": "",
+      "modifications": [],
       "review": "pending"
     }
   ]

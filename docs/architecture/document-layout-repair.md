@@ -104,9 +104,12 @@ sentences of the evidence paragraph. Ascending tuple:
 5. printed position, later first, as the last tie-breaker.
 
 A bullet that carries the only quantified result its entry still has, in an
-entry with unquantified bullets, ranks after every other line of the résumé
-(`Rank.OnlyQuantified`, recomputed after each cut), so it is the last bullet
-of its entry to go. Strength is what orders lines when the manifest's
+entry with unquantified bullets, ranks after every other line that backs as
+many requirements (`Rank.OnlyQuantified`, the term between 1 and 2,
+recomputed after each cut), so it is the last bullet of its entry to go among
+those. It does not outrank a requirement's proof: a filler bullet with a figure
+("rota 1 of year 2012") had kept its place while the job's only SQL bullet was
+cut. Strength is what orders lines when the manifest's
 requirement coverage is nearly empty (requirements that are mostly semantic): a
 tail-first order there cut the strongest bullet of a job (the p99 latency
 result, candidacy 4 v6, 2026-10-17).

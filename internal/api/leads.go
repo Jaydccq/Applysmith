@@ -188,12 +188,16 @@ func (s *Server) leadsEvaluate(d *domain) func(context.Context) (string, error) 
 }
 
 // afterScheduledScan marks a finished scheduled run and raises the alarm of a
-// source that stopped producing: one needs-you item per source per day.
+// source that stopped producing: one needs-you item per source per day. A run
+// that inserts again resolves the source's alarms still waiting.
 func (s *Server) afterScheduledScan(ctx context.Context, d *domain, rec discovery.Record) {
 	ctx = context.WithoutCancel(ctx)
 	if err := d.repo.MarkScheduled(ctx, rec.ID); err != nil {
 		s.log.Warn("a scheduled scan could not be marked", "run", rec.ID, "error", err.Error())
 		return
+	}
+	if d.notify != nil && rec.Status == discovery.RunCompleted && rec.Counts.Inserted > 0 {
+		s.resolveSourceAlarms(ctx, d, rec.Source)
 	}
 	alarm, err := d.repo.SourceAlarmFor(ctx, rec)
 	if err != nil || alarm == nil || d.notify == nil {
@@ -206,10 +210,28 @@ func (s *Server) afterScheduledScan(ctx context.Context, d *domain, rec discover
 	if alarm.Action != "" {
 		reason, detail = "sign-in", alarm.Action+" "+detail
 	}
-	id := "source-alarm-" + rec.Source + "-" + s.now().UTC().Format("2006-01-02")
+	id := sourceAlarmPrefix(rec.Source) + s.now().UTC().Format("2006-01-02")
 	_, err = d.notify.board.Raise(ctx, notify.RaiseArgs{ID: id, Kind: notify.KindTask, Origin: notify.OriginSchedule,
 		Title: "Scan " + sourceTitle(rec.Source) + " stopped producing", State: notify.NeedsYou, Reason: reason, Detail: detail, Link: "/discovery"})
 	if err != nil {
 		s.log.Warn("the source alarm could not be raised", "source", rec.Source, "error", err.Error())
+	}
+}
+
+func sourceAlarmPrefix(source string) string { return "source-alarm-" + source + "-" }
+
+func (s *Server) resolveSourceAlarms(ctx context.Context, d *domain, source string) {
+	waiting, err := d.notify.board.Inbox(ctx)
+	if err != nil {
+		s.log.Warn("the source alarms could not be read", "source", source, "error", err.Error())
+		return
+	}
+	for _, e := range waiting {
+		if !strings.HasPrefix(e.ID, sourceAlarmPrefix(source)) {
+			continue
+		}
+		if err := d.notify.board.Resolve(ctx, e.ID); err != nil {
+			s.log.Warn("a source alarm could not be resolved", "id", e.ID, "error", err.Error())
+		}
 	}
 }

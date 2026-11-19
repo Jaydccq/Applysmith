@@ -104,7 +104,12 @@ what is not built yet.
   Telegram) first re-scores them when the target roles differ from the ones
   the rows were scored under (`Repo.RankWith`, digest in `workspace_meta`
   `discovery.inbox_targets`), so roles saved after a scan reorder the rows
-  already waiting.
+  already waiting. A title with senior wording (Senior, Staff, Principal,
+  Manager and the like) for a seeker whose every rated target is intern or
+  junior takes the penalty (-4) and no target-role match (+4), which would
+  cancel it: a Senior Software Engineer posting once ranked 7 for a junior
+  Full-Stack Engineer target. Rows already waiting keep their score until the
+  target roles change.
 - The eligibility gate and the evaluation queue are injected: `Scanner.Gate`
   (nil rejects nothing; task 2.6 supplies the real gate) and `Scanner.Enqueuer`.
   The CLI enqueues by creating a `runs` row of kind `evaluate`; while a server
@@ -248,6 +253,12 @@ what is not built yet.
   treats `jobright-recommend`, the source Jobright rows are stored under, as
   `jobright`. The Ask Agent and Telegram look up the waiting row by URL
   (`Repo.InboxRowFor`) and queue it with their request.
+- Stale rows: the daily retention sweep expires the pending rows scored below
+  zero and first seen more than 14 days ago (`Repo.ExpireStale`,
+  `InboxStaleAge`), after re-scoring them under the current target roles. The drain, best score first, never reaches them, and they
+  counted on Home as postings waiting to be evaluated: 892 of the owner's
+  1,885 pending rows. Zero is the only floor; the drain and a scan's top rows
+  queue by rank alone.
 - No model, no queueing: while an evaluation task (`jd-extract`,
   `quick-screen`, `deep-eval`) has no route (`llm.Router.EvaluationUnrouted`),
   a scan's top rows (`Scanner.Unrouted`) and the `inbox.evaluate` drain queue

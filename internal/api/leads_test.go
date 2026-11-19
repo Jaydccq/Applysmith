@@ -162,4 +162,12 @@ func TestScheduledScanThatStopsProducingRaisesOneNeedsYouItemPerDay(t *testing.T
 	if n != 1 {
 		t.Fatalf("%d source alarms, want one per source per day", n)
 	}
+	// A later scheduled run that produces again resolves it.
+	h.srv.afterScheduledScan(t.Context(), d, run(discovery.RunCompleted, 1))
+	strictInto(t, h.get("/api/needs-you").body, &inbox)
+	for _, it := range inbox.Data.Items {
+		if it.Entry.Title == "Scan Indeed stopped producing" {
+			t.Fatal("the source alarm stays after the source produced again")
+		}
+	}
 }

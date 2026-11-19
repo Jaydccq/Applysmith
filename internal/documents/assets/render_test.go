@@ -1,7 +1,6 @@
 package assets
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"regexp"
@@ -130,32 +129,30 @@ func TestRender_ListStaysOutsideLetterContent(t *testing.T) {
 		t.Fatal(err)
 	}
 	s := string(out)
-	i, j := strings.Index(s, `\lettercontent{Intro}`), strings.Index(s, `\begin{itemize}`)
-	if i < 0 || j < i || strings.Contains(s[i:j], `\end{itemize}`) {
-		t.Fatalf("the list must follow its paragraph macro, not sit inside it:\n%s", s)
+	i, j := strings.Index(s, `\bodyparagraph{Intro}`), strings.Index(s, `\begin{bodylist}`)
+	if i < 0 || j < i || strings.Contains(s[i:j], `\end{bodylist}`) {
+		t.Fatalf("the list must follow its paragraph, not sit inside it:\n%s", s)
 	}
-	if !strings.Contains(s, `\fontspec[Path = fonts/raleway/, Kerning=Off, Numbers=Lining]{Raleway-Medium}`) {
-		t.Error("the list is not set in the body font")
+	// A block without text prints its list alone: an empty paragraph stops XeLaTeX.
+	bare, err := RenderCover(Cover{Paper: PaperA4, Name: "A", Blocks: []Block{{Bullets: []string{"one"}}}, Closing: "Bye"})
+	if err != nil || strings.Contains(string(bare), `\bodyparagraph{}`) || !strings.Contains(string(bare), `\begin{bodylist}`) {
+		t.Errorf("a block without text: %v\n%s", err, bare)
 	}
-	// The list resets \topsep when it begins: a rendered letter had 21 pt
-	// above its list against 13 pt between paragraphs.
-	if k := strings.Index(s, `\vspace{-\parskip}\vspace{-\topsep}\vspace{-\partopsep}\begin{itemize}`); k < 0 || k > j {
-		t.Errorf("the list's top space is not removed before the list begins:\n%s", s)
-	}
-	two, err := RenderCover(Cover{Paper: PaperA4, Name: "A", Contact: []Link{{Label: "a"}, {Label: "b"}}, Closing: "Bye"})
-	if err != nil || !strings.Contains(string(two), "{a~| b\n}") {
-		t.Errorf("a contact separator may start a wrapped line: %v\n%s", err, two)
+	// The header ends with its rule, and the colour returns to black, with or
+	// without a date.
+	if !strings.Contains(string(bare), `\headerclose`) || strings.Contains(string(bare), `\letterdate`) {
+		t.Errorf("a letter without a date: %s", bare)
 	}
 	// The profile links take their own line, and the company and the subject
 	// stand between the date and the salutation.
 	head, err := RenderCover(Cover{Paper: PaperA4, Name: "A", Title: "A - Cover Letter", Date: "D", Salutation: "S", Closing: "Bye",
 		Contact: []Link{{Label: "a"}}, Links: []Link{{Label: "p", URL: "https://example.com/p"}}, Recipient: []string{"Example Corp", "Re: Engineer"}})
-	if hs := string(head); err != nil || !strings.Contains(hs, `{a\\{}\href{https://example.com/p}{p}`+"\n}") ||
-		!strings.Contains(hs, `\currentdate{D}\mbox{}\\`+"\n"+`\lettercontent{Example Corp\\{}Re: Engineer}`+"\n"+`\lettercontent{S}`) ||
+	if hs := string(head); err != nil || !strings.Contains(hs, `\contactitem{a}`+"\n"+`\contactbreak`+"\n"+`\linkitem{https://example.com/p}{p}`+"\n"+`\headerclose`+"\n"+`\letterdate{D}`) ||
+		!strings.Contains(hs, `\letterdate{D}`+"\n"+`\recipientline{Example Corp}`+"\n"+`\recipientline{Re: Engineer}`+"\n"+`\salutation{S}`) ||
 		!strings.Contains(hs, "pdftitle={A - Cover Letter}") {
 		t.Errorf("letter head: %v\n%s", err, head)
 	}
-	if bytes.Contains(out, []byte(`\closing{Bye\\}`)) {
+	if !strings.Contains(s, `\closing{Bye}`) {
 		t.Error("closing must not carry its own line break")
 	}
 }
@@ -190,8 +187,8 @@ func TestResume_TightAdjustmentStaysWithinTheReadabilityBounds(t *testing.T) {
 			}
 		}
 	}
-	strip := regexp.MustCompile(`\\topsep0pt\\itemsep0pt\\parsep0pt|\\topsep2pt\\itemsep2pt|\\vspace\{[13]pt\}`)
-	if !strings.Contains(tight, `\itemsep0pt`) || strings.Contains(stock, `\itemsep0pt`) || strip.ReplaceAllString(stock, "") != strip.ReplaceAllString(tight, "") {
+	strip := regexp.MustCompile(`\\entryafterspace\}\{[57]pt\}|\\setlength\{\\(?:topsep|itemsep)\}\{[02]pt\}`)
+	if !strings.Contains(tight, `\setlength{\itemsep}{0pt}`) || strings.Contains(stock, `\setlength{\itemsep}{0pt}`) || strip.ReplaceAllString(stock, "") != strip.ReplaceAllString(tight, "") {
 		t.Error("the tight adjustment is not a spacing-only change")
 	}
 }

@@ -92,6 +92,29 @@ func TestRank_OrdersByRequirementsThenUniquenessThenLetterDependency(t *testing.
 	}
 }
 
+// A requirement's proof outranks a figure that backs no requirement; among
+// lines that back as many requirements, an entry's only quantified result goes
+// last. (A filler bullet with a figure had cut a job's only SQL proof.)
+func TestRank_RequirementsBeforeTheOnlyQuantifiedResult(t *testing.T) {
+	m := rankManifest(t)
+	d := rankResume(m)
+	d.Experience[0].Bullets = []Bullet{{Text: "Wrote 52 weekly status notes for the planning group", Evidence: []string{"E1"}}, bulletOf(m, "E2")}
+	d.Experience[1].Bullets = []Bullet{bulletOf(m, "E5"), {Text: "Organized 40 planning sessions a year", Evidence: []string{"E6"}}}
+	cs, ids := ranked(m, d, nil)
+	e1, e5, e6 := slices.Index(ids, "E1"), slices.Index(ids, "E5"), slices.Index(ids, "E6")
+	if !cs[e6].rank.OnlyQuantified || cs[e5].rank.Requirements != 1 || !(e6 < e5) {
+		t.Fatalf("removal order = %v; the requirement-free figure must go before the proof", ids)
+	}
+	if !cs[e1].rank.OnlyQuantified || cs[e1].rank.Requirements != 0 {
+		t.Fatalf("E1 rank = %+v", cs[e1].rank)
+	}
+	for i, c := range cs {
+		if c.rank.Requirements == 0 && !c.rank.OnlyQuantified && i > e1 {
+			t.Fatalf("removal order = %v; X1's only figure must outlast the lines that back no requirement", ids)
+		}
+	}
+}
+
 // Cutting to exhaustion leaves each entry's last bullet and the last
 // competency; contact values are not content and nothing is invented.
 func TestRepairCuts_NeverRemoveRequiredLabelsOrContactValues(t *testing.T) {

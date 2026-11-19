@@ -437,6 +437,16 @@ func typedCode(tab *scriptTab) string {
 	return code
 }
 
+// A signed-out stop whose sync found no extension answering says where the
+// extension is paired: none was loaded in the user's Chrome, and the stop read
+// only "the extension in your Chrome is not answering".
+func TestApply_Account_ASyncNoExtensionAnsweredSaysWhereItIsPaired(t *testing.T) {
+	a := &acct{host: "www.linkedin.com", rec: &SigninRecord{Session: "not available: extension-silent"}}
+	if got := a.syncNote(); !strings.Contains(got, "Settings, Browser extension") || !strings.Contains(got, "www.linkedin.com") {
+		t.Fatalf("note %q", got)
+	}
+}
+
 // The walk stops at Eightfold's sign-in dialog, which has no password box: the
 // session is asked for first, then the stage types the profile's email and
 // presses Continue, and types the code mailed after that press. A code the

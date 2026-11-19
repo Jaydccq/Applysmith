@@ -73,13 +73,13 @@ export function FunnelPanel() {
 
 // Each stage with the list of exactly what it counts since the window's first
 // day: inbox rows first seen, each posting's newest report, tracker rows moved
-// to the stage.
+// to the stage (Responded: to any reply, a rejection or interview included).
 const reached = (status: string) => (since: string) => `/tracker?reached=${status}&since=${since}`;
 const STAGES: [keyof FunnelStages, string, (since: string) => string][] = [
   ["found", "Found", (since) => `/discovery?tab=inbox&since=${since}`],
   ["evaluated", "Evaluated", (since) => `/reports?since=${since}`],
   ["applied", "Applied", reached("applied")],
-  ["responded", "Responded", reached("responded")],
+  ["responded", "Responded", reached("responded,interview,offer,rejected")],
   ["interview", "Interview", reached("interview")],
   ["offer", "Offer", reached("offer")],
 ];

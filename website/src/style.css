@@ -104,6 +104,7 @@ dd { color: #45554a; }
 .tour-panels { display: grid; gap: 1.5rem; }
 .tour-panels figure { animation: shot-in 0.35s ease; }
 .tour-panels img { display: block; width: 100%; height: auto; border-radius: 0.9rem; border: 1px solid rgb(27 42 34 / 0.18); box-shadow: 0 24px 60px rgb(27 42 34 / 0.18); }
+.film { display: block; width: 100%; height: auto; margin-top: 1rem; border-radius: 0.9rem; background: var(--green-deep); box-shadow: 0 24px 60px rgb(27 42 34 / 0.18); }
 @keyframes shot-in { from { opacity: 0; transform: translateY(8px); } }
 .questions { margin-top: 2rem; }
 .questions details { border-top: 1px solid rgb(27 42 34 / 0.25); }

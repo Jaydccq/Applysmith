@@ -221,7 +221,11 @@ asks the résumé binding for `document: "transcript"`. `docResumes.transcript`
 serves the PDF stored on the Answer Bank's Transcript tab
 (`PageDeps.Transcript`, read from `transcript/` of the workspace by
 `apply_stack.go`) under its stored file name; with none stored it answers
-`null` and the slot is left as the page has it, never given the résumé. An
+`null` and the slot is left as the page has it, never given the résumé; a
+required one left so says, in the stop, that no transcript is stored and where
+one is added (`transcriptWhy`, `gates.Item.Why`); the leftover reads
+`missing-data` (`noteTranscript`), so the stop waits for the user's data and
+adding a transcript counts as saving it (`listEvidence`). An
 attached transcript is neither the résumé nor the letter: it sets neither
 `resumeAttached` nor `coverLetterAttached` and freezes no document version.
 The extension's binding answers only résumé requests, so its fills leave a
@@ -750,7 +754,25 @@ is skipped while a run holds the window; an unreachable window or unreadable
 page is unknown, left to the chain. Today's stop on a judgement or on the
 user's own missing data also lifts when the row got a ready résumé or cover
 letter, or a documents override, after the stop (`Facts.DocumentsAt`,
-`todayVerdict`); a sign-in wall and a submit do not. A stop is on the user's
+`todayVerdict`); a sign-in wall and a submit do not. A fill-only list leaves
+out a row the running build filled today with no data or documents saved
+since (`filledToday`): a list closes the tabs it fills, so the fill again shows
+nothing new. A submitting list, retry-today, a named company and rows the user
+chose (`SelectOptions.Chosen`) run it. After the selection a list leaves out
+the rows that run on a sign-in site (`browser.SignInSites`; a row resolved
+to the employer's posting runs there) whose sign-in cookies the app browser
+lacks (`Sessions.SignedOut`, which starts the browser and loads no page; only
+LinkedIn's `li_at` is listed, so other sites and ATS accounts still stop at
+their run), once a sync of that host from the user's Chrome did not bring
+them (`Server.leaveSignedOut`), and raises one inbox item per site
+(`site-sign-in-<domain>`, sign-in, fix: the Browser page) as the list starts.
+Each row would only stop at the site's signed-out page, and one did ten
+minutes into a list. A sign-in check that reads the site signed in, or a later
+list that finds the cookies, resolves the item; a list that finds it waiting
+does not tell it again; it brings the item's words up to date, and with no
+extension answering the sync (`extension-silent`) they name Settings, Browser
+extension, where one is paired. A list left with no row to run is refused with the
+first three rows left out and why (`leftWords`). A stop is on the user's
 own missing data (`userDataStop`) when it is an answer gap at check whose every
 leftover reads, in the reasons the check writes, as the user's to answer:
 `abstained:ask-me`, or `declined`, `declined-before`, `missing-data` or
@@ -1196,6 +1218,7 @@ The rows below are the ones the owner decided; the code cites them by site.
 | Greenhouse (Abnormal Security), 2026-11-04 | required "Please enter your preferred Last Name/Surname (only enter your preferred Last Name/Surname)" left (`no-entry`) | the profile pass's preferred-last-name rule took only the bare "Preferred Last Name" | the rule takes a request lead ("please enter/provide/type", "your") and "last name/surname"; the bracketed note is a format hint and drops; with no preferred surname recorded the box takes the last name (owner rule). Test "A request for the preferred surname with its own note takes the last name too" (`engine/test/profile.test.ts`) |
 | Greenhouse (Postscript), 2026-11-04 | required "What Race/Ethnicity do you identify as? (select all that apply)" left (`self-id-policy`) with "Asian" recorded, over "Asian or Pacific Islander (including East Asian, South Asian and Southeast Asian)" | PO-018: a race label counts only whole, so a recorded "Asian" never takes a label joining it with another group ("Asian or Asian-American", "Black or African American" are its traps) | owner decision 2026-11-04 ("the system may auto-pick all such combined race options"): a recorded race takes a label that lists its groups among others (`raceListed`, score 0.9, race axis only; qualifiers such as "(including ...)" dropped first). Each group counts whole: "Indian" never takes "American Indian or Alaska Native", nor "Asian" "East Asian" or "Native Hawaiian or Other Pacific Islander". Tests: the PO-018 table, `TestXC_RecordedRaceTakesAListingOption` |
 | Greenhouse (Block), 2026-11-04 | required "Will you now or in the future require sponsorship for work authorization? (This information will not be used in assessing your qualifications for any position.)" and "Are you authorized to work lawfully in the location posted for this position?" left (`ambiguous`, then `sensitive-category`); "What is your Legal First Name?" left (`excluded_identity`); "Do you consent to us using AI to transcribe and summarize your interview?" left (`low-confidence`) | the note's "not" broke the closed reading; route 76 took "to work in the posted location" only, and no place phrase read "the location posted for this position" | `useNoteRE` drops a note on how the answer is used ("This information / answer will not be used / considered / affect ..."), bracketed or closing, before the closed reading; route 76 and `deicticRE` take "to work (legally / lawfully) in the location posted / listed / advertised for this position". The legal first name takes the Dropbox fix (`askedField`). Consent to AI transcription of interviews is a preference the owner has not stated. Tests `TestXC_SponsorshipWithANoteOnHowTheAnswerIsUsed`, `TestXC_AuthorizedToWorkLawfullyInTheLocationPosted`, route 76 cases |
+| Workday (Adobe), fill-only, 2026-11-18 | required "If you are offered employment by Adobe, can you provide documentation establishing your identity and right to work in the country where this position will be based?" left (`ambiguous`, then the model barred from work authorization) | the proof lead took "offered employment" or "a position with" an employer, not "employment by" one, and proof "of", "proving" or "showing", not "establishing" | the owner's rule (proof of the right to work is the right itself) now reads both (`proofLead`, `proofOfRE`). Case in `TestXC_RoutesImmigration` |
 
 ### Optional questions held for a joint decision
 

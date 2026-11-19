@@ -80,8 +80,14 @@ func TestApply_Record_NoTrackerRowCreatedOnlyWhenCompanyAndRoleAreKnown(t *testi
 	if d := g.r.trackerEffect(e); !strings.Contains(d, "applied by the agent") {
 		t.Fatalf("detail %q", d)
 	}
+	// An address alone is named by the page's JobPosting data.
+	e = exec1(g, Input{URL: "https://careers.example.test/jobs/57", Caller: gates.CallerCLI}, conf)
+	e.Run.Stated = Stated{Company: "Example Corp", Role: "Platform Engineer"}
+	if d := g.r.trackerEffect(e); !strings.Contains(d, "applied by the agent") {
+		t.Fatalf("stated names: detail %q", d)
+	}
 	page, err := tr.List(context.Background(), tracker.ListQuery{})
-	if err != nil || len(page.Entries) != 1 || page.Entries[0].Status != tracker.Applied {
+	if err != nil || len(page.Entries) != 2 || page.Entries[0].Status != tracker.Applied {
 		t.Fatalf("rows %+v err %v", page, err)
 	}
 }

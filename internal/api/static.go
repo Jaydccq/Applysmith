@@ -14,13 +14,24 @@ import (
 
 	"applysmith/internal/api/apikit"
 	"applysmith/internal/api/wire"
+	"applysmith/internal/lazyregexp"
 )
 
 const placeholderPage = `<!doctype html><meta charset="utf-8"><title>Applysmith</title><p>The dashboard assets are not built into this binary.</p>`
 
-// static serves the embedded dashboard. Paths without a file extension fall
+// namesFile tells a file request from a client route: a path under assets/
+// or one ending in a file extension, which starts with a letter. A route
+// segment may carry a dot of its own, as an apply run id does
+// (run_<time>.<milliseconds>_<suffix>).
+func namesFile(p string) bool {
+	return strings.HasPrefix(p, "/assets/") || fileExtension.MatchString(path.Ext(p))
+}
+
+var fileExtension = lazyregexp.New(`^\.[A-Za-z][A-Za-z0-9]{0,7}$`)
+
+// static serves the embedded dashboard. Paths that do not name a file fall
 // back to the index document so client-side routes survive a reload; a missing
-// file with an extension and any unknown API path are typed errors.
+// file and any unknown API path are typed errors.
 func (s *Server) static(c *apikit.Call) (apikit.Reply, error) {
 	p := path.Clean("/" + c.R.PathValue("path"))
 	if p == "/api" || strings.HasPrefix(p, "/api/") {
@@ -34,7 +45,7 @@ func (s *Server) static(c *apikit.Call) (apikit.Reply, error) {
 		// A tunnel visitor without a device credential gets the pairing page
 		// for any page address and nothing else.
 		if c.P.Kind != apikit.PrincipalRemoteDevice {
-			if path.Ext(p) != "" {
+			if namesFile(p) {
 				return apikit.Reply{}, errUnauthenticated()
 			}
 			return s.pairPage(c)
@@ -50,7 +61,7 @@ func (s *Server) static(c *apikit.Call) (apikit.Reply, error) {
 		name = "index.html"
 	}
 	if s.cfg.Assets == nil {
-		if name != "index.html" && path.Ext(name) != "" {
+		if name != "index.html" && namesFile(p) {
 			return apikit.Reply{}, apikit.NewErr(wire.CodeNotFound, "no such file")
 		}
 		c.W.Header().Set("Cache-Control", "no-store")
@@ -61,7 +72,7 @@ func (s *Server) static(c *apikit.Call) (apikit.Reply, error) {
 	}
 	data, err := fs.ReadFile(s.cfg.Assets, name)
 	if err != nil {
-		if path.Ext(name) != "" {
+		if namesFile(p) {
 			return apikit.Reply{}, apikit.NewErr(wire.CodeNotFound, "no such file")
 		}
 		name = "index.html"

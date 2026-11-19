@@ -217,7 +217,8 @@ contract.
 - **Visual language.** The [career companion design](../design/career-companion.md)
   pairs original cartoon cat artwork with cream paper, sage surfaces and forest
   actions. Shared tokens in `src/styles.css` control every page in light and
-  dark modes. The Home cover is `src/ui/CareerCover.tsx`; its links open
+  dark modes. The Home cover is `src/ui/CareerCover.tsx` (only on a workspace
+  with no tracker row, see Home and Ask Agent); its links open
   Discovery and Ask Agent without starting work. The cover is a decorative WebP
   with real, selectable interface text over it; narrow containers place the
   illustration below the copy. Native icon artwork and web avatar share the
@@ -823,7 +824,10 @@ contract.
   `reply_check`); a failing source is named under it with Try again. Below 700 px it comes above the
   tiles; the DOM runs in that order and a wide page lifts the tiles with CSS
   `order`, so Tab follows what a phone shows; "Last 7 days" stays under the
-  columns there, so Needs you is in the first screen. From 800 px the setup
+  columns there, so Needs you is in the first screen. The cover leads only
+  while the tracker holds no row (the Tracker tile's summary read, lifted to
+  the page so it is asked once); a workspace in use opens on Needs you, which
+  the cover pushed below the fold at 1440x900. From 800 px the setup
   card above them is a strip (its button beside the title, the steps left to
   do on their label's line) for the same reason. The palette's "Evaluate a job post"
   opens Home and focuses its paste box. A broken Server component links to its setup
@@ -991,8 +995,10 @@ contract.
   waiting unacknowledged (`applynext/Progress.tsx`, titled "Running now",
   "Waiting runs" or both): at most three rows, running first, then "N more runs
   are on the Runs page" and a link to all application runs.
-- "Next up" is the best Apply now or Selective row a run can start on (a
-  posting address, not on the skip list, state `idle`), why it leads, and two
+- "Next up" is the top Apply now or Selective row, in the page's order, a run
+  can start on (a posting address, not on the skip list, state `idle`), shown
+  while both lanes are on their first page; it says why it leads ("Best
+  score in" or "Newest in" the lane), and has two
   actions: "Autofill only" (primary; stops before Submit) and "Autofill and
   submit..." (the row's `RowSubmitDialog`). A label ending in an ellipsis
   always opens a confirmation; a lane's batch pair is "Autofill all" and
@@ -1012,10 +1018,18 @@ contract.
 - `lane` (one or a comma-separated list) keeps those lanes, with a chip that
   clears it: Home's ready count opens Apply now and Selective, each lane count
   its lane.
+- "Order" in the header is Best score (the default) or Newest (`sort=newest`:
+  report date first, since postings close quickly and a fresh one should not
+  wait pages behind older ones); a change starts every lane on page 1. A
+  lane's batch still takes its rows best score first, and its dialog says so
+  when the lane holds rows beyond the page. Each
+  lane has its own pager and `page.<lane>` in the address (as on the
+  server), so one table's page leaves the others where they are; a lane left
+  empty on a later page moves to its last page with rows. There is no text
+  search: the server pages the list, so a filter in the page would see 10
+  rows.
 - Each lane says why its rows are there in one `.lane-why` line; an empty lane
-  keeps its heading and that line (`.lane-empty`) on purpose; a lane whose
-  rows all sit on earlier pages (the server pages the lanes together) says so
-  with "Go to page 1" instead; with every lane
+  keeps its heading and that line (`.lane-empty`) on purpose; with every lane
   empty the page shows one `EmptyState` pointing to Discovery, and with only
   Apply now and Selective empty one "Find postings in Discovery" line above
   the lanes. The list reads again on the `tracker` topic and once the `runs`
@@ -1025,7 +1039,9 @@ contract.
   a "Source unverified" chip (`bad` when the check failed, `warn` when none
   saw the posting live) whose title says why. No state strip
   that would only count unstarted rows; a Marked applied row reads "Applied by
-  you", and a run that stopped before is "Earlier run" there, never "failed".
+  you", and a run that stopped before is "Earlier run" there, never "failed";
+  an idle row whose last run filled the form reads "Filled earlier"
+  (neutral), so "Not started" is only a row never run.
   A start or refusal shows above the lanes and is scrolled into view, since the
   press may be far down; the start note follows its run (`GET /api/runs/{id}`)
   and says how it ended or stopped for you. A start that waits for the apply

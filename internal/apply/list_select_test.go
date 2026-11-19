@@ -346,7 +346,35 @@ func TestApplyList_Skip_InterruptedRowHoldsUnderRetryToday(t *testing.T) {
 	}
 }
 
-func TestApplyList_Skip_LastRunOfDayIsVerdictFilledAndEnvironmentNeverSkip(t *testing.T) {
+// A list closes the tabs it fills, so a fill-only list that fills a row the
+// running build filled today shows the user nothing new.
+func TestApplyList_Skip_FillOnlyListLeavesARowThisBuildFilledToday(t *testing.T) {
+	url := "https://careers.example.org/jobs/42"
+	c := lsCand(url, "Example Corp", "Data Engineer")
+	filled := []RunFact{lsRun("r1", url, t0.Add(-2*time.Hour), func(r *RunFact) {
+		r.Kind, r.Class, r.Stage, r.Reason, r.Build = OutcomeFilled, "", "", "", "build-b"
+	})}
+	if res := lsSelect(t, Facts{Runs: filled}, []Candidate{c}, nil); holdRule(res) != RuleToday || len(res.Rows) != 0 {
+		t.Fatalf("fill-only list: %+v", res)
+	}
+	saved := Facts{Runs: filled, DataSavedAt: t0.Add(-time.Hour)}
+	for name, run := range map[string]struct {
+		f   Facts
+		mod func(*SelectOptions)
+	}{
+		"a submitting list":           {Facts{Runs: filled}, func(o *SelectOptions) { o.Submit = true }},
+		"retry today":                 {Facts{Runs: filled}, func(o *SelectOptions) { o.RetryToday = true }},
+		"the company named":           {Facts{Runs: filled}, func(o *SelectOptions) { o.Named, o.NamedCompanies = true, []string{"Example Corp"} }},
+		"the row chosen":              {Facts{Runs: filled}, func(o *SelectOptions) { o.Chosen = true }},
+		"the user's data saved since": {saved, nil},
+	} {
+		if res := lsSelect(t, run.f, []Candidate{c}, run.mod); len(res.Rows) != 1 {
+			t.Fatalf("%s: %+v", name, res)
+		}
+	}
+}
+
+func TestApplyList_Skip_LastRunOfDayIsVerdictAndEnvironmentNeverSkips(t *testing.T) {
 	url := "https://careers.example.org/jobs/41"
 	c := lsCand(url, "Example Corp", "Data Engineer")
 	morning, noon := t0.Add(-4*time.Hour), t0.Add(-2*time.Hour)

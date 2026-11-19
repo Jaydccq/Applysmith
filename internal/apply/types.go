@@ -262,7 +262,8 @@ type Run struct {
 	LeftForAnotherHost string `json:"leftForAnotherHost,omitempty"`
 	// Stated is what the first page the browser stages opened says of its
 	// posting, read once. It is text from a page, so its names only name the
-	// run on the board, after the request, the report and the workspace, and
+	// run on the board and the tracker row a confirmed submission creates,
+	// after the request, the report and the workspace, and
 	// its place locates the posting only where no board does (postingLoc); it
 	// is never written to the run's record, which a retry reads back as the
 	// request.

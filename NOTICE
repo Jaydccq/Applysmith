@@ -14,23 +14,6 @@ Committed third-party assets
 Exact-file manifest: third_party/document-sources.json (original and shipped
 SHA-256, modifications, licence evidence). Licence texts: third_party/licenses/.
 
-ai-job-search document sources
-  Version: commit a011214d60f943770e33f7d5f070e1a5f91e3822
-  SPDX: MIT
-  Copyright (c) 2026 Mads Lorentzen
-  Source: https://github.com/MadsLorentzen/ai-job-search
-  Files: verify_pdf.py, verify_layout.py, resume.tex, cover.tex, cover.cls
-  (internal/documents/assets/), adapted; the changes are listed in the manifest.
-  Licence text: third_party/licenses/MIT-ai-job-search.txt
-
-Deedy-Resume deedy-resume-openfont.cls (ancestor of cover.cls)
-  Version: commit 6d06ba7d8eee5fb8870bb00cb13a777f2083aa18
-  SPDX: Apache-2.0
-  Copyright 2014 Debarghya Das
-  Source: https://github.com/deedy/Deedy-Resume
-  Files: cover.cls (internal/documents/assets/), modified as stated in its header.
-  Licence text: third_party/licenses/Apache-2.0.txt
-
 Lato
   Version: 2.015
   SPDX: OFL-1.1

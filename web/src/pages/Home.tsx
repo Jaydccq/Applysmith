@@ -8,10 +8,10 @@ import { agentTaskList, confirmationList } from "../api/decoders_agent";
 import { inboxPage } from "../api/decoders_discovery";
 import { interviewsSoon } from "../api/decoders_interview";
 import { gmailInboxPage } from "../api/decoders_gmail";
-import type { AgentTaskList, ApplyList, ConfirmationList, DayLine, FollowupList, GmailInboxPage, InboxPage, InterviewsSoon, LLMRouting, NeedsYouCounts, NeedsYouInbox } from "../wire";
+import type { AgentTaskList, ApplyList, ConfirmationList, DayLine, FollowupList, GmailInboxPage, InboxPage, InterviewsSoon, LLMRouting, NeedsYouCounts, NeedsYouInbox, TrackerSummary } from "../wire";
 import { boardEntryList, boardSummary, dayView, needsYouCounts, needsYouInbox, runAccepted } from "../api/decoders_runs";
 import { health } from "../api/decode";
-import { BoardContext, useBoardState, useInterval, useLocalDay, useResource } from "../hooks";
+import { BoardContext, useBoardState, useInterval, useLocalDay, useResource, type Resource } from "../hooks";
 import { useAction } from "./action";
 import { EvaluationNote } from "./discovery/EvaluationNote";
 import { WeekFunnel } from "./discovery/Funnel";
@@ -43,8 +43,7 @@ const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one :
 
 // The tracker tile lists every status that holds a row, so the parts always
 // add up to the total; a status with no row is left out rather than shown as 0.
-function TrackerCounts() {
-  const [res, retry] = useResource(() => get("/api/tracker/summary", trackerSummary), [], ["tracker"], { keep: "home.summary" });
+function TrackerCounts({ res, retry }: { res: Resource<TrackerSummary>; retry: () => void }) {
   return (
     <Panel title="Tracker" id="home-tracker" res={res} retry={retry} icon={ListChecks} className="stat">
       {(s) =>
@@ -611,10 +610,13 @@ function Server() {
 }
 
 export default function Home() {
+  const [summary, retrySummary] = useResource(() => get("/api/tracker/summary", trackerSummary), [], ["tracker"], { keep: "home.summary" });
   return (
     <div className="home-page">
       <PageHeader path="/">Your job search, one good step at a time.</PageHeader>
-      <CareerCover />
+      {/* The cover welcomes a workspace with nothing tracked yet; once the
+          tracker holds a row it would push Needs you below the fold. */}
+      {summary.data?.total === 0 && <CareerCover />}
       <SetupCard />
       {/* The DOM runs in the order a narrow page shows: what needs you, then
           the counts. Two columns stack independently, so a long list in one
@@ -632,7 +634,7 @@ export default function Home() {
       </div>
       <div className="stats">
         <ReadyToApply />
-        <TrackerCounts />
+        <TrackerCounts res={summary} retry={retrySummary} />
         <Spend />
       </div>
       <WeekFunnel className="week" />

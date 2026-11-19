@@ -53,7 +53,7 @@ func TestDeepLinksServeTheIndexDocument(t *testing.T) {
 		t.Fatal(err)
 	}
 	get := newTestEnv(t).startServe().session()
-	for _, path := range []string{"/tracker", "/tracker?status=applied&row=3", "/reports?id=7", "/apply-next", "/settings", "/discovery", "/guide?doc=tutorial", "/not-a-page"} {
+	for _, path := range []string{"/tracker", "/tracker?status=applied&row=3", "/reports?id=7", "/apply-next", "/settings", "/discovery", "/guide?doc=tutorial", "/runs/run_20261118T193019.340_b89a09", "/not-a-page"} {
 		resp, body := get(path)
 		if resp.StatusCode != 200 || string(body) != string(index) {
 			t.Errorf("GET %s: %d, %d bytes (want the %d-byte index)", path, resp.StatusCode, len(body), len(index))

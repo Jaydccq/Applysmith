@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"slices"
 	"strings"
 	"time"
 
@@ -116,11 +117,11 @@ type ListQuery struct {
 	// application date never matches. since is that day, set by prepare.
 	AppliedWithinDays int
 	since             string
-	// Reached keeps the rows that moved to this status (created in it,
-	// changed or corrected to it), MovedBy those this actor moved, on or
+	// Reached keeps the rows that moved to one of these statuses (created in
+	// it, changed or corrected to it), MovedBy those this actor moved, on or
 	// after the local day ReachedSince, YYYY-MM-DD: the rows the Home and
-	// funnel counts of that status, and Home's Gmail line, count.
-	Reached      Status
+	// funnel counts of those statuses, and Home's Gmail line, count.
+	Reached      []Status
 	MovedBy      Actor
 	ReachedSince string
 	reachedFrom  string
@@ -169,7 +170,7 @@ func (t *Tracker) prepare(q ListQuery) (ListQuery, error) {
 	if q.AppliedWithinDays > 0 {
 		q.since = t.now().AddDate(0, 0, -q.AppliedWithinDays).Format(dateLayout)
 	}
-	if q.Reached != "" || q.MovedBy != "" {
+	if len(q.Reached) > 0 || q.MovedBy != "" {
 		d, err := time.ParseInLocation(dateLayout, q.ReachedSince, t.now().Location())
 		if err != nil {
 			return q, fmt.Errorf("%w: since must be a date, YYYY-MM-DD", ErrInvalid)
@@ -180,7 +181,7 @@ func (t *Tracker) prepare(q ListQuery) (ListQuery, error) {
 }
 
 func (q ListQuery) validate() (ListQuery, error) {
-	for _, s := range append([]Status{q.Status, q.Reached}, q.Statuses...) {
+	for _, s := range slices.Concat([]Status{q.Status}, q.Reached, q.Statuses) {
 		if _, err := ParseStatus(string(s)); s != "" && err != nil {
 			return q, err
 		}
@@ -188,7 +189,7 @@ func (q ListQuery) validate() (ListQuery, error) {
 	if q.MovedBy != "" && !q.MovedBy.valid() {
 		return q, fmt.Errorf("%w: movedBy must be user, gmail, apply_chain, agent or evaluation", ErrInvalid)
 	}
-	if q.Reached == "" && q.MovedBy == "" && q.ReachedSince != "" {
+	if len(q.Reached) == 0 && q.MovedBy == "" && q.ReachedSince != "" {
 		return q, fmt.Errorf("%w: since needs reached or movedBy", ErrInvalid)
 	}
 	if q.AppliedWithinDays < 0 || q.AppliedWithinDays > maxAppliedWithinDays {
@@ -252,9 +253,11 @@ func (q ListQuery) where() (clause string, args []any, rank string, rankArgs []a
 	if q.reachedFrom != "" {
 		cond := "id IN (SELECT entry_id FROM tracker_events WHERE kind IN (?, ?, ?) AND at >= ?"
 		args = append(args, string(EventCreated), string(EventStatusChanged), string(EventStatusCorrected), q.reachedFrom)
-		if q.Reached != "" {
-			cond += " AND new_status = ?"
-			args = append(args, string(q.Reached))
+		if len(q.Reached) > 0 {
+			cond += " AND new_status IN (" + strings.TrimSuffix(strings.Repeat("?,", len(q.Reached)), ",") + ")"
+			for _, st := range q.Reached {
+				args = append(args, string(st))
+			}
 		}
 		if q.MovedBy != "" {
 			cond += " AND actor = ?"

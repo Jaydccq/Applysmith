@@ -161,6 +161,8 @@ func TestGmail_Role_ResolutionAndPlaceholders(t *testing.T) {
 		{"Your application to Backend Engineer at Example Corp", "", "Example Corp", "Backend Engineer"},
 		{"Application update", "Thank you for applying to the Staff Data Scientist position at Example Corp.", "Example Corp", "Staff Data Scientist"},
 		{"Software Engineer - Evaluation - example.com", "", "Example", "Software Engineer - Evaluation"},
+		{"Application update", "We were glad to see you apply for the Partner Success Associate position at Example Corp.", "Example Corp", "Partner Success Associate"},
+		{"Next steps", "Thanks for waiting while we reviewed the next round for our Platform Reliability Engineer role.", "Example Corp", "Platform Reliability Engineer"},
 		{"Thanks", "Hello", "", UnknownRole},
 		{"Hi Alex", "Dear Jordan, Thank you for your time.", "", UnknownRole},
 	}

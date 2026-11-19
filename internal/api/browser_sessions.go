@@ -64,6 +64,9 @@ type SessionBrowser interface {
 	// for the manage list. Forget clears one of them.
 	ImportedSites(ctx context.Context) ([]browser.ImportedSite, error)
 	Forget(ctx context.Context, host string) (int, error)
+	// SignedOut reports the listed sign-in site of host when the running
+	// profile lacks the cookies that prove its sign-in; it loads no page.
+	SignedOut(ctx context.Context, host string) (browser.SignInSite, bool)
 }
 
 // noBrowser stands in for a server started without a managed browser.
@@ -87,6 +90,10 @@ func (noBrowser) Undo(context.Context) (wire.SessionUndoResult, error) {
 func (noBrowser) ImportedSites(context.Context) ([]browser.ImportedSite, error) { return nil, nil }
 
 func (noBrowser) Forget(context.Context, string) (int, error) { return 0, errNoBrowser() }
+
+func (noBrowser) SignedOut(context.Context, string) (browser.SignInSite, bool) {
+	return browser.SignInSite{}, false
+}
 
 func errNoBrowser() *apikit.Error {
 	return apikit.WithReason(apikit.NewErr(wire.CodeUnavailable, "this server has no managed browser to copy a sign-in into"), reasonNoBrowser)

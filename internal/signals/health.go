@@ -77,6 +77,10 @@ func (s *Service) laneAlarm(ctx context.Context, res SourceResult, enabled bool,
 	if res.Reason != "" {
 		status = res.Reason
 	}
+	if strings.EqualFold(strings.TrimSuffix(status, "."), "ok") {
+		// A clean run is not the cause: the alarm is that it returned nothing.
+		status = "Ran without error and returned no documents."
+	}
 	a := &Alarm{Source: res.ID, Status: status, LastProduced: last, Retryable: true}
 	if action != "" {
 		a.RequiredAction, a.Retryable = action, false

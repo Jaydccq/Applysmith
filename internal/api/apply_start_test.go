@@ -3,9 +3,11 @@ package api
 import (
 	"io"
 	"net/http"
+	"os"
 	"slices"
 	"strings"
 	"testing"
+	"time"
 
 	"applysmith/internal/api/apikit"
 	"applysmith/internal/api/wire"
@@ -13,6 +15,7 @@ import (
 	"applysmith/internal/gates"
 	"applysmith/internal/notify"
 	"applysmith/internal/tracker"
+	"applysmith/internal/workspace"
 )
 
 func TestApplyStart_ADryRunNeedsNoConfirmationAndIsRecordedForTheCaller(t *testing.T) {
@@ -201,6 +204,23 @@ func TestApplyStart_ABatchLeavesTheSkipListToTheUser(t *testing.T) {
 	}
 	if run := waitForApplyRun(t, h); run.caller != string(gates.CallerCLI) {
 		t.Fatalf("run = %+v", run)
+	}
+}
+
+// Adding or replacing the transcript counts as saving the user's data, so a
+// list runs again a row that stopped today for want of one.
+func TestApplyStart_ATranscriptAddedCountsAsSavedData(t *testing.T) {
+	h := newDomainHarness(t, unavailableWindow)
+	dir := h.srv.cfg.Workspace.Path(workspace.TranscriptDir)
+	if err := os.MkdirAll(dir, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	at := time.Now().Add(time.Hour).Truncate(time.Second)
+	if err := os.Chtimes(dir, at, at); err != nil {
+		t.Fatal(err)
+	}
+	if got, err := h.srv.listEvidence().DataSavedAt(t.Context()); err != nil || !got.Equal(at) {
+		t.Fatalf("data saved at %v, %v; want %v", got, err, at)
 	}
 }
 

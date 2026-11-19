@@ -3,6 +3,7 @@ package apply
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"testing"
 	"time"
@@ -74,6 +75,34 @@ func TestApply_Check_ADateThePagesBoundRefusedIsSaidWithTheBound(t *testing.T) {
 	want := `page 1 "Graduation Date": required and not answered (the page accepts dates from 2026-11-02 on)`
 	if res.Allowed() || res.Class != gates.ClassAnswerGap || res.Reason != want {
 		t.Fatalf("verdict %+v", res)
+	}
+}
+
+// A transcript upload left because none is stored says where one is added: a
+// required "Upload Transcripts" stopped as only "required and not answered".
+// Another upload left is said as it was.
+func TestApply_Check_ATranscriptUploadLeftWithNoneStoredSaysWhereToAddOne(t *testing.T) {
+	row := engine.Row{Selector: "#tr", Label: "Upload Transcripts", Kind: "file", Outcome: "skipped", Reason: "no-lane-claimed"}
+	ps := &pageState{leftovers: []Leftover{{Selector: "#tr", Label: row.Label, Reason: ReasonNeedsUser, Why: transcriptWhy(row, true)}}}
+	res := gates.SubmitReadiness(gates.ReadinessInput{Pages: []gates.PageReport{ps.gatesReport(1)}, Final: true})
+	want := `page 1 "Upload Transcripts": required and not answered (no transcript is stored: add your transcript PDF on the Answer Bank's Transcript tab)`
+	if res.Allowed() || res.Class != gates.ClassAnswerGap || res.Reason != want {
+		t.Fatalf("verdict %+v", res)
+	}
+	for _, r := range []engine.Row{{Label: "Portfolio", Kind: "file"}, {Label: "Transcript of your interview", Kind: "textarea"}} {
+		if why := transcriptWhy(r, true); why != "" {
+			t.Errorf("%q: %q", r.Label, why)
+		}
+	}
+	if why := transcriptWhy(row, false); why != "" {
+		t.Errorf("a stored transcript: %q", why)
+	}
+	// The stop waits for the user's data, so adding a transcript lets a list
+	// run the row again.
+	l := Leftover{Label: row.Label, Reason: ReasonNeedsUser, Detail: "no-lane-claimed"}
+	noteTranscript(&l, row, true)
+	if l.Why == "" || !userDataStop(userDataRun("r1", t0, fmt.Sprintf("%s (%s)", l.Label, l.Detail))) {
+		t.Fatalf("leftover %+v is not the user's missing data", l)
 	}
 }
 

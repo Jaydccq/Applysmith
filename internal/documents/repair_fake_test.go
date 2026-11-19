@@ -20,7 +20,8 @@ type fakeBuilder struct {
 	calls []fakeCall
 	// resumeCap and coverCap are the text height of one page in points.
 	resumeCap, coverCap float64
-	// itemPt is the height of one list item in the résumé; 0 means 12.
+	// itemPt is the height of one list item in the résumé; 0 means
+	// resumeLinePt, the real template's.
 	itemPt float64
 	// override replaces check verdicts for a call: tool/id to status.
 	override func(call fakeCall) map[string]string
@@ -66,19 +67,19 @@ func detex(tex string) string {
 func (f *fakeBuilder) heights(kind Kind, tex string) (content, capacity float64) {
 	items := len(reItem.FindAllString(tex, -1))
 	if kind == KindResume {
-		entries := float64(strings.Count(tex, `\cventry{`))
+		entries := float64(strings.Count(tex, `\begin{entry}`))
 		// A list line is a bullet or a competency line; an entry's own heading line costs one more.
 		// The summary paragraph is left out because the capacities are calibrated without it.
-		lines := float64(items+strings.Count(tex, `\cvitem{}{\textbf{`)) + entries
-		content := 150 + 28*entries + orDefault(f.itemPt, 12)*lines
-		if !strings.Contains(tex, `\itemsep0pt`) {
-			// At the stock spacing a bullet takes 2pt more, as on the real
-			// template; the spacing adjustment takes them back.
-			content += tightSavingPt * float64(items)
+		lines := float64(items+strings.Count(tex, `\cvitem{`)) + entries
+		content := 150 + 28*entries + orDefault(f.itemPt, resumeLinePt)*lines
+		if !strings.Contains(tex, `\setlength{\itemsep}{0pt}`) {
+			// At the stock spacing a bullet and a list each take 2pt more,
+			// as on the real template; the spacing adjustment takes them back.
+			content += tightSavingPt * float64(items+strings.Count(tex, `\begin{bullets}`))
 		}
 		return content, orDefault(f.resumeCap, 700)
 	}
-	return 200 + 40*float64(strings.Count(tex, `\lettercontent{`)) + 15*float64(items), orDefault(f.coverCap, 640)
+	return 200 + 40*float64(strings.Count(tex, `\bodyparagraph{`)) + 15*float64(items), orDefault(f.coverCap, 640)
 }
 
 func orDefault(v, d float64) float64 {

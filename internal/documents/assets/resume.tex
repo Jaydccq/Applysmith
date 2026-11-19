@@ -1,113 +1,179 @@
-%% Resume template for LuaLaTeX with moderncv (banking style, blue).
-%%
-%% Adapted from cv/main_example.tex of ai-job-search (MIT, commit
-%% a011214d60f943770e33f7d5f070e1a5f91e3822). Every template action is
-%% expanded by Go text/template; the only functions available to an action are
-%% the encoders of internal/documents/tex, so content is always literal.
-%%
-%% .Tight, the only layout adjustment, narrows the gaps between entries; the font
-%% size and geometry scale below are the readability bounds and stay put.
-
+% Résumé template for LuaLaTeX, expanded by assets.RenderResume.
+%
+% Built on moderncv with its banking style, the sans option and a text area
+% of 80 percent of the page in each direction. The title block and the entry
+% layout are written here rather than taken from the class: the class's
+% contact line draws Font Awesome icons, whose glyph names would end up in
+% the text layer, and its \cventry boxes an entry's description so a long
+% entry could not break across pages.
+%
+% Every printed value goes through one of the encoders tex, rich, url or
+% paper; an empty optional field emits no command at all.
 \documentclass[11pt,<% paper .Paper %>,sans]{moderncv}
 \moderncvstyle{banking}
-% The style's contact icons extract as words ("MOBILE-ALT", "Envelope") from
-% the PDF text an applicant tracking system reads, so the contact line is text.
-\renewcommand*{\mobilephonesymbol}{}
-\renewcommand*{\fixedphonesymbol}{}
-\renewcommand*{\emailsymbol}{}
-\renewcommand*{\homepagesymbol}{}
 \moderncvcolor{blue}
-
-% The banking style copies the pre-scheme accent colour, so the name and
-% section headings stay black unless they are set again after \moderncvcolor.
-\renewcommand*{\namefont}{\fontsize{34}{36}\bfseries\upshape}
-% The style ties the two names with a space of the body font, too narrow beside
-% the name's own size for a PDF reader to see a word break: an applicant
-% tracking system read "JordanAvery" as one name. The space is the name font's,
-% and the body font's tie is taken back.
-\renewcommand*{\firstnamestyle}[1]{{\namefont\textcolor{firstnamecolor}{#1}\nobreakspace}}
-\renewcommand*{\lastnamestyle}[1]{\hspace{-\fontdimen2\font}{\namefont\textcolor{lastnamecolor}{#1}}}
-\colorlet{firstnamecolor}{color1}
-\colorlet{lastnamecolor}{color1}
-\colorlet{namecolor}{color1}
-\renewcommand*{\sectionstyle}[1]{{\sectionfont\color{color1}#1}}
-
-\usepackage[utf8]{inputenc}
-\ifpdftex\usepackage[T1]{fontenc}\fi
-% Pair kerning tucks "W" under "A", and a PDF reader takes the overlap for a
-% word break: an applicant tracking system read "AWS" as "A WS". The fonts are
-% the class's own, loaded again without kerning.
-\ifpdftex\else
-\usepackage{fontspec}
-\setsansfont{Latin Modern Sans}[Kerning=Off]
-\setmainfont{Latin Modern Roman}[Kerning=Off]
-\fi
-% moderncv loads hyperref in an \AtEndPreamble hook, so the settings go in a
-% hook of our own. pdfpagemode=UseNone keeps the PDF from opening fullscreen.
-\AtEndPreamble{\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,
-    urlcolor=blue,
-    pdftitle={<% tex .Title %>},
-    pdfpagemode=UseNone,
-}}
+% One accent colour, a deep blue, for the name, the section headings and the
+% bullet markers; everything else is black or the class's dark grey.
+\definecolor{accent}{RGB}{28,61,105}
+\colorlet{firstnamecolor}{accent}
+\colorlet{lastnamecolor}{accent}
+\colorlet{sectioncolor}{accent}
+\colorlet{bodyrulecolor}{accent}
 \usepackage[scale=0.80]{geometry}
-\usepackage{import}
+\nopagenumbers
+% A long unbreakable word (a path, a command name) may loosen its line rather
+% than run into the right margin.
+\setlength{\emergencystretch}{3em}
+\makeatletter
+
+% The class's Latin Modern Sans, declared here with the kernel's file names
+% and optical sizes but with kerning off: pypdf reads a wide kern (A-W in
+% "AWS") as a word break. Declaring the family keeps the kernel from loading
+% its own definitions over these. Nothing else about the fonts changes.
+\newcommand*{\unkerned}[1]{"[#1]:+tlig;-kern;"}
+\DeclareFontFamily{TU}{lmss}{}
+\DeclareFontShape{TU}{lmss}{m}{n}{<-8.5>\unkerned{lmsans8-regular}
+  <8.5-9.5>\unkerned{lmsans9-regular}<9.5-11>\unkerned{lmsans10-regular}
+  <11-15.5>\unkerned{lmsans12-regular}<15.5->\unkerned{lmsans17-regular}}{}
+\DeclareFontShape{TU}{lmss}{m}{sl}{<-8.5>\unkerned{lmsans8-oblique}
+  <8.5-9.5>\unkerned{lmsans9-oblique}<9.5-11>\unkerned{lmsans10-oblique}
+  <11-15.5>\unkerned{lmsans12-oblique}<15.5->\unkerned{lmsans17-oblique}}{}
+\DeclareFontShape{TU}{lmss}{bx}{n}{<->\unkerned{lmsans10-bold}}{}
+\DeclareFontShape{TU}{lmss}{bx}{sl}{<->\unkerned{lmsans10-boldoblique}}{}
+\DeclareFontShape{TU}{lmss}{m}{it}{<->ssub*lmss/m/sl}{}
+\DeclareFontShape{TU}{lmss}{bx}{it}{<->ssub*lmss/bx/sl}{}
+\DeclareFontShape{TU}{lmss}{b}{n}{<->ssub*lmss/bx/n}{}
+\DeclareFontShape{TU}{lmss}{b}{sl}{<->ssub*lmss/bx/sl}{}
+\DeclareFontShape{TU}{lmss}{b}{it}{<->ssub*lmss/bx/sl}{}
 
 \name{<% tex .FirstName %>}{<% tex .LastName %>}
-<% if .Address %>\address{<% tex .Address %>}{}{}
-<% end %><% if .Phone %>\phone[mobile]{<% tex .Phone %>}
-<% end %>\email{<% tex .Email %>}
-<% if .Links %>\extrainfo{<% range $i, $l := .Links %><% if $i %>, <% end %>\href{<% url $l.URL %>}{<% tex $l.Label %>}<% end %>}
+% The class builds the PDF title from the name at the end of the preamble;
+% this hook runs after it, so the document title wins.
+\AtEndPreamble{\hypersetup{pdftitle={<% tex .Title %>}}}
+
+% Spacing. The two modes differ only in these three values: the space after
+% an entry, the space above a list (as the list's top separation) and the
+% space between list items. Paragraphs inside an item never get extra space.
+<% if .Tight %>\newcommand*{\entryafterspace}{5pt}
+\newcommand*{\setlistspacing}{\setlength{\topsep}{0pt}\setlength{\itemsep}{0pt}}
+<% else %>\newcommand*{\entryafterspace}{7pt}
+\newcommand*{\setlistspacing}{\setlength{\topsep}{2pt}\setlength{\itemsep}{2pt}}
 <% end %>
+% Contact line: items joined by a bar that disappears where the line wraps,
+% so no line starts or ends with a separator (the \unskip removes the space
+% the source's line end leaves before an item).
+\newif\ifcontactbegun
+\newcommand*{\contactitem}[1]{%
+  \ifcontactbegun\unskip\discretionary{}{}{\kern.6em\textbar\kern.6em}\fi
+  \contactbeguntrue\mbox{#1}}
+
+% Entries. The fields are set one by one, so an empty field is simply never
+% set; \entryhead prints title and organization on the left, wrapping in
+% the width the right column leaves, and location and dates on the right,
+% level with the first line; the note goes on a line of its own below.
+%
+% Keeping things together. The class's \section forbids a break after the
+% heading; the header and note lines cannot be broken apart; a bullet list
+% forbids a break before its first item, and a bullet splits only with two
+% lines on each side. So a heading always shares its page with the first
+% entry's header, and that header with the start of its first bullet:
+% exactly the space needed is reserved. Every other break (between items,
+% after a list, between paragraphs) is allowed, and with the class's ragged
+% bottom TeX takes the last one that fits, so pages fill.
+\newcommand*{\entrydates}[1]{\def\entry@dates{#1}}
+\newcommand*{\entrytitle}[1]{\def\entry@title{#1}}
+\newcommand*{\entryorg}[1]{\def\entry@org{#1}}
+\newcommand*{\entryplace}[1]{\def\entry@place{#1}}
+\newcommand*{\entrynote}[1]{\def\entry@note{#1}}
+\newcommand*{\entry@reset}{%
+  \let\entry@dates\@empty\let\entry@title\@empty\let\entry@org\@empty
+  \let\entry@place\@empty\let\entry@note\@empty}
+\newenvironment{entry}
+  {\par\entry@reset}
+  {\par\addvspace{\entryafterspace}}
+\newsavebox{\entry@right}
+\newcommand*{\entryhead}{%
+  \begingroup\interlinepenalty\@M
+  \sbox{\entry@right}{%
+    \ifx\entry@place\@empty\else
+      \entry@place\ifx\entry@dates\@empty\else\hspace{.5em}\textbar\hspace{.5em}\fi\fi
+    \ifx\entry@dates\@empty\else\entry@dates\fi}%
+  \noindent\parbox[t]{\dimexpr\linewidth-\wd\entry@right-1.5em\relax}{%
+    \raggedright
+    \ifx\entry@title\@empty\else
+      {\bfseries\entry@title\ifx\entry@org\@empty\else,\fi}\fi
+    \ifx\entry@org\@empty\else
+      \ifx\entry@title\@empty\else\space\fi{\itshape\entry@org}\fi\strut}%
+  \hfill\usebox{\entry@right}\par
+  \ifx\entry@note\@empty\else\nobreak{\itshape\entry@note\par}\fi
+  \endgroup}
+
+% Bullets: a plain list in the body font, outside any box so that it can
+% break across pages. The marker is the bullet of the sans font itself.
+\newenvironment{bullets}
+  {\begin{list}{\textcolor{accent}{\textbullet}}{%
+     \setlength{\leftmargin}{1.1em}\setlength{\labelsep}{.5em}%
+     \setlength{\labelwidth}{.6em}\setlength{\partopsep}{0pt}%
+     \setlength{\parsep}{0pt}\setlistspacing
+     \@beginparpenalty\@M\@itempenalty\z@\@endparpenalty\z@
+     \clubpenalty\@M\widowpenalty\@M}}
+  {\end{list}}
+
+\makeatother
+
 \begin{document}
-
-\makecvtitle
-
-<% if .Profile %>\section{<% tex .Labels.Summary %>}
-\vspace{1pt}
-\cvitem{}{<% rich .Profile %>}
-
-<% end %><% if .Competencies %>\section{<% tex .Labels.Competencies %>}
-\vspace{1pt}
-<% range .Competencies %>
-\cvitem{}{\textbf{<% tex .Label %>}: <% rich .Text %>}
+{\centering
+  \firstnamestyle{<% tex .FirstName %>}~\lastnamestyle{<% tex .LastName %>}\par
+  \vspace{6pt}
+  {\addressfont\color{addresscolor}%
+<% if .Address %>  \contactitem{<% tex .Address %>}
+<% end %><% if .Phone %>  \contactitem{<% tex .Phone %>}
+<% end %><% if .Email %>  \contactitem{\href{mailto:<% tex .Email %>}{<% tex .Email %>}}
+<% end %><% range .Links %>  \contactitem{\href{<% url .URL %>}{<% tex .Label %>}}
+<% end %>  \par}\par}
+<% if .Profile %>
+\section{<% tex .Labels.Summary %>}
+<% rich .Profile %>\par
+<% end %><% if .Competencies %>
+\section{<% tex .Labels.Competencies %>}
+<% range .Competencies %>\cvitem{<% tex .Label %>}{<% rich .Text %>}
+<% end %><% end %><% if .Experience %>
+\section{<% tex .Labels.Experience %>}
+<% range .Experience %>\begin{entry}
+<% if .Dates %>\entrydates{<% tex .Dates %>}
+<% end %><% if .Title %>\entrytitle{<% tex .Title %>}
+<% end %><% if .Organization %>\entryorg{<% tex .Organization %>}
+<% end %><% if .Location %>\entryplace{<% tex .Location %>}
+<% end %><% if .Note %>\entrynote{<% tex .Note %>}
+<% end %>\entryhead
+<% if .Bullets %>\begin{bullets}
+<% range .Bullets %>\item <% rich . %>
+<% end %>\end{bullets}
+<% end %>\end{entry}
+<% end %><% end %><% if .Projects %>
+\section{<% tex .Labels.Projects %>}
+<% range .Projects %>\begin{entry}
+<% if .Title %>\entrytitle{<% tex .Title %>}
+<% end %>\entryhead
+<% if .Bullets %>\begin{bullets}
+<% range .Bullets %>\item <% rich . %>
+<% end %>\end{bullets}
+<% end %>\end{entry}
+<% end %><% end %><% if .Education %>
+\section{<% tex .Labels.Education %>}
+<% range .Education %>\begin{entry}
+<% if .Dates %>\entrydates{<% tex .Dates %>}
+<% end %><% if .Title %>\entrytitle{<% tex .Title %>}
+<% end %><% if .Organization %>\entryorg{<% tex .Organization %>}
+<% end %><% if .Location %>\entryplace{<% tex .Location %>}
+<% end %><% if .Note %>\entrynote{<% tex .Note %>}
+<% end %>\entryhead
+<% if .Bullets %>\begin{bullets}
+<% range .Bullets %>\item <% rich . %>
+<% end %>\end{bullets}
+<% end %>\end{entry}
+<% end %><% end %><% if .Languages %>
+\section{<% tex .Labels.Languages %>}
+<% tex .Languages %>\par
 <% end %>
-
-<% end %><% if .Experience %>\section{<% tex .Labels.Experience %>}
-\vspace{3pt}
-<% range .Experience %>
-\begin{minipage}{\linewidth}\cventry{<% tex .Dates %>}{<% tex .Title %>}{<% tex .Organization %>}{<% tex .Location %>}{}{<% if .Bullets %>\vspace{1pt}
-\begin{itemize}<% if $.Tight %>\topsep0pt\itemsep0pt\parsep0pt<% else %>\topsep2pt\itemsep2pt<% end %>
-<% range .Bullets %>    \item {<% rich . %>}
-<% end %>\end{itemize}<% end %>}\end{minipage}
-
-\vspace{<% if $.Tight %>1<% else %>3<% end %>pt}
-<% end %>
-
-<% end %><% if .Projects %>\section{<% tex .Labels.Projects %>}
-\vspace{3pt}
-<% range .Projects %>
-\begin{minipage}{\linewidth}\cventry{<% tex .Dates %>}{<% tex .Title %>}{<% tex .Organization %>}{<% tex .Location %>}{}{<% if .Bullets %>\vspace{1pt}
-\begin{itemize}<% if $.Tight %>\topsep0pt\itemsep0pt\parsep0pt<% else %>\topsep2pt\itemsep2pt<% end %>
-<% range .Bullets %>    \item {<% rich . %>}
-<% end %>\end{itemize}<% end %>}\end{minipage}
-
-\vspace{<% if $.Tight %>1<% else %>3<% end %>pt}
-<% end %>
-
-<% end %><% if .Education %>\section{<% tex .Labels.Education %>}
-\vspace{1pt}
-<% range .Education %>
-\cventry{<% tex .Dates %>}{<% tex .Title %>}{<% tex .Organization %>}{<% tex .Location %>}{}{<% if .Note %>\vspace{1pt}
-<% tex .Note %><% end %>}
-
-\vspace{<% if $.Tight %>1<% else %>3<% end %>pt}
-<% end %>
-
-<% end %><% if .Languages %>\section{<% tex .Labels.Languages %>}
-\vspace{1pt}
-\cvitem{}{<% tex .Languages %>}
-
-<% end %>\end{document}
+\end{document}

@@ -22,7 +22,7 @@ const (
 	Unverified = "unverified"
 )
 
-// VerifierSchema is the version of the JSON the adapted scripts print.
+// VerifierSchema is the version of the JSON the verifier scripts print.
 const VerifierSchema = 1
 
 // ErrVerdict is returned when a verifier's output cannot be accepted. The PDF

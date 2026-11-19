@@ -144,21 +144,21 @@ type pageGeometry struct {
 	// the bottom of the text area.
 	bottomPt float64
 	// entryTopPt is the top of an entry's first line at the top of a page. A
-	// section heading's box starts 2.4pt higher.
+	// section heading's box starts about 4pt higher.
 	entryTopPt float64
 }
 
 var resumePages = map[assets.Paper]pageGeometry{
-	assets.PaperA4:     {bottomPt: 745.8, entryTopPt: 64.5},
-	assets.PaperLetter: {bottomPt: 701.9, entryTopPt: 60.5},
+	assets.PaperA4:     {bottomPt: 743.9, entryTopPt: 65.7},
+	assets.PaperLetter: {bottomPt: 699.8, entryTopPt: 61.7},
 }
 
 // The space a block needs above it when it moves up behind an entry, at the
 // stock spacing: a section heading's, and another entry's. Tight spacing takes
 // tightSavingPt off both (the entry's closing \vspace).
 const (
-	headingGapPt = 10.6
-	entryGapPt   = 1.6
+	headingGapPt = 10.4
+	entryGapPt   = 4.6
 )
 
 // lowestPt is the bottom of the lowest line box on a page.
@@ -207,23 +207,23 @@ func spillPt(ms []toolchain.Measurement, from int, layout toolchain.LayoutExpect
 // Height estimates measured on the compiled templates (A4, English). A round
 // that falls short is topped up by the next, so they only size a round. A
 // résumé line is cut at tight spacing (the adjustment comes first): a bullet
-// line is 12pt, a competency line 16.3pt and each further printed line of it
+// line is 13.5pt, a competency line 16.3pt and each further printed line of it
 // 13.5pt.
 const (
-	resumeLineChars  = 112
-	resumeLinePt     = 12.0
+	resumeLineChars  = 98
+	resumeLinePt     = 13.5
 	competencyItemPt = 16.3
 	competencyLinePt = 13.5
-	letterLineChars  = 89
-	letterLinePt     = 14.4
-	letterItemGapPt  = 6.6
+	letterLineChars  = 79
+	letterLinePt     = 14.0
+	letterItemGapPt  = 4.0
 	// letterSignGapPt is the two empty lines the class sets over the
 	// signature. A letter's spill counts text alone, so a signature alone on
 	// the last page needs this much more to come back.
 	letterSignGapPt = 26.0
-	// tightSavingPt is what the spacing adjustment saves per bullet: the 2pt
+	// tightSavingPt is what the spacing adjustment saves per bullet (the 2pt
 	// between two bullets, and for an entry's last bullet the 2pt of the
-	// entry's closing space.
+	// entry's closing space) and once more per list (the 2pt above it).
 	tightSavingPt   = 2.0
 	maxCutsPerRound = 100
 )
@@ -283,7 +283,9 @@ func tightCredit(d ResumeDoc) float64 {
 	n := 0
 	for _, list := range [][]EntryDraft{d.Experience, d.Projects} {
 		for _, e := range list {
-			n += len(e.Bullets)
+			if len(e.Bullets) > 0 {
+				n += len(e.Bullets) + 1
+			}
 		}
 	}
 	return float64(n) * tightSavingPt
@@ -518,9 +520,12 @@ func (j *job) repairLetter(v *version, d defect, rr *RepairRound) bool {
 				continue
 			}
 			rr.Cuts = append(rr.Cuts, Cut{Document: KindCover, Group: c.group, Text: c.text, Evidence: c.evidence, Rank: c.rank, Reason: reasonFor(d, KindCover, c)})
-			removed += float64(lineCount(c.text, letterLineChars)) * letterLinePt
 			if c.group == groupLetterBullet {
-				removed += letterItemGapPt
+				removed += float64(lineCount(c.text, letterLineChars))*letterLinePt + letterItemGapPt
+			} else {
+				// Trailing sentences leave a running paragraph: they free
+				// their share of its lines, not whole lines of their own.
+				removed += float64(utf8.RuneCountInString(c.text)) / letterLineChars * letterLinePt
 			}
 			cur, picked, any = next, true, true
 			break

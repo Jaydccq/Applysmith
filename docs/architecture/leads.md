@@ -53,7 +53,8 @@ Code is in `internal/discovery/leads*.go`; the table is in the leads migration.
   `unknown`, and the lead is not evaluated from its title.
 - The silent-source alarm is decided by `SourceAlarmFor` after a scheduled run
   (runs are marked with `MarkScheduled`) and raised as one needs-you item per
-  source per day.
+  source per day. A later scheduled run that completes and inserts resolves
+  the source's alarms still waiting.
 
 ## Surfaces
 

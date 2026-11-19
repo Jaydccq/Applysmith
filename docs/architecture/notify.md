@@ -47,7 +47,10 @@ Producers:
   job that needs the user (`scheduler.NeedsYou`) and a Gmail app password
   Gmail refuses (`gmail.Hooks`). A scheduled job's item is keyed by schedule
   and reason (`needs-schedule-<id>-<reason>`, F-2) and resolved by
-  `Options.Recovered` when a later run of that schedule succeeds.
+  `Options.Recovered` when a later run of that schedule succeeds. A job site
+  the app browser is signed out of, found as a list starts, is keyed by site
+  (`site-sign-in-<domain>`) and resolved by a sign-in check or a list that
+  finds the site signed in ([apply.md](apply.md)).
 - The apply chain and the agent write through the same interface when they are
   wired to the server; nothing else keeps a display status.
 
@@ -102,7 +105,12 @@ one, a scheduled job that succeeded says the summary it returned, and a
 dashboard pass (a company brief, story proposals, a knowledge ingest, answer
 coaching) the line it ended with, which `runPass` stores in `runs.outcome`
 before the end, so a notice never reads only "It finished." when the pass
-said more. An
+said more. A scheduled job that succeeded and did nothing (`BoardOptions.Idle`,
+`jobs.Idle`: a Gmail sync whose summary is "0 listed, 0 stored, 0 for review,
+0 linked" or "a sync was already running") is acknowledged as it ends, so it
+is neither a finished run to see nor announced: in the owner's workspace the
+ten-minute sync made 850 of a week's succeeded runs, 806 of them idle, each an
+unacknowledged finished entry. A failed sync stays. An
 evaluation whose input names a `ScanRun` joins that scan's batch
 (`ScanBatch` + the scan's run id) with its origin; an evaluation that ends
 well resolves the review entries of the same identity key, before its own

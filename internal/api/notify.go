@@ -56,7 +56,7 @@ func (s *Server) buildNotify(st *store.Store) *notifyStack {
 	ns.ctx, ns.stop = context.WithCancel(context.Background())
 	ns.desktop = notify.NewDesktop(notify.DesktopOptions{Store: st, Now: s.now, Log: s.log, Publish: s.notifs.publish, Attached: s.notifs.listening,
 		Changed: func() { s.notify("notifications") }})
-	ns.board = notify.NewBoard(st, notify.BoardOptions{Now: s.now, Log: s.log, Changed: s.notifyTopics, ScanTitle: sourceTitle})
+	ns.board = notify.NewBoard(st, notify.BoardOptions{Now: s.now, Log: s.log, Changed: s.notifyTopics, ScanTitle: sourceTitle, Idle: jobs.Idle})
 	ns.settings = notify.NewSettingsStore(st, s.now)
 	ns.tgState = telegram.NewState(st, s.now)
 	ns.tg = telegram.New(telegram.Config{

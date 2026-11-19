@@ -65,3 +65,28 @@ chooses the Offline provider, evaluates the three sample postings, runs a dry
 run of the sample form (the apply window opens for a few seconds) and captures
 the other pages. The demo server listens on a free port, so a running
 Applysmith is left alone. A dashboard without the demo banner is refused.
+
+## The site film
+
+The 37-second film on the website (`website/README.md`, "The film") is not
+made by `cmd/video`. It is an OpenMotion project ("Applysmith site film", titled in Chinese),
+kept in the OpenMotion workspace on the owner's Mac; version 8 is the one on
+the site. It tells the page's own story with the page's paper sheets: postings
+scatter, form a stream, are scored in a wall, the skipped ones fall away, one
+posting gets a résumé and a cover letter, the form is filled and stops before
+Submit, and the pack is sealed. The sheets, the scores and the form are drawn;
+the only real screen is the dry-run panel cropped from
+`docs/user-guide/images/tutorial-06-sample-form-filled.webp`. Every word on
+screen comes from the website.
+
+Its music is the `intro` score of `cmd/video/music.go` at exactly 36.923 s
+(16 bars at 104 BPM), written by calling `compose` and `writeWAV` from a
+throwaway `main` (the `music` command takes its length from a film in
+`films.js`). The cuts fall on bar lines: the wall lands as the drums enter
+(bar 4, 9.23 s) and the seal lands where the music thins (bar 13, 30.0 s).
+
+The web files are made from the OpenMotion export and are not in git:
+
+    ffmpeg -i export.mp4 -c:v libx264 -preset slow -crf 23 -profile:v high \
+      -pix_fmt yuv420p -movflags +faststart -c:a aac -b:a 128k video/dist/site-film.mp4
+    ffmpeg -ss 2.6 -i export.mp4 -frames:v 1 -vf scale=1280:-1 -q:v 4 video/dist/site-film.jpg

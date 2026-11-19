@@ -10,4 +10,4 @@ package classify
 
 // Version identifies the rule set. Decisions are keyed by message id and this
 // version, so a change of rules re-decides prior mail as a new decision.
-const Version = "gmail-classifier-go-5"
+const Version = "gmail-classifier-go-6"

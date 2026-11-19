@@ -323,6 +323,9 @@ typed); `sponsorship-type-description` accepts `long_text` (Pinterest's
   takes the recorded need, any other needs sponsorship, one must be recorded.
   On Mercury's "SF, NY, Portland, or Remote within Canada or United States" an
   F-1 OPT applicant answers Yes; a US citizen stays ambiguous (owner decision).
+  A town the table does not know before a two-letter code ("Marina del Rey,
+  CA", Zefr) is in a country the code can mean, the United States or Canada
+  here (`codeCountries`).
   A location that names North America and otherwise only a work arrangement
   is the United States, Canada and Mexico for this read (`northAmerica`). Any
   other region, like a location that names no place, takes only a recorded

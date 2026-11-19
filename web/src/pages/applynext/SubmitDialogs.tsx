@@ -148,7 +148,7 @@ export function LaneSubmitDialog({ title, count, items, hidden, busy, retry, onR
       details={
         <>
           <LeftOutLines items={items} />
-          {hidden && <p>Rows beyond this page are checked when the run starts.</p>}
+          {hidden && <p>Rows beyond this page are checked when the run starts. The run takes the lane best score first, whatever the page's order.</p>}
           <RetryLine retry={retry} onRetry={onRetry} />
           <LetterOffers offered={offered} ticked={letters} onTicked={setLetters} />
         </>

@@ -14,7 +14,7 @@ import (
 )
 
 // Version is stored with every decision.
-const Version = "link-1"
+const Version = "link-2"
 
 // Decisions.
 const (
@@ -82,6 +82,17 @@ var stopwords = toSet("and", "the", "of", "for", "a", "an", "in", "at", "to", "w
 var generic = toSet("engineer", "engineers", "engineering", "developer", "developers", "manager", "managers", "analyst", "analysts",
 	"specialist", "associate", "senior", "junior", "staff", "principal", "lead", "intern", "sr", "jr", "software", "full", "time", "part")
 
+// levels are distinctive enough to tell two openings of one kind apart, but
+// two kinds of job that share only a level are still two jobs.
+var levels = toSet("graduate", "grad", "entry", "level", "early", "career", "university", "college")
+
+// titleNouns name the kind of work a title is, by family: a developer and an
+// engineer are the same kind, an engineer and an analyst are not.
+var titleNouns = map[string]string{"engineer": "engineer", "engineers": "engineer", "engineering": "engineer", "developer": "engineer",
+	"developers": "engineer", "manager": "manager", "managers": "manager", "analyst": "analyst", "analysts": "analyst",
+	"scientist": "scientist", "designer": "designer", "associate": "associate", "consultant": "consultant",
+	"researcher": "researcher", "architect": "architect", "specialist": "specialist"}
+
 func toSet(ws ...string) map[string]bool {
 	m := make(map[string]bool, len(ws))
 	for _, w := range ws {
@@ -146,14 +157,21 @@ type party struct {
 	keyWords  [][]string
 	roleKnown bool
 	// role holds the role's tokens without stopwords, distinct those without
-	// generic nouns either, and line all of its tokens in order.
-	role, distinct map[string]bool
-	line           string
+	// generic nouns either, nouns its title-noun families, and line all of its
+	// tokens in order.
+	role, distinct, nouns map[string]bool
+	line                  string
 }
 
 func newParty(company, role string) party {
 	p := party{keys: companyKeys(company), roleKnown: !placeholderRole(role), role: roleTokens(role), line: strings.Join(tokens(role), " ")}
 	p.distinct = distinctive(p.role)
+	p.nouns = map[string]bool{}
+	for w := range p.role {
+		if f, ok := titleNouns[w]; ok {
+			p.nouns[f] = true
+		}
+	}
 	for _, k := range p.keys {
 		p.keyWords = append(p.keyWords, strings.Fields(k))
 	}
@@ -169,14 +187,27 @@ func sameCompany(a, b party) bool {
 	return false
 }
 
-// conflict reports a distinctive role conflict: both sides name a role and
-// neither covers 60 percent of the other once generic nouns are removed.
+// conflict reports a role conflict: both sides name a role and neither covers
+// 60 percent of the other once generic nouns are removed, or they share no
+// title-noun family and no distinctive word but a level.
 func conflict(sig, cand party) bool {
-	if !sig.roleKnown || !cand.roleKnown || len(sig.distinct) == 0 || len(cand.distinct) == 0 {
+	if !sig.roleKnown || !cand.roleKnown {
 		return false
 	}
-	n := float64(overlap(sig.distinct, cand.distinct))
-	return n/float64(len(sig.distinct)) < coverageFloor && n/float64(len(cand.distinct)) < coverageFloor
+	n := overlap(sig.distinct, cand.distinct)
+	if len(sig.distinct) > 0 && len(cand.distinct) > 0 &&
+		float64(n)/float64(len(sig.distinct)) < coverageFloor && float64(n)/float64(len(cand.distinct)) < coverageFloor {
+		return true
+	}
+	if len(sig.nouns) == 0 || len(cand.nouns) == 0 || overlap(sig.nouns, cand.nouns) > 0 {
+		return false
+	}
+	for w := range sig.distinct {
+		if cand.distinct[w] && !levels[w] {
+			return false
+		}
+	}
+	return true
 }
 
 // prepared is a candidacy with its party read.

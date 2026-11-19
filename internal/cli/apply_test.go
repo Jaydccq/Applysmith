@@ -5,6 +5,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -232,5 +234,23 @@ func TestApplyCommand_AServerSilentForTooLongEndsTheWait(t *testing.T) {
 	_, err := e.awaitRun(context.Background(), f, "run_1")
 	if !errors.Is(err, errServerSilent) || f.polls < 2 {
 		t.Fatalf("err %v after %d polls", err, f.polls)
+	}
+}
+
+// A list start is answered after the server has checked every chosen posting
+// in the apply window, which takes longer than an ordinary call is given.
+func TestApplyList_StartWaitsLongerThanAnOrdinaryCall(t *testing.T) {
+	setForTest(t, &liveCallTimeout, 10*time.Millisecond)
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		time.Sleep(100 * time.Millisecond)
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, `{"ok":true,"data":{"runId":"run_1","batchId":"list_1","rows":12}}`)
+	}))
+	t.Cleanup(srv.Close)
+	e, _, _ := applyEnv(t)
+	l := liveApply{e: e, srv: &liveServer{origin: srv.URL, token: "tok", client: srv.Client()}}
+	acc, err := l.runList(context.Background(), wire.ApplyBatchRequest{Limit: 12})
+	if err != nil || acc.BatchID != "list_1" {
+		t.Fatalf("accepted %+v err %v", acc, err)
 	}
 }

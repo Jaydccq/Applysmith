@@ -16,6 +16,7 @@ stack is sealed.
 | Colors, type and layout | `src/style.css` |
 | The scene: arrangements, lights, camera per section | `src/scene.js` |
 | Brand mark | `../web/src/assets/career-cat.webp`, shared with the dashboard |
+| The film | `../video/dist/site-film.mp4` and `site-film.jpg`, not in git (below) |
 | The four screens | `../docs/user-guide/images/tutorial-0{4,5,6,7}-*.webp`, shared with the tutorial |
 
 Every claim about Applysmith comes from `README.md`, `docs/setup` and
@@ -31,9 +32,17 @@ from `docs/user-guide/images` in `src/main.js`, so the site adds no image to
 the repository; when the tutorial's screenshots are retaken the site shows the
 new ones at its next build. Each must show the demo workspace only.
 
-The product videos (`video/`) are not on the page: their files are far over
-the one-mebibyte limit for a tracked file (`internal/guard/budgets.go`), and
-the page calls no other host that could hold them.
+## The film
+
+"The whole idea, in 37 seconds." sits above the screens. Its files are far
+over the one-mebibyte limit for a tracked file, and the repository's byte
+budget has almost no room left (`internal/guard/budgets.go`), so they stay
+out of git. `src/main.js` picks up `video/dist/site-film.mp4` and
+`site-film.jpg` when they exist and Vite serves them from `/assets/` like
+every other file, so the page still calls no other host. Without them the
+build passes and the section stays hidden. How the film is made:
+[video/README.md](../video/README.md), "The site film". The two product videos
+made by `make videos` are not on the page.
 
 Each answer under "Questions" restates `README.md`, `docs/setup/00-prerequisites.md`
 or `docs/setup/09-llm.md` (the providers, the Offline choice and the default
@@ -103,7 +112,11 @@ and served from the site itself; the page calls no other host.
 
 The site is static: `dist/` is served as the assets of a Cloudflare Worker.
 The Worker's name, the account and the token are given at the command line or
-in the environment, never in this repository.
+in the environment, never in this repository. Its only code, `worker.js`,
+runs first for `/assets/*.mp4`: static assets answer a byte-range request
+with the whole file, and Safari plays a video only from ranged (206)
+responses. Check with
+`curl -sI -H "Range: bytes=0-1" https://www.ovreni.org/assets/site-film-<hash>.mp4`.
 
     bun run build
     bunx wrangler versions upload --name <worker>
@@ -113,6 +126,9 @@ in the environment, never in this repository.
 assets, and `public/404.html` for any address that is not a file.
 `public/_headers` lets browsers keep the hashed files under `/assets/`
 for a year.
+
+Before uploading, check that `dist/assets` holds a `site-film-*.mp4`: a
+build without the film publishes the page without it.
 
 `versions upload` makes a version with a preview address and leaves the live
 site alone; `versions deploy` makes a version live, and the same command with

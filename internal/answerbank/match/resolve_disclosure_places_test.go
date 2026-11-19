@@ -174,7 +174,9 @@ func TestAnswerBank_WorkAuth_SeveralCountriesWithOneNeed(t *testing.T) {
 			func(r *Request) { r.Facts.AuthorizedCountries = countries })
 	}
 	const q = "Will you now or at any time in the future require visa sponsorship?"
-	for _, loc := range []string{mercury, "US or Canada", "Toronto, ON or Austin, TX", "New York, NY; London, UK", "North America", "Remote - North America"} {
+	// Zefr's "Marina del Rey, CA": a town the table does not know before a code
+	// that is a US state and a country.
+	for _, loc := range []string{mercury, "US or Canada", "Toronto, ON or Austin, TX", "New York, NY; London, UK", "North America", "Remote - North America", "Marina del Rey, CA"} {
 		r := run(q, loc, false, true, "US")
 		if r.Outcome != OutcomeFilledReview || r.ChosenLabel != "Yes" || r.Confidence >= AutoFillConfidence {
 			t.Fatalf("%s, needs sponsorship in the recorded country and is not authorized in the others: %+v", loc, r)

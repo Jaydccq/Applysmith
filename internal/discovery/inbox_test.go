@@ -193,6 +193,28 @@ func (e *env) waitingRow(source, id string, score int) InboxRow {
 	return row
 }
 
+// A row the pre-filter scored below zero that waited two weeks expires: the
+// drain takes the best rows first and never reaches it, and it would count as
+// waiting for evaluation forever. A row at the floor, and a younger one, stay.
+func TestInbox_ExpireStale_ShedsOldRowsBelowTheFloor(t *testing.T) {
+	e := newEnv(t)
+	old, floor := e.waitingRow("registry", "01", -1), e.waitingRow("registry", "02", 0)
+	e.clk.advance(InboxStaleAge - time.Hour)
+	young := e.waitingRow("registry", "03", -1)
+	e.clk.advance(2 * time.Hour)
+	if n, err := e.rp.ExpireStale(e.ctx); err != nil || n != 1 {
+		t.Fatalf("expired %d, %v; want 1", n, err)
+	}
+	for _, c := range []struct {
+		row  InboxRow
+		want string
+	}{{old, InboxExpired}, {floor, InboxPending}, {young, InboxPending}} {
+		if row, _ := e.rp.InboxGet(e.ctx, c.row.ID); row.Status != c.want {
+			t.Errorf("%s (score %d): %s, want %s", c.row.Role, c.row.Score, row.Status, c.want)
+		}
+	}
+}
+
 // The scheduled drain takes the best-ranked waiting rows first, in auto mode
 // whatever the source's own mode, up to its limit; a row whose one earlier
 // evaluation failed gets its retry.
